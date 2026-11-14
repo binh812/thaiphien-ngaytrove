@@ -1,0 +1,90 @@
+{
+ "sunset": {
+  "id": "syferfontein_0d_clear_puresky",
+  "sunU": 0.5973,
+  "sunEl": 3.47,
+  "tint": [
+   0.798,
+   0.983,
+   1.717
+  ],
+  "peak": 23.9
+ },
+ "golden": {
+  "id": "syferfontein_6d_clear_puresky",
+  "sunU": 0.5995,
+  "sunEl": 5.84,
+  "tint": [
+   0.737,
+   1.034,
+   1.422
+  ],
+  "peak": 36116.0
+ },
+ "low": {
+  "id": "syferfontein_18d_clear_puresky",
+  "sunU": 0.5997,
+  "sunEl": 18.33,
+  "tint": [
+   0.701,
+   1.024,
+   1.629
+  ],
+  "peak": 118303.5
+ },
+ "day": {
+  "id": "kloofendal_43d_clear_puresky",
+  "sunU": 0.6005,
+  "sunEl": 42.93,
+  "tint": [
+   0.773,
+   1.021,
+   1.439
+  ],
+  "peak": 36607.5
+ },
+ "cloudy": {
+  "id": "kloofendal_48d_partly_cloudy_puresky",
+  "sunU": 0.5951,
+  "sunEl": 47.86,
+  "tint": [
+   0.859,
+   0.998,
+   1.429
+  ],
+  "peak": 24216.6
+ },
+ "overcast": {
+  "id": "kloofendal_overcast_puresky",
+  "sunU": null,
+  "sunEl": null,
+  "tint": [
+   0.919,
+   1.005,
+   1.19
+  ],
+  "peak": 4.7
+ },
+ "misty": {
+  "id": "kloofendal_misty_morning_puresky",
+  "sunU": null,
+  "sunEl": null,
+  "tint": [
+   0.925,
+   1.005,
+   1.162
+  ],
+  "peak": 1.4
+ },
+ "night": {
+  "id": "qwantani_night_puresky",
+  "sunU": 0.6249,
+  "sunEl": 0.04,
+  "tint": [
+   0.999,
+   1.0,
+   0.995
+  ],
+  "peak": 34.8
+ }
+}

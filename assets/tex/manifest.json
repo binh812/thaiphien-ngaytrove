@@ -1,0 +1,245 @@
+{
+ "plaster": {
+  "id": "painted_plaster_wall",
+  "meters": 2.0,
+  "sizes": [
+   512,
+   1024,
+   2048
+  ],
+  "mean": [
+   0.4068,
+   0.3657,
+   0.3504
+  ],
+  "rough": 0.919
+ },
+ "concrete": {
+  "id": "concrete_wall_008",
+  "meters": 2.71,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.2661,
+   0.2368,
+   0.1615
+  ],
+  "rough": 0.737
+ },
+ "pavers": {
+  "id": "concrete_tiles_02",
+  "meters": 1.825,
+  "sizes": [
+   512,
+   1024,
+   2048
+  ],
+  "mean": [
+   0.1369,
+   0.1243,
+   0.1079
+  ],
+  "rough": 0.939
+ },
+ "brickPave": {
+  "id": "red_brick_pavers",
+  "meters": 1.8,
+  "sizes": [
+   512,
+   1024,
+   2048
+  ],
+  "mean": [
+   0.1749,
+   0.0509,
+   0.0325
+  ],
+  "rough": 0.891
+ },
+ "asphalt": {
+  "id": "asphalt_04",
+  "meters": 4.04,
+  "sizes": [
+   512,
+   1024,
+   2048
+  ],
+  "mean": [
+   0.2374,
+   0.2218,
+   0.2099
+  ],
+  "rough": 0.932
+ },
+ "roofTile": {
+  "id": "clay_roof_tiles_02",
+  "meters": 2.5,
+  "sizes": [
+   512,
+   1024,
+   2048
+  ],
+  "mean": [
+   0.2988,
+   0.0827,
+   0.0253
+  ],
+  "rough": 0.915
+ },
+ "floorTile": {
+  "id": "marble_tiles",
+  "meters": 2.0,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.2649,
+   0.2224,
+   0.1706
+  ],
+  "rough": 0.633
+ },
+ "wallTile": {
+  "id": "long_white_tiles",
+  "meters": 1.27,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.6145,
+   0.5698,
+   0.4719
+  ],
+  "rough": 0.243
+ },
+ "wood": {
+  "id": "wood_table_001",
+  "meters": 1.5,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.0482,
+   0.01,
+   0.0032
+  ],
+  "rough": 0.254
+ },
+ "bark": {
+  "id": "bark_brown_02",
+  "meters": 1.0,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.1195,
+   0.0976,
+   0.0576
+  ],
+  "rough": 0.902
+ },
+ "grass": {
+  "id": "sparse_grass",
+  "meters": 2.0,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.0795,
+   0.0477,
+   0.0078
+  ],
+  "rough": 0.943
+ },
+ "metalCorr": {
+  "id": "corrugated_iron_02",
+  "meters": 2.7,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.0993,
+   0.0977,
+   0.0827
+  ],
+  "rough": 0.522
+ },
+ "sand": {
+  "id": "playground_sand",
+  "meters": 2.07,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.1997,
+   0.14,
+   0.0613
+  ],
+  "rough": 0.901
+ },
+ "court": {
+  "id": "rubberized_track",
+  "meters": 2.0,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.1743,
+   0.0465,
+   0.0362
+  ],
+  "rough": 0.925
+ },
+ "brick": {
+  "id": "red_brick_03",
+  "meters": 1.0,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.1485,
+   0.0922,
+   0.0755
+  ],
+  "rough": 0.532
+ },
+ "granite": {
+  "id": "terrazzo_tiles",
+  "meters": 2.0,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.2507,
+   0.1522,
+   0.0951
+  ],
+  "rough": 0.283
+ },
+ "fabric": {
+  "id": "cotton_jersey",
+  "meters": 0.264,
+  "sizes": [
+   512,
+   1024
+  ],
+  "mean": [
+   0.5398,
+   0.4056,
+   0.3372
+  ],
+  "rough": 0.802
+ }
+}

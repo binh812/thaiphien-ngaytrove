@@ -1,0 +1,16 @@
+node_modules/
+.tools/
+# ảnh duyệt và tệp trung gian của quá trình dựng hình
+assets/people/_preview/
+__pycache__/
+# mô hình mỗi-bộ-một-tệp đời trước (trò chơi đã chuyển sang tệp tủ đồ) và bản sao chuyển động
+assets/people/[mf]_white.glb
+assets/people/[mf]_jacket.glb
+assets/people/[mf]_pe.glb
+assets/people/[mf]_teacher.glb
+assets/people/[mf]_class.glb
+assets/people/f_class_skirt.glb
+assets/people/f_aodai.glb
+assets/people/f_aodai_teacher.glb
+assets/people/anims_cc0.glb
+tools/_req.mjs

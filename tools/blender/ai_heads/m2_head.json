@@ -1,0 +1,239 @@
+{
+ "_chu_thich": "Cấu hình chiếu bản vẽ ba góc lên đầu nhân vật nam (project_head.py). Toạ độ `ref` là điểm ảnh trên bản vẽ; `pick` là điểm ảnh trên ảnh trực giao 1200 px của lưới gốc (preview_ai_head.py --ortho --size 1200): [góc nhìn, x, y], luôn chọn ở giữa mặt hoặc bên TRÁI nhân vật (x > 600 ở góc trước, x < 600 ở góc sau). Khoá ref: f = góc trước, fm = điểm đối xứng (bên phải nhân vật) ở góc trước, s = góc nghiêng (bên trái nhân vật, mũi quay sang trái ảnh), b / bm = góc sau.",
+ "source_glb": "assets/people/m_wardrobe.glb",
+ "output_glb": ".tools/build/ai_heads_var/m2.glb",
+ "manifest": "assets/people/manifest.json",
+ "manifest_from": "m",
+ "manifest_key": "m_ai2_unused",
+ "sheet": "m2_head_sheet.png",
+ "ortho": {
+  "size": 1200,
+  "span": 0.42,
+  "centre_y": 1.58
+ },
+ "views": {
+  "side": {
+   "columns": [
+    87,
+    590
+   ],
+   "hair_seed": [
+    400,
+    150
+   ]
+  },
+  "front": {
+   "columns": [
+    590,
+    1000
+   ],
+   "hair_seed": [
+    787,
+    130
+   ]
+  },
+  "back": {
+   "columns": [
+    1000,
+    1481
+   ],
+   "hair_seed": [
+    1212,
+    300
+   ]
+  }
+ },
+ "exclude_rects": [
+  [
+   1325,
+   625,
+   1568,
+   779
+  ]
+ ],
+ "inpaint_rects": [
+  [
+   826,
+   386,
+   842,
+   408
+  ]
+ ],
+ "ref_midline_front": 788.0,
+ "key": {
+  "green_margin": 10,
+  "erode_px": 2
+ },
+ "hair": {
+  "max_luma": 62,
+  "band_start_mm": 9.0,
+  "band_end_mm": 26.0,
+  "px_per_mm": 1.92
+ },
+ "angles": {
+  "axis_z": 0.03,
+  "front_side": 31.0,
+  "side_back": 135.0,
+  "blend": 16.0
+ },
+ "texture": {
+  "head_size": [
+   1024,
+   1536
+  ],
+  "fill_px": 28,
+  "jpeg_quality": 92,
+  "body_jpeg_quality": 92
+ },
+ "seam": {
+  "start_m": 0.006,
+  "end_m": 0.04,
+  "low_y": 1.44,
+  "high_y": 1.475
+ },
+ "cheek_box": {
+  "x": [
+   0.022,
+   0.05
+  ],
+  "y": [
+   1.555,
+   1.605
+  ],
+  "z_min": 0.085
+ },
+ "eyebrow_alpha": 0.45,
+ "eye_shrink_px": 0,
+ "eye_clean_px": 3,
+ "eye_far_px": 6,
+ "eye_ring_keep": 0.7,
+ "highlight_knee": 215,
+ "sharpen": 0.9,
+ "edge": {
+  "start_px": 8,
+  "end_px": 30
+ },
+ "relight": {
+  "symmetrise_front": true,
+  "sigma_px": 12
+ },
+ "lip_close": {
+  "overlap_mm": 0.6,
+  "reach_mm": 7.0,
+  "teeth_narrow": 0.88
+ },
+ "ear_balance": {
+  "radius_mm": 30,
+  "amount": 0.75,
+  "brightness": 0.97
+ },
+ "eye_shade": {
+  "top": 0.3,
+  "corner": 0.22
+ },
+ "hair_follow_morphs": [
+  "age_teen"
+ ],
+ "seam_blend_mm": 3.0,
+ "mesh_warp": {
+  "gain": 0.6,
+  "cap_mm": 5.0,
+  "zero_below_y": 1.5,
+  "full_above_y": 1.53,
+  "anchor_distance_m": 0.05,
+  "fit": [
+   "pupil",
+   "nasion",
+   "lip_line",
+   "chin_bottom",
+   "nose_tip"
+  ],
+  "move": [
+   "pupil",
+   "eye_in",
+   "eye_out",
+   "lid_up",
+   "lid_low",
+   "ala",
+   "mouth_corner",
+   "ear_back",
+   "ear_lobe",
+   "ear_top",
+   "lip_top",
+   "lip_bottom",
+   "jaw_mouth"
+  ],
+  "follow": [
+   "skin_head",
+   "skin_torso",
+   "skin_upperarm",
+   "eyebrows",
+   "eyelashes",
+   "teeth",
+   "hair_0",
+   "hair_1",
+   "hair_2",
+   "hair_3",
+   "glasses_0",
+   "glasses_1",
+   "glasses_2"
+  ],
+  "x_only": [
+   "ala",
+   "ear_back",
+   "ear_lobe",
+   "ear_top",
+   "jaw_mouth"
+  ],
+  "eyes": "eyes",
+  "eye_scale_max": 1.12
+ },
+ "rest_morphs": {
+  "age_teen": 0.4
+ },
+ "normal_flatten": 0.65,
+ "landmarks": [
+  {"name": "top", "pick": ["front", 600, 180], "ref": {"f": [787, 97], "s": [301, 100]}},
+  {"name": "top_back", "pick": ["back", 600, 185], "ref": {"b": [1212, 100], "s": [493, 125]}},
+  {"name": "hairline_c", "pick": ["front", 600, 256], "ref": {"f": [787, 198], "s": [222, 203]}},
+  {"name": "hair_corner", "pick": ["front", 745, 285], "ref": {"f": [895, 216], "fm": [682, 218], "s": [282, 205]}},
+  {"name": "temple_hair", "pick": ["side", 318, 349], "ref": {"f": [923, 285], "fm": [651, 285], "s": [290, 285]}},
+  {"name": "temple_low", "pick": ["side", 345, 420], "ref": {"f": [923, 315], "fm": [651, 315], "s": [318, 315]}},
+  {"name": "sideburn", "pick": ["side", 372, 490], "ref": {"f": [921, 345], "fm": [653, 345], "s": [342, 345]}},
+  {"name": "forehead", "pick": ["front", 600, 349], "ref": {"f": [787, 285], "s": [190, 285]}},
+  {"name": "glabella", "pick": ["front", 600, 405], "ref": {"f": [787, 318], "s": [187, 316]}},
+  {"name": "nasion", "pick": ["front", 600, 452], "ref": {"f": [787, 345], "s": [196, 338]}},
+  {"name": "nose_tip", "pick": ["front", 600, 572], "ref": {"f": [787, 410], "s": [156, 412]}},
+  {"name": "subnasale", "pick": ["front", 600, 598], "ref": {"f": [787, 434], "s": [182, 430]}},
+  {"name": "lip_top", "pick": ["front", 600, 648], "ref": {"f": [790, 465], "s": [176, 462]}},
+  {"name": "lip_line", "pick": ["front", 600, 667], "ref": {"f": [790, 478], "s": [182, 474]}},
+  {"name": "lip_bottom", "pick": ["front", 600, 700], "ref": {"f": [790, 498], "s": [182, 490]}},
+  {"name": "chin_front", "pick": ["front", 600, 762], "ref": {"f": [789, 535], "s": [192, 535]}},
+  {"name": "chin_bottom", "pick": ["front", 600, 795], "ref": {"f": [789, 568], "s": [215, 553]}},
+  {"name": "throat", "pick": ["front", 600, 840], "ref": {"f": [789, 600], "s": [287, 572]}},
+  {"name": "neck_base", "pick": ["front", 600, 986], "ref": {"f": [789, 690], "s": [300, 640]}},
+  {"name": "pupil", "pick": ["front", 683, 459], "ref": {"f": [851, 343], "fm": [725, 344]}},
+  {"name": "eye_in", "pick": ["front", 658, 465], "ref": {"f": [823, 350], "fm": [752, 350]}},
+  {"name": "eye_out", "pick": ["front", 718, 459], "ref": {"f": [881, 346], "fm": [690, 347], "s": [232, 345]}},
+  {"name": "lid_up", "pick": ["front", 688, 449], "ref": {"f": [851, 334], "fm": [725, 334], "s": [218, 336]}},
+  {"name": "lid_low", "pick": ["front", 688, 470], "ref": {"f": [851, 352], "fm": [725, 352], "s": [220, 352]}},
+  {"name": "brow_tail", "pick": ["front", 752, 418], "ref": {"f": [900, 314], "fm": [678, 316], "s": [238, 312]}},
+  {"name": "ala", "pick": ["front", 653, 572], "ref": {"f": [827, 427], "fm": [750, 427], "s": [200, 420]}},
+  {"name": "mouth_corner", "pick": ["front", 661, 670], "ref": {"f": [839, 477], "fm": [739, 477], "s": [208, 474]}},
+  {"name": "jaw_mouth", "pick": ["front", 788, 672], "ref": {"f": [909, 477], "fm": [669, 477]}},
+  {"name": "ear_top", "pick": ["side", 495, 438], "ref": {"s": [400, 325], "f": [951, 331], "fm": [629, 331], "b": [1050, 332], "bm": [1374, 332]}},
+  {"name": "ear_back", "pick": ["side", 518, 500], "ref": {"s": [442, 368], "f": [960, 355], "fm": [616, 350], "b": [1040, 360], "bm": [1385, 360]}},
+  {"name": "ear_lobe", "pick": ["side", 468, 594], "ref": {"s": [375, 440], "f": [921, 442], "fm": [652, 442], "b": [1078, 440], "bm": [1350, 440]}},
+  {"name": "ear_front_top", "pick": ["side", 462, 470], "ref": {"s": [386, 346]}},
+  {"name": "jaw_a", "pick": ["side", 300, 802], "ref": {"s": [240, 552]}},
+  {"name": "jaw_b", "pick": ["side", 380, 792], "ref": {"s": [290, 548]}},
+  {"name": "jaw_angle", "pick": ["side", 440, 720], "ref": {"s": [345, 505]}},
+  {"name": "tragus", "pick": ["side", 455, 520], "ref": {"s": [383, 380], "f": [922, 380], "fm": [651, 380]}},
+  {"name": "skull_side", "pick": ["side", 500, 300], "ref": {"s": [405, 235], "f": [948, 235], "fm": [628, 235], "b": [1048, 235], "bm": [1378, 235]}},
+  {"name": "behind_ear", "pick": ["side", 530, 610], "ref": {"s": [420, 465], "b": [1088, 450], "bm": [1340, 450]}},
+  {"name": "occiput", "pick": ["back", 600, 400], "ref": {"b": [1212, 290], "s": [553, 303]}},
+  {"name": "nape_c", "pick": ["back", 600, 700], "ref": {"b": [1212, 504], "s": [493, 504]}},
+  {"name": "nape_side", "pick": ["back", 500, 690], "ref": {"b": [1145, 500], "bm": [1279, 500]}},
+  {"name": "neck_back_low", "pick": ["back", 600, 815], "ref": {"b": [1212, 581], "s": [508, 581]}}
+ ]
+}

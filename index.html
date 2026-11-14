@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Thái Phiên – Ngày trở về (bản điện ảnh)</title>
+<link rel="stylesheet" href="./src/ui.css">
+<script type="importmap">
+{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/addons/","rapier":"./vendor/rapier/rapier.mjs","three/examples/jsm/":"./vendor/three/addons/","three-mesh-bvh":"./vendor/three-mesh-bvh/index.module.js","three-gpu-pathtracer":"./vendor/three-gpu-pathtracer/index.module.js"}}
+</script>
+</head>
+<body>
+<div id="app"></div>
+<div id="loading"><div class="box"><div class="logo">TP</div><h1>THÁI PHIÊN</h1><p class="sub">Ngày trở về · bản điện ảnh</p><div class="bar"><i id="loadBar"></i></div><p id="loadMsg">Đang khởi động…</p></div></div>
+<div id="hud" class="hidden">
+  <div id="where"></div>
+  <div id="prompt"></div>
+  <div id="toast"></div>
+  <div id="cross"></div>
+  <div id="stats"></div>
+  <div id="topbar">
+    <button id="bMenu" title="Bảng điều khiển (Tab)">☰</button>
+    <button id="bMap" title="Dịch chuyển (M)">📍</button>
+    <button id="bView" title="Đổi góc nhìn (V)">👁</button>
+    <button id="bPhoto" title="Chế độ chụp ảnh (P)">📷</button>
+    <button id="bPlan" class="hidden" title="Chương trình ngày về (J)">📋</button>
+  </div>
+  <div id="joy"><i id="knob"></i></div>
+  <div id="touchBtns"><button id="tJump">⤒</button><button id="tUse">E</button><button id="tThrow">◎</button></div>
+</div>
+<div id="panel" class="panel hidden"></div>
+<div id="mapPanel" class="panel hidden"></div>
+<div id="start" class="hidden"><div class="box">
+  <h1>VỀ THĂM TRƯỜNG THPT THÁI PHIÊN</h1><p class="sub">258 Đà Nẵng · Hải Phòng</p>
+  <div id="builder"></div>
+  <div class="keys">
+    <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> đi · <kbd>Shift</kbd> chạy · <kbd>Space</kbd> nhảy</span>
+    <span><kbd>Chuột</kbd> nhìn · <kbd>Chuột trái</kbd> nhặt / ném · <kbd>E</kbd> tương tác · <kbd>F</kbd> đá</span>
+    <span><kbd>V</kbd> góc nhìn · <kbd>M</kbd> dịch chuyển · <kbd>Tab</kbd> thời gian, thời tiết, đồ họa · <kbd>P</kbd> chụp ảnh · <kbd>J</kbd> chương trình ngày về</span>
+    <span><kbd>C</kbd> ngồi xuống ghế · <kbd>R</kbd> ném dép khều xoài (đứng gần cây)</span>
+    <span><kbd>E</kbd> gọi món ở quán, vào đá cầu (<kbd>Space</kbd> tâng) · đêm 19h30 có lửa trại</span>
+  </div>
+  <button id="go">Vào trường ▶</button>
+</div></div>
+<script>
+// lỗi tải mô-đun (thiếu tệp vendor, sai MIME…) không tới được main.js nên báo ngay tại đây
+function tpBootError(m) { var el = document.getElementById('loadMsg'); if (el && !window.__ready) el.textContent = 'Lỗi tải trang: ' + m; }
+window.addEventListener('error', function (e) { tpBootError(e.message || (e.target && (e.target.src || e.target.href)) || 'không rõ'); }, true);
+window.addEventListener('unhandledrejection', function (e) { tpBootError(e.reason && e.reason.message ? e.reason.message : String(e.reason)); });
+</script>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

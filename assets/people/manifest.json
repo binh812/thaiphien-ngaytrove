@@ -1,0 +1,8544 @@
+{
+ "files": {
+  "f_aodai": {
+   "file": "f_aodai.glb",
+   "bytes": 9818096,
+   "triangles": 64202,
+   "trianglesByMesh": {
+    "body": 14936,
+    "bottom": 2256,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 8474,
+    "hair_1": 4108,
+    "hair_2": 5518,
+    "hair_3": 1922,
+    "hair_4": 2248,
+    "hair_5": 5352,
+    "shoes": 708,
+    "teeth": 4440,
+    "top": 10904
+   },
+   "height": 1.5892,
+   "minY": -0.0,
+   "hipsRestHeight": 0.8598,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "hair_4",
+    "hair_5",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_4",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_5",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    }
+   ],
+   "images": [
+    {
+     "name": "middleage_lightskinned_female_diffuse2_skin_53f734ac7f9c",
+     "mimeType": "image/jpeg",
+     "bytes": 311908
+    },
+    {
+     "name": "head_f_aodai_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 101330
+    },
+    {
+     "name": "head_f_aodai_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 130764
+    },
+    {
+     "name": "head_f_aodai_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17389
+    },
+    {
+     "name": "silk_normal_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 9609
+    },
+    {
+     "name": "silk_base_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 2477
+    },
+    {
+     "name": "eyebrow005_brow_f_cd60af934831",
+     "mimeType": "image/png",
+     "bytes": 47580
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_1b678ae188f1",
+     "mimeType": "image/jpeg",
+     "bytes": 18701
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "bob01_diffuse_strands_0cba7085a186",
+     "mimeType": "image/png",
+     "bytes": 547477
+    },
+    {
+     "name": "long01_diffuse_strands_ceeb096e1340",
+     "mimeType": "image/png",
+     "bytes": 432243
+    },
+    {
+     "name": "braid01_diffuse_strands_091d0541af15",
+     "mimeType": "image/png",
+     "bytes": 419060
+    },
+    {
+     "name": "short03_diffuse_strands_0d1d37f200d4",
+     "mimeType": "image/png",
+     "bytes": 406632
+    },
+    {
+     "name": "bob02_diffuse_strands_3e5bfa1b70e9",
+     "mimeType": "image/png",
+     "bytes": 405072
+    },
+    {
+     "name": "ponytail01_diffuse_strands_99af011335df",
+     "mimeType": "image/png",
+     "bytes": 609571
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_4": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_5": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/f_aodai_full.png",
+    "_preview/f_aodai_face.png",
+    "_preview/f_aodai_hair1.png",
+    "_preview/f_aodai_hair2.png",
+    "_preview/f_aodai_pose.png"
+   ],
+   "hairStyles": [
+    "bob",
+    "long",
+    "braid",
+    "pixie",
+    "bob_bangs",
+    "pony"
+   ],
+   "glasses": 3,
+   "bakedTop": false
+  },
+  "f_jacket": {
+   "file": "f_jacket.glb",
+   "bytes": 10229920,
+   "triangles": 59874,
+   "trianglesByMesh": {
+    "body": 15704,
+    "bottom": 1712,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 8474,
+    "hair_1": 4108,
+    "hair_2": 5518,
+    "hair_3": 1922,
+    "hair_4": 2248,
+    "hair_5": 5352,
+    "shoes": 2776,
+    "teeth": 4440,
+    "top": 4284
+   },
+   "height": 1.5765,
+   "minY": -0.0,
+   "hipsRestHeight": 0.8542,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "hair_4",
+    "hair_5",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_4",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_5",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    }
+   ],
+   "images": [
+    {
+     "name": "young_lightskinned_female_diffuse3_skin_de3114688372",
+     "mimeType": "image/jpeg",
+     "bytes": 299769
+    },
+    {
+     "name": "head_f_jacket_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 101678
+    },
+    {
+     "name": "head_f_jacket_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 129686
+    },
+    {
+     "name": "head_f_jacket_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17511
+    },
+    {
+     "name": "female_casualsuit01_normal_normal_d967622a1674",
+     "mimeType": "image/jpeg",
+     "bytes": 51224
+    },
+    {
+     "name": "female_casualsuit01_diffuse_highpass_ee7f4d0c4cdf",
+     "mimeType": "image/jpeg",
+     "bytes": 139129
+    },
+    {
+     "name": "eyebrow005_brow_f_cd60af934831",
+     "mimeType": "image/png",
+     "bytes": 47580
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_5551e5d312ac",
+     "mimeType": "image/jpeg",
+     "bytes": 18712
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "bob01_diffuse_strands_0cba7085a186",
+     "mimeType": "image/png",
+     "bytes": 547477
+    },
+    {
+     "name": "long01_diffuse_strands_ceeb096e1340",
+     "mimeType": "image/png",
+     "bytes": 432243
+    },
+    {
+     "name": "braid01_diffuse_strands_091d0541af15",
+     "mimeType": "image/png",
+     "bytes": 419060
+    },
+    {
+     "name": "short03_diffuse_strands_0d1d37f200d4",
+     "mimeType": "image/png",
+     "bytes": 406632
+    },
+    {
+     "name": "bob02_diffuse_strands_3e5bfa1b70e9",
+     "mimeType": "image/png",
+     "bytes": 405072
+    },
+    {
+     "name": "ponytail01_diffuse_strands_99af011335df",
+     "mimeType": "image/png",
+     "bytes": 609571
+    },
+    {
+     "name": "shoes05_diffuse_copy_ddfe448ee8d5",
+     "mimeType": "image/jpeg",
+     "bytes": 145625
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    },
+    {
+     "name": "male_casualsuit05_normal_normal_43a1632d36ca",
+     "mimeType": "image/jpeg",
+     "bytes": 62415
+    },
+    {
+     "name": "male_casualsuit05_diffuse_highpass_6029af1c13b1",
+     "mimeType": "image/jpeg",
+     "bytes": 146560
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_4": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_5": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/f_jacket_full.png",
+    "_preview/f_jacket_face.png",
+    "_preview/f_jacket_hair1.png",
+    "_preview/f_jacket_hair2.png",
+    "_preview/f_jacket_pose.png"
+   ],
+   "hairStyles": [
+    "bob",
+    "long",
+    "braid",
+    "pixie",
+    "bob_bangs",
+    "pony"
+   ],
+   "glasses": 3,
+   "bakedTop": false
+  },
+  "f_pe": {
+   "file": "f_pe.glb",
+   "bytes": 9937032,
+   "triangles": 59422,
+   "trianglesByMesh": {
+    "body": 17012,
+    "bottom": 1712,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 8474,
+    "hair_1": 4108,
+    "hair_2": 5518,
+    "hair_3": 1922,
+    "hair_4": 2248,
+    "hair_5": 5352,
+    "shoes": 2776,
+    "teeth": 4440,
+    "top": 2524
+   },
+   "height": 1.5765,
+   "minY": -0.0,
+   "hipsRestHeight": 0.8542,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "hair_4",
+    "hair_5",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_4",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_5",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    }
+   ],
+   "images": [
+    {
+     "name": "young_lightskinned_female_diffuse3_skin_de3114688372",
+     "mimeType": "image/jpeg",
+     "bytes": 299769
+    },
+    {
+     "name": "head_f_pe_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 101678
+    },
+    {
+     "name": "head_f_pe_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 129686
+    },
+    {
+     "name": "head_f_pe_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17511
+    },
+    {
+     "name": "female_casualsuit01_normal_normal_d967622a1674",
+     "mimeType": "image/jpeg",
+     "bytes": 51224
+    },
+    {
+     "name": "female_casualsuit01_diffuse_flat_6a616cbcab79",
+     "mimeType": "image/jpeg",
+     "bytes": 22477
+    },
+    {
+     "name": "eyebrow005_brow_f_cd60af934831",
+     "mimeType": "image/png",
+     "bytes": 47580
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_5551e5d312ac",
+     "mimeType": "image/jpeg",
+     "bytes": 18712
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "bob01_diffuse_strands_0cba7085a186",
+     "mimeType": "image/png",
+     "bytes": 547477
+    },
+    {
+     "name": "long01_diffuse_strands_ceeb096e1340",
+     "mimeType": "image/png",
+     "bytes": 432243
+    },
+    {
+     "name": "braid01_diffuse_strands_091d0541af15",
+     "mimeType": "image/png",
+     "bytes": 419060
+    },
+    {
+     "name": "short03_diffuse_strands_0d1d37f200d4",
+     "mimeType": "image/png",
+     "bytes": 406632
+    },
+    {
+     "name": "bob02_diffuse_strands_3e5bfa1b70e9",
+     "mimeType": "image/png",
+     "bytes": 405072
+    },
+    {
+     "name": "ponytail01_diffuse_strands_99af011335df",
+     "mimeType": "image/png",
+     "bytes": 609571
+    },
+    {
+     "name": "shoes06_diffuse_copy_393f351f4e58",
+     "mimeType": "image/jpeg",
+     "bytes": 180607
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_4": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_5": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/f_pe_full.png",
+    "_preview/f_pe_face.png",
+    "_preview/f_pe_hair1.png",
+    "_preview/f_pe_hair2.png",
+    "_preview/f_pe_pose.png"
+   ],
+   "hairStyles": [
+    "bob",
+    "long",
+    "braid",
+    "pixie",
+    "bob_bangs",
+    "pony"
+   ],
+   "glasses": 3,
+   "bakedTop": false
+  },
+  "f_teacher": {
+   "file": "f_teacher.glb",
+   "bytes": 9893336,
+   "triangles": 60590,
+   "trianglesByMesh": {
+    "body": 15818,
+    "bottom": 2626,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 8474,
+    "hair_1": 4108,
+    "hair_2": 5518,
+    "hair_3": 1922,
+    "hair_4": 2248,
+    "hair_5": 5352,
+    "shoes": 3284,
+    "teeth": 4440,
+    "top": 3464
+   },
+   "height": 1.5518,
+   "minY": -0.0,
+   "hipsRestHeight": 0.8424,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "hair_4",
+    "hair_5",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_4",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_5",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    }
+   ],
+   "images": [
+    {
+     "name": "middleage_lightskinned_female_diffuse2_skin_53f734ac7f9c",
+     "mimeType": "image/jpeg",
+     "bytes": 311908
+    },
+    {
+     "name": "head_f_teacher_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 101327
+    },
+    {
+     "name": "head_f_teacher_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 130789
+    },
+    {
+     "name": "head_f_teacher_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17476
+    },
+    {
+     "name": "male_elegantsuit01_diffuse_flat_a624b1a8686f",
+     "mimeType": "image/jpeg",
+     "bytes": 23196
+    },
+    {
+     "name": "eyebrow005_brow_f_cd60af934831",
+     "mimeType": "image/png",
+     "bytes": 47580
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_417f4af8a7c7",
+     "mimeType": "image/jpeg",
+     "bytes": 18711
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "bob01_diffuse_strands_0cba7085a186",
+     "mimeType": "image/png",
+     "bytes": 547477
+    },
+    {
+     "name": "long01_diffuse_strands_ceeb096e1340",
+     "mimeType": "image/png",
+     "bytes": 432243
+    },
+    {
+     "name": "braid01_diffuse_strands_091d0541af15",
+     "mimeType": "image/png",
+     "bytes": 419060
+    },
+    {
+     "name": "short03_diffuse_strands_0d1d37f200d4",
+     "mimeType": "image/png",
+     "bytes": 406632
+    },
+    {
+     "name": "bob02_diffuse_strands_3e5bfa1b70e9",
+     "mimeType": "image/png",
+     "bytes": 405072
+    },
+    {
+     "name": "ponytail01_diffuse_strands_99af011335df",
+     "mimeType": "image/png",
+     "bytes": 609571
+    },
+    {
+     "name": "shoes03_diffuse_copy_96b176cca90b",
+     "mimeType": "image/jpeg",
+     "bytes": 58275
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    },
+    {
+     "name": "female_elegantsuit01_normal_normal_f0dd35b8accd",
+     "mimeType": "image/jpeg",
+     "bytes": 53883
+    },
+    {
+     "name": "female_elegantsuit01_diffuse_flat_70dfed81cf05",
+     "mimeType": "image/jpeg",
+     "bytes": 20500
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_4": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_5": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/f_teacher_full.png",
+    "_preview/f_teacher_face.png",
+    "_preview/f_teacher_hair1.png",
+    "_preview/f_teacher_hair2.png",
+    "_preview/f_teacher_pose.png"
+   ],
+   "hairStyles": [
+    "bob",
+    "long",
+    "braid",
+    "pixie",
+    "bob_bangs",
+    "pony"
+   ],
+   "glasses": 3,
+   "bakedTop": false
+  },
+  "f_white": {
+   "file": "f_white.glb",
+   "bytes": 10244768,
+   "triangles": 71630,
+   "trianglesByMesh": {
+    "body": 17732,
+    "bottom": 2626,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 8474,
+    "hair_1": 4108,
+    "hair_2": 5518,
+    "hair_3": 1922,
+    "hair_4": 2248,
+    "hair_5": 5352,
+    "shoes": 3512,
+    "teeth": 4440,
+    "top": 12362
+   },
+   "height": 1.5833,
+   "minY": -0.0,
+   "hipsRestHeight": 0.8611,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "hair_4",
+    "hair_5",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_4",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_5",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    }
+   ],
+   "images": [
+    {
+     "name": "young_lightskinned_female_diffuse3_skin_de3114688372",
+     "mimeType": "image/jpeg",
+     "bytes": 299769
+    },
+    {
+     "name": "head_f_white_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 101678
+    },
+    {
+     "name": "head_f_white_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 129686
+    },
+    {
+     "name": "head_f_white_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17511
+    },
+    {
+     "name": "male_elegantsuit01_diffuse_flat_a624b1a8686f",
+     "mimeType": "image/jpeg",
+     "bytes": 23196
+    },
+    {
+     "name": "eyebrow005_brow_f_cd60af934831",
+     "mimeType": "image/png",
+     "bytes": 47580
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_5551e5d312ac",
+     "mimeType": "image/jpeg",
+     "bytes": 18712
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "bob01_diffuse_strands_0cba7085a186",
+     "mimeType": "image/png",
+     "bytes": 547477
+    },
+    {
+     "name": "long01_diffuse_strands_ceeb096e1340",
+     "mimeType": "image/png",
+     "bytes": 432243
+    },
+    {
+     "name": "braid01_diffuse_strands_091d0541af15",
+     "mimeType": "image/png",
+     "bytes": 419060
+    },
+    {
+     "name": "short03_diffuse_strands_0d1d37f200d4",
+     "mimeType": "image/png",
+     "bytes": 406632
+    },
+    {
+     "name": "bob02_diffuse_strands_3e5bfa1b70e9",
+     "mimeType": "image/png",
+     "bytes": 405072
+    },
+    {
+     "name": "ponytail01_diffuse_strands_99af011335df",
+     "mimeType": "image/png",
+     "bytes": 609571
+    },
+    {
+     "name": "shoes03_diffuse_copy_96b176cca90b",
+     "mimeType": "image/jpeg",
+     "bytes": 58275
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    },
+    {
+     "name": "uniform_atlas_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 43444
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_4": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_5": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/f_white_full.png",
+    "_preview/f_white_face.png",
+    "_preview/f_white_hair1.png",
+    "_preview/f_white_hair2.png",
+    "_preview/f_white_pose.png"
+   ],
+   "hairStyles": [
+    "bob",
+    "long",
+    "braid",
+    "pixie",
+    "bob_bangs",
+    "pony"
+   ],
+   "glasses": 3,
+   "bakedTop": false
+  },
+  "m_jacket": {
+   "file": "m_jacket.glb",
+   "bytes": 7755320,
+   "triangles": 47729,
+   "trianglesByMesh": {
+    "body": 15816,
+    "bottom": 1712,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 3678,
+    "hair_1": 4172,
+    "hair_2": 3344,
+    "hair_3": 4172,
+    "shoes": 2776,
+    "teeth": 4439,
+    "top": 4284
+   },
+   "height": 1.674,
+   "minY": -0.0,
+   "hipsRestHeight": 0.9241,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    }
+   ],
+   "images": [
+    {
+     "name": "young_lightskinned_male_diffuse3_skin_0665f75dc0dd",
+     "mimeType": "image/jpeg",
+     "bytes": 329284
+    },
+    {
+     "name": "head_m_jacket_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 103323
+    },
+    {
+     "name": "head_m_jacket_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 107652
+    },
+    {
+     "name": "head_m_jacket_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17376
+    },
+    {
+     "name": "male_casualsuit05_normal_normal_43a1632d36ca",
+     "mimeType": "image/jpeg",
+     "bytes": 62415
+    },
+    {
+     "name": "male_casualsuit05_diffuse_highpass_6029af1c13b1",
+     "mimeType": "image/jpeg",
+     "bytes": 146560
+    },
+    {
+     "name": "eyebrow001_brow_m_0ca8b24d41e4",
+     "mimeType": "image/png",
+     "bytes": 59102
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_7a6afc8d4e7f",
+     "mimeType": "image/jpeg",
+     "bytes": 18734
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "short01_diffuse_strands_62061bb342c8",
+     "mimeType": "image/png",
+     "bytes": 755151
+    },
+    {
+     "name": "hair_atlas_normal_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 34434
+    },
+    {
+     "name": "hair_atlas_v22",
+     "mimeType": "image/png",
+     "bytes": 328172
+    },
+    {
+     "name": "short02_diffuse_strands_a4e6cffab7e7",
+     "mimeType": "image/png",
+     "bytes": 466535
+    },
+    {
+     "name": "shoes06_diffuse_copy_393f351f4e58",
+     "mimeType": "image/jpeg",
+     "bytes": 180607
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/m_jacket_full.png",
+    "_preview/m_jacket_face.png",
+    "_preview/m_jacket_hair1.png",
+    "_preview/m_jacket_hair2.png",
+    "_preview/m_jacket_pose.png"
+   ],
+   "hairStyles": [
+    "side",
+    "crew",
+    "fringe",
+    "shaved"
+   ],
+   "glasses": 3,
+   "bakedTop": false
+  },
+  "m_pe": {
+   "file": "m_pe.glb",
+   "bytes": 7572652,
+   "triangles": 46413,
+   "trianglesByMesh": {
+    "body": 17256,
+    "bottom": 1712,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 3678,
+    "hair_1": 4172,
+    "hair_2": 3344,
+    "hair_3": 4172,
+    "shoes": 2776,
+    "teeth": 4439,
+    "top": 1528
+   },
+   "height": 1.674,
+   "minY": -0.0,
+   "hipsRestHeight": 0.9241,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    }
+   ],
+   "images": [
+    {
+     "name": "young_lightskinned_male_diffuse3_skin_0665f75dc0dd",
+     "mimeType": "image/jpeg",
+     "bytes": 329284
+    },
+    {
+     "name": "head_m_pe_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 103323
+    },
+    {
+     "name": "head_m_pe_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 107652
+    },
+    {
+     "name": "head_m_pe_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17376
+    },
+    {
+     "name": "male_casualsuit04_normal_normal_7b63adc5d3a1",
+     "mimeType": "image/jpeg",
+     "bytes": 54102
+    },
+    {
+     "name": "male_casualsuit04_diffuse_flat_e1ec8fcc2c18",
+     "mimeType": "image/jpeg",
+     "bytes": 30025
+    },
+    {
+     "name": "eyebrow001_brow_m_0ca8b24d41e4",
+     "mimeType": "image/png",
+     "bytes": 59102
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_7a6afc8d4e7f",
+     "mimeType": "image/jpeg",
+     "bytes": 18734
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "short01_diffuse_strands_62061bb342c8",
+     "mimeType": "image/png",
+     "bytes": 755151
+    },
+    {
+     "name": "hair_atlas_normal_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 34434
+    },
+    {
+     "name": "hair_atlas_v22",
+     "mimeType": "image/png",
+     "bytes": 328172
+    },
+    {
+     "name": "short02_diffuse_strands_a4e6cffab7e7",
+     "mimeType": "image/png",
+     "bytes": 466535
+    },
+    {
+     "name": "shoes05_diffuse_copy_ddfe448ee8d5",
+     "mimeType": "image/jpeg",
+     "bytes": 145625
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/m_pe_full.png",
+    "_preview/m_pe_face.png",
+    "_preview/m_pe_hair1.png",
+    "_preview/m_pe_hair2.png",
+    "_preview/m_pe_pose.png"
+   ],
+   "hairStyles": [
+    "side",
+    "crew",
+    "fringe",
+    "shaved"
+   ],
+   "glasses": 3,
+   "bakedTop": false
+  },
+  "m_teacher": {
+   "file": "m_teacher.glb",
+   "bytes": 7872304,
+   "triangles": 47462,
+   "trianglesByMesh": {
+    "body": 15738,
+    "bottom": 2626,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 3678,
+    "hair_1": 4180,
+    "hair_2": 3344,
+    "hair_3": 4180,
+    "shoes": 2852,
+    "teeth": 4440,
+    "top": 3088
+   },
+   "height": 1.6949,
+   "minY": -0.0,
+   "hipsRestHeight": 0.9359,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    }
+   ],
+   "images": [
+    {
+     "name": "middleage_lightskinned_male_diffuse2_skin_660d9070f14e",
+     "mimeType": "image/jpeg",
+     "bytes": 368049
+    },
+    {
+     "name": "head_m_teacher_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 103075
+    },
+    {
+     "name": "head_m_teacher_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 123208
+    },
+    {
+     "name": "head_m_teacher_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17307
+    },
+    {
+     "name": "male_elegantsuit01_diffuse_flat_a624b1a8686f",
+     "mimeType": "image/jpeg",
+     "bytes": 23196
+    },
+    {
+     "name": "eyebrow002_brow_m_4ef57c9e060b",
+     "mimeType": "image/png",
+     "bytes": 65561
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_ac405c4020eb",
+     "mimeType": "image/jpeg",
+     "bytes": 18777
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "short01_diffuse_strands_62061bb342c8",
+     "mimeType": "image/png",
+     "bytes": 755151
+    },
+    {
+     "name": "hair_atlas_normal_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 34434
+    },
+    {
+     "name": "hair_atlas_v22",
+     "mimeType": "image/png",
+     "bytes": 328172
+    },
+    {
+     "name": "short02_diffuse_strands_a4e6cffab7e7",
+     "mimeType": "image/png",
+     "bytes": 466535
+    },
+    {
+     "name": "shoes01_normal_normal_469c533f8c4d",
+     "mimeType": "image/jpeg",
+     "bytes": 129561
+    },
+    {
+     "name": "shoes01_diffuse_copy_d8e4ec6a3bd6",
+     "mimeType": "image/jpeg",
+     "bytes": 158331
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    },
+    {
+     "name": "male_casualsuit03_normal_normal_5670830e839d",
+     "mimeType": "image/jpeg",
+     "bytes": 122562
+    },
+    {
+     "name": "male_casualsuit03_diffuse_flat_d2217a39ec2f",
+     "mimeType": "image/jpeg",
+     "bytes": 29241
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/m_teacher_full.png",
+    "_preview/m_teacher_face.png",
+    "_preview/m_teacher_hair1.png",
+    "_preview/m_teacher_hair2.png",
+    "_preview/m_teacher_pose.png"
+   ],
+   "hairStyles": [
+    "side",
+    "crew",
+    "fringe",
+    "shaved"
+   ],
+   "glasses": 3,
+   "bakedTop": false
+  },
+  "m_white": {
+   "file": "m_white.glb",
+   "bytes": 7923744,
+   "triangles": 59721,
+   "trianglesByMesh": {
+    "body": 17584,
+    "bottom": 2626,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 3678,
+    "hair_1": 4144,
+    "hair_2": 3344,
+    "hair_3": 4144,
+    "shoes": 3840,
+    "teeth": 4439,
+    "top": 12586
+   },
+   "height": 1.681,
+   "minY": -0.0,
+   "hipsRestHeight": 0.9311,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    }
+   ],
+   "images": [
+    {
+     "name": "young_lightskinned_male_diffuse3_skin_0665f75dc0dd",
+     "mimeType": "image/jpeg",
+     "bytes": 329284
+    },
+    {
+     "name": "head_m_white_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 103323
+    },
+    {
+     "name": "head_m_white_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 107652
+    },
+    {
+     "name": "head_m_white_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17376
+    },
+    {
+     "name": "male_elegantsuit01_diffuse_flat_a624b1a8686f",
+     "mimeType": "image/jpeg",
+     "bytes": 23196
+    },
+    {
+     "name": "eyebrow001_brow_m_0ca8b24d41e4",
+     "mimeType": "image/png",
+     "bytes": 59102
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_7a6afc8d4e7f",
+     "mimeType": "image/jpeg",
+     "bytes": 18734
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "short01_diffuse_strands_62061bb342c8",
+     "mimeType": "image/png",
+     "bytes": 755151
+    },
+    {
+     "name": "hair_atlas_normal_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 34434
+    },
+    {
+     "name": "hair_atlas_v22",
+     "mimeType": "image/png",
+     "bytes": 328172
+    },
+    {
+     "name": "short02_diffuse_strands_a4e6cffab7e7",
+     "mimeType": "image/png",
+     "bytes": 466535
+    },
+    {
+     "name": "shoes03_diffuse_copy_96b176cca90b",
+     "mimeType": "image/jpeg",
+     "bytes": 58275
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    },
+    {
+     "name": "uniform_atlas_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 43444
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/m_white_full.png",
+    "_preview/m_white_face.png",
+    "_preview/m_white_hair1.png",
+    "_preview/m_white_hair2.png",
+    "_preview/m_white_pose.png"
+   ],
+   "hairStyles": [
+    "side",
+    "crew",
+    "fringe",
+    "shaved"
+   ],
+   "glasses": 3,
+   "bakedTop": false
+  },
+  "f_aodai_teacher": {
+   "file": "f_aodai_teacher.glb",
+   "bytes": 9949360,
+   "triangles": 64792,
+   "trianglesByMesh": {
+    "body": 16012,
+    "bottom": 2260,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 8474,
+    "hair_1": 4108,
+    "hair_2": 5518,
+    "hair_3": 1922,
+    "hair_4": 2248,
+    "hair_5": 5352,
+    "shoes": 740,
+    "teeth": 4440,
+    "top": 10382
+   },
+   "height": 1.5882,
+   "minY": -0.0,
+   "hipsRestHeight": 0.8729,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "hair_4",
+    "hair_5",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_4",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_5",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    }
+   ],
+   "images": [
+    {
+     "name": "middleage_lightskinned_female_diffuse2_skin_53f734ac7f9c",
+     "mimeType": "image/jpeg",
+     "bytes": 311908
+    },
+    {
+     "name": "head_f_aodai_teacher_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 101332
+    },
+    {
+     "name": "head_f_aodai_teacher_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 130816
+    },
+    {
+     "name": "head_f_aodai_teacher_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17516
+    },
+    {
+     "name": "silk_normal_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 9609
+    },
+    {
+     "name": "silk_base_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 2477
+    },
+    {
+     "name": "eyebrow005_brow_f_cd60af934831",
+     "mimeType": "image/png",
+     "bytes": 47580
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_01dc209cf8d5",
+     "mimeType": "image/jpeg",
+     "bytes": 18640
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "bob01_diffuse_strands_0cba7085a186",
+     "mimeType": "image/png",
+     "bytes": 547477
+    },
+    {
+     "name": "long01_diffuse_strands_ceeb096e1340",
+     "mimeType": "image/png",
+     "bytes": 432243
+    },
+    {
+     "name": "braid01_diffuse_strands_091d0541af15",
+     "mimeType": "image/png",
+     "bytes": 419060
+    },
+    {
+     "name": "short03_diffuse_strands_0d1d37f200d4",
+     "mimeType": "image/png",
+     "bytes": 406632
+    },
+    {
+     "name": "bob02_diffuse_strands_3e5bfa1b70e9",
+     "mimeType": "image/png",
+     "bytes": 405072
+    },
+    {
+     "name": "ponytail01_diffuse_strands_99af011335df",
+     "mimeType": "image/png",
+     "bytes": 609571
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    },
+    {
+     "name": "embroidery_normal_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 36074
+    },
+    {
+     "name": "embroidery_base_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 33047
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_4": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_5": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/f_aodai_teacher_full.png",
+    "_preview/f_aodai_teacher_face.png",
+    "_preview/f_aodai_teacher_hair1.png",
+    "_preview/f_aodai_teacher_hair2.png",
+    "_preview/f_aodai_teacher_pose.png"
+   ],
+   "hairStyles": [
+    "bob",
+    "long",
+    "braid",
+    "pixie",
+    "bob_bangs",
+    "pony"
+   ],
+   "glasses": 3,
+   "bakedTop": false
+  },
+  "m_class": {
+   "file": "m_class.glb",
+   "bytes": 7735652,
+   "triangles": 55163,
+   "trianglesByMesh": {
+    "body": 17268,
+    "bottom": 2626,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 3678,
+    "hair_1": 4144,
+    "hair_2": 3344,
+    "hair_3": 4144,
+    "shoes": 2744,
+    "teeth": 4439,
+    "top": 9440
+   },
+   "height": 1.674,
+   "minY": -0.0,
+   "hipsRestHeight": 0.9241,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    }
+   ],
+   "images": [
+    {
+     "name": "young_lightskinned_male_diffuse3_skin_0665f75dc0dd",
+     "mimeType": "image/jpeg",
+     "bytes": 329284
+    },
+    {
+     "name": "head_m_class_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 103323
+    },
+    {
+     "name": "head_m_class_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 107652
+    },
+    {
+     "name": "head_m_class_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17376
+    },
+    {
+     "name": "male_elegantsuit01_diffuse_flat_a624b1a8686f",
+     "mimeType": "image/jpeg",
+     "bytes": 23196
+    },
+    {
+     "name": "eyebrow001_brow_m_0ca8b24d41e4",
+     "mimeType": "image/png",
+     "bytes": 59102
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_7a6afc8d4e7f",
+     "mimeType": "image/jpeg",
+     "bytes": 18734
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "short01_diffuse_strands_62061bb342c8",
+     "mimeType": "image/png",
+     "bytes": 755151
+    },
+    {
+     "name": "hair_atlas_normal_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 34434
+    },
+    {
+     "name": "hair_atlas_v22",
+     "mimeType": "image/png",
+     "bytes": 328172
+    },
+    {
+     "name": "short02_diffuse_strands_a4e6cffab7e7",
+     "mimeType": "image/png",
+     "bytes": 466535
+    },
+    {
+     "name": "shoes05_diffuse_flat_c716d069cb46",
+     "mimeType": "image/jpeg",
+     "bytes": 29306
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    },
+    {
+     "name": "tee_atlas_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 47994
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/m_class_full.png",
+    "_preview/m_class_face.png",
+    "_preview/m_class_hair1.png",
+    "_preview/m_class_hair2.png",
+    "_preview/m_class_pose.png"
+   ],
+   "hairStyles": [
+    "side",
+    "crew",
+    "fringe",
+    "shaved"
+   ],
+   "glasses": 3,
+   "bakedTop": true
+  },
+  "f_class": {
+   "file": "f_class.glb",
+   "bytes": 10199448,
+   "triangles": 66486,
+   "trianglesByMesh": {
+    "body": 17472,
+    "bottom": 1712,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 8474,
+    "hair_1": 4108,
+    "hair_2": 5518,
+    "hair_3": 1922,
+    "hair_4": 2248,
+    "hair_5": 5352,
+    "shoes": 2776,
+    "teeth": 4440,
+    "top": 9128
+   },
+   "height": 1.5765,
+   "minY": -0.0,
+   "hipsRestHeight": 0.8542,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "hair_4",
+    "hair_5",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_4",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_5",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    }
+   ],
+   "images": [
+    {
+     "name": "young_lightskinned_female_diffuse3_skin_de3114688372",
+     "mimeType": "image/jpeg",
+     "bytes": 299769
+    },
+    {
+     "name": "head_f_class_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 101678
+    },
+    {
+     "name": "head_f_class_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 129686
+    },
+    {
+     "name": "head_f_class_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17511
+    },
+    {
+     "name": "female_casualsuit01_normal_normal_d967622a1674",
+     "mimeType": "image/jpeg",
+     "bytes": 51224
+    },
+    {
+     "name": "female_casualsuit01_diffuse_highpass_ee7f4d0c4cdf",
+     "mimeType": "image/jpeg",
+     "bytes": 139129
+    },
+    {
+     "name": "eyebrow005_brow_f_cd60af934831",
+     "mimeType": "image/png",
+     "bytes": 47580
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_5551e5d312ac",
+     "mimeType": "image/jpeg",
+     "bytes": 18712
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "bob01_diffuse_strands_0cba7085a186",
+     "mimeType": "image/png",
+     "bytes": 547477
+    },
+    {
+     "name": "long01_diffuse_strands_ceeb096e1340",
+     "mimeType": "image/png",
+     "bytes": 432243
+    },
+    {
+     "name": "braid01_diffuse_strands_091d0541af15",
+     "mimeType": "image/png",
+     "bytes": 419060
+    },
+    {
+     "name": "short03_diffuse_strands_0d1d37f200d4",
+     "mimeType": "image/png",
+     "bytes": 406632
+    },
+    {
+     "name": "bob02_diffuse_strands_3e5bfa1b70e9",
+     "mimeType": "image/png",
+     "bytes": 405072
+    },
+    {
+     "name": "ponytail01_diffuse_strands_99af011335df",
+     "mimeType": "image/png",
+     "bytes": 609571
+    },
+    {
+     "name": "shoes06_diffuse_flat_896785442f09",
+     "mimeType": "image/jpeg",
+     "bytes": 27300
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    },
+    {
+     "name": "tee_atlas_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 47994
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_4": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_5": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/f_class_full.png",
+    "_preview/f_class_face.png",
+    "_preview/f_class_hair1.png",
+    "_preview/f_class_hair2.png",
+    "_preview/f_class_pose.png"
+   ],
+   "hairStyles": [
+    "bob",
+    "long",
+    "braid",
+    "pixie",
+    "bob_bangs",
+    "pony"
+   ],
+   "glasses": 3,
+   "bakedTop": true
+  },
+  "f_class_skirt": {
+   "file": "f_class_skirt.glb",
+   "bytes": 10150492,
+   "triangles": 69022,
+   "trianglesByMesh": {
+    "body": 19512,
+    "bottom": 1920,
+    "eyebrows": 192,
+    "eyelashes": 368,
+    "eyes": 172,
+    "glasses_0": 868,
+    "glasses_1": 868,
+    "glasses_2": 868,
+    "hair_0": 8474,
+    "hair_1": 4108,
+    "hair_2": 5518,
+    "hair_3": 1922,
+    "hair_4": 2248,
+    "hair_5": 5352,
+    "shoes": 3064,
+    "teeth": 4440,
+    "top": 9128
+   },
+   "height": 1.5765,
+   "minY": -0.0,
+   "hipsRestHeight": 0.8542,
+   "meshes": [
+    "body",
+    "bottom",
+    "eyebrows",
+    "eyelashes",
+    "eyes",
+    "glasses_0",
+    "glasses_1",
+    "glasses_2",
+    "hair_0",
+    "hair_1",
+    "hair_2",
+    "hair_3",
+    "hair_4",
+    "hair_5",
+    "shoes",
+    "teeth",
+    "top"
+   ],
+   "materials": [
+    {
+     "name": "body",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "head",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": true
+    },
+    {
+     "name": "bottom",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": true
+    },
+    {
+     "name": "eyebrows",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyelashes",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "eyes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "frame",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "lens",
+     "alphaMode": "BLEND",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_0",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_1",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_2",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_3",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_4",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "hair_5",
+     "alphaMode": "MASK",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    },
+    {
+     "name": "shoes",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "teeth",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": false,
+     "normalTexture": false
+    },
+    {
+     "name": "top",
+     "alphaMode": "OPAQUE",
+     "alphaCutoff": null,
+     "doubleSided": true,
+     "normalTexture": false
+    }
+   ],
+   "images": [
+    {
+     "name": "young_lightskinned_female_diffuse3_skin_de3114688372",
+     "mimeType": "image/jpeg",
+     "bytes": 299769
+    },
+    {
+     "name": "head_f_class_skirt_v22_normal",
+     "mimeType": "image/jpeg",
+     "bytes": 101678
+    },
+    {
+     "name": "head_f_class_skirt_v22_color",
+     "mimeType": "image/jpeg",
+     "bytes": 129686
+    },
+    {
+     "name": "head_f_class_skirt_v22_orm",
+     "mimeType": "image/jpeg",
+     "bytes": 17511
+    },
+    {
+     "name": "silk_normal_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 9609
+    },
+    {
+     "name": "silk_base_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 2477
+    },
+    {
+     "name": "eyebrow005_brow_f_cd60af934831",
+     "mimeType": "image/png",
+     "bytes": 47580
+    },
+    {
+     "name": "eyelashes01_lash_f2ccd02cca33",
+     "mimeType": "image/png",
+     "bytes": 109380
+    },
+    {
+     "name": "eye_painted_5551e5d312ac",
+     "mimeType": "image/jpeg",
+     "bytes": 18712
+    },
+    {
+     "name": "glasses_frame_v22",
+     "mimeType": "image/png",
+     "bytes": 212
+    },
+    {
+     "name": "glasses_lens_v22",
+     "mimeType": "image/png",
+     "bytes": 210
+    },
+    {
+     "name": "bob01_diffuse_strands_0cba7085a186",
+     "mimeType": "image/png",
+     "bytes": 547477
+    },
+    {
+     "name": "long01_diffuse_strands_ceeb096e1340",
+     "mimeType": "image/png",
+     "bytes": 432243
+    },
+    {
+     "name": "braid01_diffuse_strands_091d0541af15",
+     "mimeType": "image/png",
+     "bytes": 419060
+    },
+    {
+     "name": "short03_diffuse_strands_0d1d37f200d4",
+     "mimeType": "image/png",
+     "bytes": 406632
+    },
+    {
+     "name": "bob02_diffuse_strands_3e5bfa1b70e9",
+     "mimeType": "image/png",
+     "bytes": 405072
+    },
+    {
+     "name": "ponytail01_diffuse_strands_99af011335df",
+     "mimeType": "image/png",
+     "bytes": 609571
+    },
+    {
+     "name": "shoes06_diffuse_flat_896785442f09",
+     "mimeType": "image/jpeg",
+     "bytes": 27300
+    },
+    {
+     "name": "teeth_teeth_1f07578759a9",
+     "mimeType": "image/jpeg",
+     "bytes": 51598
+    },
+    {
+     "name": "tee_atlas_v22",
+     "mimeType": "image/jpeg",
+     "bytes": 47994
+    }
+   ],
+   "morphTargets": {
+    "body": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyebrows": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyelashes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "eyes": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "glasses_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_0": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_1": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_2": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_3": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_4": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "hair_5": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ],
+    "teeth": [
+     "face_1",
+     "face_2",
+     "face_3",
+     "face_4",
+     "face_5",
+     "face_6",
+     "age_teen",
+     "age_old",
+     "smile",
+     "brow_up",
+     "age_mid",
+     "smile_open",
+     "blink"
+    ]
+   },
+   "morphNormals": true,
+   "previews": [
+    "_preview/f_class_skirt_full.png",
+    "_preview/f_class_skirt_face.png",
+    "_preview/f_class_skirt_hair1.png",
+    "_preview/f_class_skirt_hair2.png",
+    "_preview/f_class_skirt_pose.png"
+   ],
+   "hairStyles": [
+    "bob",
+    "long",
+    "braid",
+    "pixie",
+    "bob_bangs",
+    "pony"
+   ],
+   "glasses": 3,
+   "bakedTop": true
+  }
+ },
+ "skeleton": {
+  "armatureNode": "Armature",
+  "root": "mixamorigHips",
+  "bones": [
+   {
+    "name": "mixamorigHips",
+    "parent": null
+   },
+   {
+    "name": "mixamorigLeftUpLeg",
+    "parent": "mixamorigHips"
+   },
+   {
+    "name": "mixamorigLeftLeg",
+    "parent": "mixamorigLeftUpLeg"
+   },
+   {
+    "name": "mixamorigLeftFoot",
+    "parent": "mixamorigLeftLeg"
+   },
+   {
+    "name": "mixamorigLeftToeBase",
+    "parent": "mixamorigLeftFoot"
+   },
+   {
+    "name": "mixamorigRightUpLeg",
+    "parent": "mixamorigHips"
+   },
+   {
+    "name": "mixamorigRightLeg",
+    "parent": "mixamorigRightUpLeg"
+   },
+   {
+    "name": "mixamorigRightFoot",
+    "parent": "mixamorigRightLeg"
+   },
+   {
+    "name": "mixamorigRightToeBase",
+    "parent": "mixamorigRightFoot"
+   },
+   {
+    "name": "mixamorigSpine",
+    "parent": "mixamorigHips"
+   },
+   {
+    "name": "mixamorigSpine1",
+    "parent": "mixamorigSpine"
+   },
+   {
+    "name": "mixamorigSpine2",
+    "parent": "mixamorigSpine1"
+   },
+   {
+    "name": "mixamorigLeftShoulder",
+    "parent": "mixamorigSpine2"
+   },
+   {
+    "name": "mixamorigLeftArm",
+    "parent": "mixamorigLeftShoulder"
+   },
+   {
+    "name": "mixamorigLeftForeArm",
+    "parent": "mixamorigLeftArm"
+   },
+   {
+    "name": "mixamorigLeftHand",
+    "parent": "mixamorigLeftForeArm"
+   },
+   {
+    "name": "mixamorigLeftHandIndex1",
+    "parent": "mixamorigLeftHand"
+   },
+   {
+    "name": "mixamorigLeftHandIndex2",
+    "parent": "mixamorigLeftHandIndex1"
+   },
+   {
+    "name": "mixamorigLeftHandIndex3",
+    "parent": "mixamorigLeftHandIndex2"
+   },
+   {
+    "name": "mixamorigLeftHandMiddle1",
+    "parent": "mixamorigLeftHand"
+   },
+   {
+    "name": "mixamorigLeftHandMiddle2",
+    "parent": "mixamorigLeftHandMiddle1"
+   },
+   {
+    "name": "mixamorigLeftHandMiddle3",
+    "parent": "mixamorigLeftHandMiddle2"
+   },
+   {
+    "name": "mixamorigLeftHandPinky1",
+    "parent": "mixamorigLeftHand"
+   },
+   {
+    "name": "mixamorigLeftHandPinky2",
+    "parent": "mixamorigLeftHandPinky1"
+   },
+   {
+    "name": "mixamorigLeftHandPinky3",
+    "parent": "mixamorigLeftHandPinky2"
+   },
+   {
+    "name": "mixamorigLeftHandRing1",
+    "parent": "mixamorigLeftHand"
+   },
+   {
+    "name": "mixamorigLeftHandRing2",
+    "parent": "mixamorigLeftHandRing1"
+   },
+   {
+    "name": "mixamorigLeftHandRing3",
+    "parent": "mixamorigLeftHandRing2"
+   },
+   {
+    "name": "mixamorigLeftHandThumb1",
+    "parent": "mixamorigLeftHand"
+   },
+   {
+    "name": "mixamorigLeftHandThumb2",
+    "parent": "mixamorigLeftHandThumb1"
+   },
+   {
+    "name": "mixamorigLeftHandThumb3",
+    "parent": "mixamorigLeftHandThumb2"
+   },
+   {
+    "name": "mixamorigNeck",
+    "parent": "mixamorigSpine2"
+   },
+   {
+    "name": "mixamorigHead",
+    "parent": "mixamorigNeck"
+   },
+   {
+    "name": "mixamorigRightShoulder",
+    "parent": "mixamorigSpine2"
+   },
+   {
+    "name": "mixamorigRightArm",
+    "parent": "mixamorigRightShoulder"
+   },
+   {
+    "name": "mixamorigRightForeArm",
+    "parent": "mixamorigRightArm"
+   },
+   {
+    "name": "mixamorigRightHand",
+    "parent": "mixamorigRightForeArm"
+   },
+   {
+    "name": "mixamorigRightHandIndex1",
+    "parent": "mixamorigRightHand"
+   },
+   {
+    "name": "mixamorigRightHandIndex2",
+    "parent": "mixamorigRightHandIndex1"
+   },
+   {
+    "name": "mixamorigRightHandIndex3",
+    "parent": "mixamorigRightHandIndex2"
+   },
+   {
+    "name": "mixamorigRightHandMiddle1",
+    "parent": "mixamorigRightHand"
+   },
+   {
+    "name": "mixamorigRightHandMiddle2",
+    "parent": "mixamorigRightHandMiddle1"
+   },
+   {
+    "name": "mixamorigRightHandMiddle3",
+    "parent": "mixamorigRightHandMiddle2"
+   },
+   {
+    "name": "mixamorigRightHandPinky1",
+    "parent": "mixamorigRightHand"
+   },
+   {
+    "name": "mixamorigRightHandPinky2",
+    "parent": "mixamorigRightHandPinky1"
+   },
+   {
+    "name": "mixamorigRightHandPinky3",
+    "parent": "mixamorigRightHandPinky2"
+   },
+   {
+    "name": "mixamorigRightHandRing1",
+    "parent": "mixamorigRightHand"
+   },
+   {
+    "name": "mixamorigRightHandRing2",
+    "parent": "mixamorigRightHandRing1"
+   },
+   {
+    "name": "mixamorigRightHandRing3",
+    "parent": "mixamorigRightHandRing2"
+   },
+   {
+    "name": "mixamorigRightHandThumb1",
+    "parent": "mixamorigRightHand"
+   },
+   {
+    "name": "mixamorigRightHandThumb2",
+    "parent": "mixamorigRightHandThumb1"
+   },
+   {
+    "name": "mixamorigRightHandThumb3",
+    "parent": "mixamorigRightHandThumb2"
+   }
+  ]
+ },
+ "restPose": {
+  "type": "A",
+  "upperArmDegreesBelowHorizontal": 48.7
+ },
+ "animations": {
+  "source": "cc0",
+  "file": "anims.glb",
+  "bytes": 1650460,
+  "fps": 30,
+  "retargetedOn": "m_white.glb",
+  "hipsRestHeight": 0.9311,
+  "tracks": "quaternion cho mọi xương + position chỉ cho mixamorigHips",
+  "clips": {
+   "sprint": {
+    "frames": 21,
+    "duration": 0.6667
+   },
+   "walk_formal": {
+    "frames": 41,
+    "duration": 1.3333
+   },
+   "talk": {
+    "frames": 89,
+    "duration": 2.9333
+   },
+   "sit_idle": {
+    "frames": 51,
+    "duration": 1.6667
+   },
+   "sit_talk": {
+    "frames": 89,
+    "duration": 2.9333
+   },
+   "sit_down": {
+    "frames": 40,
+    "duration": 1.3
+   },
+   "stand_up": {
+    "frames": 32,
+    "duration": 1.0333
+   },
+   "interact": {
+    "frames": 61,
+    "duration": 2.0
+   },
+   "pick_up": {
+    "frames": 26,
+    "duration": 0.8333
+   },
+   "idle": {
+    "frames": 76,
+    "duration": 2.5
+   },
+   "agree": {
+    "frames": 76,
+    "duration": 2.5
+   },
+   "headShake": {
+    "frames": 76,
+    "duration": 2.5
+   },
+   "walk": {
+    "frames": 34,
+    "duration": 1.1,
+    "rootSpeed": 1.365
+   },
+   "run": {
+    "frames": 23,
+    "duration": 0.7333,
+    "rootSpeed": 3.003
+   },
+   "walk_f": {
+    "frames": 44,
+    "duration": 1.4333,
+    "rootSpeed": 0.966
+   }
+  }
+ },
+ "aodaiBones": {
+  "f_aodai": {
+   "file": "f_aodai.glb",
+   "bones": [
+    {
+     "name": "aodaiFront1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9752,
+      0.1291
+     ],
+     "tail": [
+      0.0,
+      0.7404,
+      0.1252
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront2",
+     "parent": "aodaiFront1",
+     "head": [
+      0.0,
+      0.7404,
+      0.1252
+     ],
+     "tail": [
+      0.0,
+      0.5023,
+      0.1463
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront3",
+     "parent": "aodaiFront2",
+     "head": [
+      0.0,
+      0.5023,
+      0.1463
+     ],
+     "tail": [
+      0.0,
+      0.2635,
+      0.1716
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront4",
+     "parent": "aodaiFront3",
+     "head": [
+      0.0,
+      0.2635,
+      0.1716
+     ],
+     "tail": [
+      0.0,
+      0.027,
+      0.1864
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9752,
+      -0.025
+     ],
+     "tail": [
+      0.0,
+      0.7404,
+      -0.0687
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack2",
+     "parent": "aodaiBack1",
+     "head": [
+      0.0,
+      0.7404,
+      -0.0687
+     ],
+     "tail": [
+      0.0,
+      0.5023,
+      -0.0862
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack3",
+     "parent": "aodaiBack2",
+     "head": [
+      0.0,
+      0.5023,
+      -0.0862
+     ],
+     "tail": [
+      0.0,
+      0.2635,
+      -0.1034
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack4",
+     "parent": "aodaiBack3",
+     "head": [
+      0.0,
+      0.2635,
+      -0.1034
+     ],
+     "tail": [
+      0.0,
+      0.027,
+      -0.1099
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    }
+   ],
+   "note": "Trục dọc xương là +Y cục bộ. Quay quanh trục Z cục bộ một góc (forwardSign × góc dương) thì tà hất ra phía trước (+Z của glTF). Trục X cục bộ vuông góc với mặt tà. anims.glb không có track cho các xương này."
+  },
+  "f_aodai_teacher": {
+   "file": "f_aodai_teacher.glb",
+   "bones": [
+    {
+     "name": "aodaiFront1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9867,
+      0.1508
+     ],
+     "tail": [
+      0.0,
+      0.7686,
+      0.1395
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront2",
+     "parent": "aodaiFront1",
+     "head": [
+      0.0,
+      0.7686,
+      0.1395
+     ],
+     "tail": [
+      0.0,
+      0.5496,
+      0.1383
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront3",
+     "parent": "aodaiFront2",
+     "head": [
+      0.0,
+      0.5496,
+      0.1383
+     ],
+     "tail": [
+      0.0,
+      0.3304,
+      0.1502
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront4",
+     "parent": "aodaiFront3",
+     "head": [
+      0.0,
+      0.3304,
+      0.1502
+     ],
+     "tail": [
+      0.0,
+      0.1118,
+      0.1618
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9867,
+      -0.0852
+     ],
+     "tail": [
+      0.0,
+      0.7686,
+      -0.0827
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack2",
+     "parent": "aodaiBack1",
+     "head": [
+      0.0,
+      0.7686,
+      -0.0827
+     ],
+     "tail": [
+      0.0,
+      0.5496,
+      -0.0811
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack3",
+     "parent": "aodaiBack2",
+     "head": [
+      0.0,
+      0.5496,
+      -0.0811
+     ],
+     "tail": [
+      0.0,
+      0.3304,
+      -0.0956
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack4",
+     "parent": "aodaiBack3",
+     "head": [
+      0.0,
+      0.3304,
+      -0.0956
+     ],
+     "tail": [
+      0.0,
+      0.1118,
+      -0.1021
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    }
+   ],
+   "note": "Trục dọc xương là +Y cục bộ. Quay quanh trục Z cục bộ một góc (forwardSign × góc dương) thì tà hất ra phía trước (+Z của glTF). Trục X cục bộ vuông góc với mặt tà. anims.glb không có track cho các xương này."
+  },
+  "f_class_skirt": {
+   "file": "f_class_skirt.glb",
+   "bones": [
+    {
+     "name": "aodaiFront1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9791,
+      0.1124
+     ],
+     "tail": [
+      0.0,
+      0.8016,
+      0.1151
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront2",
+     "parent": "aodaiFront1",
+     "head": [
+      0.0,
+      0.8016,
+      0.1151
+     ],
+     "tail": [
+      0.0,
+      0.6242,
+      0.1423
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront3",
+     "parent": "aodaiFront2",
+     "head": [
+      0.0,
+      0.6242,
+      0.1423
+     ],
+     "tail": [
+      0.0,
+      0.4468,
+      0.1707
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront4",
+     "parent": "aodaiFront3",
+     "head": [
+      0.0,
+      0.4468,
+      0.1707
+     ],
+     "tail": [
+      0.0,
+      0.2693,
+      0.1991
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9791,
+      -0.0128
+     ],
+     "tail": [
+      0.0,
+      0.8016,
+      -0.0554
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack2",
+     "parent": "aodaiBack1",
+     "head": [
+      0.0,
+      0.8016,
+      -0.0554
+     ],
+     "tail": [
+      0.0,
+      0.6242,
+      -0.0826
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack3",
+     "parent": "aodaiBack2",
+     "head": [
+      0.0,
+      0.6242,
+      -0.0826
+     ],
+     "tail": [
+      0.0,
+      0.4468,
+      -0.111
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack4",
+     "parent": "aodaiBack3",
+     "head": [
+      0.0,
+      0.4468,
+      -0.111
+     ],
+     "tail": [
+      0.0,
+      0.2693,
+      -0.1394
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    }
+   ],
+   "note": "Trục dọc xương là +Y cục bộ. Quay quanh trục Z cục bộ một góc (forwardSign × góc dương) thì tà hất ra phía trước (+Z của glTF). Trục X cục bộ vuông góc với mặt tà. anims.glb không có track cho các xương này."
+  },
+  "f_wardrobe": {
+   "file": "f_wardrobe.glb",
+   "bones": [
+    {
+     "name": "aodaiFront1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9879,
+      0.1346
+     ],
+     "tail": [
+      0.0,
+      0.7504,
+      0.1303
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront2",
+     "parent": "aodaiFront1",
+     "head": [
+      0.0,
+      0.7504,
+      0.1303
+     ],
+     "tail": [
+      0.0,
+      0.5096,
+      0.1516
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront3",
+     "parent": "aodaiFront2",
+     "head": [
+      0.0,
+      0.5096,
+      0.1516
+     ],
+     "tail": [
+      0.0,
+      0.2681,
+      0.17
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront4",
+     "parent": "aodaiFront3",
+     "head": [
+      0.0,
+      0.2681,
+      0.17
+     ],
+     "tail": [
+      0.0,
+      0.029,
+      0.1853
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9879,
+      -0.0265
+     ],
+     "tail": [
+      0.0,
+      0.7504,
+      -0.0698
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack2",
+     "parent": "aodaiBack1",
+     "head": [
+      0.0,
+      0.7504,
+      -0.0698
+     ],
+     "tail": [
+      0.0,
+      0.5096,
+      -0.0845
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack3",
+     "parent": "aodaiBack2",
+     "head": [
+      0.0,
+      0.5096,
+      -0.0845
+     ],
+     "tail": [
+      0.0,
+      0.2681,
+      -0.1041
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack4",
+     "parent": "aodaiBack3",
+     "head": [
+      0.0,
+      0.2681,
+      -0.1041
+     ],
+     "tail": [
+      0.0,
+      0.029,
+      -0.1105
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    }
+   ],
+   "note": "Trục dọc xương là +Y cục bộ. Quay quanh trục Z cục bộ một góc (forwardSign × góc dương) thì tà hất ra phía trước (+Z của glTF). Trục X cục bộ vuông góc với mặt tà. anims.glb không có track cho các xương này."
+  },
+  "m_wardrobe": {
+   "file": "m_wardrobe.glb",
+   "bones": [],
+   "note": "Trục dọc xương là +Y cục bộ. Quay quanh trục Z cục bộ một góc (forwardSign × góc dương) thì tà hất ra phía trước (+Z của glTF). Trục X cục bộ vuông góc với mặt tà. anims.glb không có track cho các xương này."
+  }
+ },
+ "animations_anims_cc0": {
+  "source": "cc0",
+  "file": "anims_cc0.glb",
+  "bytes": 1650268,
+  "fps": 30,
+  "retargetedOn": "m_white.glb",
+  "hipsRestHeight": 0.9311,
+  "tracks": "quaternion cho mọi xương + position chỉ cho mixamorigHips",
+  "clips": {
+   "idle": {
+    "frames": 76,
+    "duration": 2.5
+   },
+   "agree": {
+    "frames": 76,
+    "duration": 2.5
+   },
+   "headShake": {
+    "frames": 76,
+    "duration": 2.5
+   },
+   "sprint": {
+    "frames": 21,
+    "duration": 0.6667
+   },
+   "walk_formal": {
+    "frames": 41,
+    "duration": 1.3333
+   },
+   "talk": {
+    "frames": 89,
+    "duration": 2.9333
+   },
+   "sit_idle": {
+    "frames": 51,
+    "duration": 1.6667
+   },
+   "sit_talk": {
+    "frames": 89,
+    "duration": 2.9333
+   },
+   "sit_down": {
+    "frames": 40,
+    "duration": 1.3
+   },
+   "stand_up": {
+    "frames": 32,
+    "duration": 1.0333
+   },
+   "interact": {
+    "frames": 61,
+    "duration": 2.0
+   },
+   "pick_up": {
+    "frames": 26,
+    "duration": 0.8333
+   },
+   "walk": {
+    "frames": 34,
+    "duration": 1.1,
+    "rootSpeed": 1.365
+   },
+   "run": {
+    "frames": 23,
+    "duration": 0.7333,
+    "rootSpeed": 3.003
+   },
+   "walk_f": {
+    "frames": 44,
+    "duration": 1.4333,
+    "rootSpeed": 0.966
+   }
+  }
+ },
+ "poses": {
+  "file": "poses.glb",
+  "bytes": 3335700,
+  "fps": 30,
+  "frames": 60,
+  "hipsRestHeight": 0.9311,
+  "clips": [
+   "pose_peace",
+   "pose_peace_f",
+   "pose_peace2",
+   "pose_peace2_f",
+   "pose_heart",
+   "pose_heart_f",
+   "pose_bigheart",
+   "pose_bigheart_f",
+   "pose_wave",
+   "pose_wave_f",
+   "pose_thumb",
+   "pose_thumb_f",
+   "pose_hips",
+   "pose_hips_f",
+   "pose_cross",
+   "pose_cross_f",
+   "pose_chin",
+   "pose_chin_f",
+   "pose_grace",
+   "pose_grace_f",
+   "pose_cheer",
+   "pose_cheer_f",
+   "pose_squat",
+   "pose_squat_f"
+  ],
+  "note": "Clip hậu tố _f giải trên bộ xương nữ (f_white); kênh vị trí hông đã quy về hipsRestHeight này."
+ },
+ "wardrobe": {
+  "f": {
+   "file": "f_wardrobe.glb",
+   "height": 1.5769,
+   "hipsRestHeight": 0.8716,
+   "hairStyles": [
+    "bob",
+    "long",
+    "braid",
+    "pixie",
+    "bob_bangs",
+    "pony"
+   ],
+   "glasses": 3,
+   "skin": [
+    "skin_head",
+    "skin_torso",
+    "skin_upperarm",
+    "skin_forearm",
+    "skin_hand",
+    "skin_hip",
+    "skin_knee",
+    "skin_shin",
+    "skin_foot"
+   ],
+   "tops": [
+    {
+     "id": "uniform",
+     "mesh": "top_uniform",
+     "label": "Sơ mi đồng phục",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee"
+     ]
+    },
+    {
+     "id": "class",
+     "mesh": "top_class",
+     "label": "Áo lớp",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": true
+    },
+    {
+     "id": "polo",
+     "mesh": "top_polo",
+     "label": "Áo polo",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#1f2a4d",
+      "#7a2d3a",
+      "#2f6b4f",
+      "#f2c6cf"
+     ]
+    },
+    {
+     "id": "aodai",
+     "mesh": "top_aodai",
+     "label": "Áo dài cổ tàu",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm",
+      "skin_forearm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#f2c6cf",
+      "#8e1b2c",
+      "#f1e6cf",
+      "#3fa7a0",
+      "#b79ad6"
+     ],
+     "flaps": true,
+     "bottoms": [
+      "aodai"
+     ]
+    },
+    {
+     "id": "aodai_modern",
+     "mesh": "top_aodai_modern",
+     "label": "Áo dài cách tân",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": false,
+     "tint": "#f2c6cf",
+     "tints": [
+      "#f4f3ee",
+      "#f2c6cf",
+      "#8e1b2c",
+      "#f1e6cf",
+      "#3fa7a0",
+      "#b79ad6"
+     ],
+     "flaps": true,
+     "bottoms": [
+      "aodai"
+     ]
+    },
+    {
+     "id": "shirt",
+     "mesh": "top_shirt",
+     "label": "Sơ mi dài tay",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm",
+      "skin_forearm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#cfe0f2",
+      "#f2d5dc"
+     ]
+    },
+    {
+     "id": "jacket",
+     "mesh": "top_jacket",
+     "label": "Áo khoác đồng phục",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm",
+      "skin_forearm"
+     ],
+     "baked": false,
+     "tint": "#1f2a4d",
+     "tints": [
+      "#1f2a4d",
+      "#1c1c22"
+     ]
+    },
+    {
+     "id": "pe",
+     "mesh": "top_pe",
+     "label": "Áo thể dục",
+     "hides": [
+      "skin_torso"
+     ],
+     "baked": false,
+     "tint": "#d9dde6",
+     "tints": [
+      "#d9dde6",
+      "#f4f3ee",
+      "#1f2a4d"
+     ]
+    }
+   ],
+   "bottoms": [
+    {
+     "id": "pe",
+     "mesh": "bottom_pe",
+     "label": "Quần thể dục",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#1f2a4d",
+     "tints": [
+      "#1f2a4d",
+      "#1c1c22",
+      "#6b6f78"
+     ]
+    },
+    {
+     "id": "aodai",
+     "mesh": "bottom_aodai",
+     "label": "Quần lụa",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#1c1c22",
+      "#f1e6cf"
+     ]
+    },
+    {
+     "id": "trousers",
+     "mesh": "bottom_trousers",
+     "label": "Quần âu",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#1c1c22",
+      "#1f2a4d",
+      "#6b6f78",
+      "#c9b79a"
+     ]
+    },
+    {
+     "id": "jeans",
+     "mesh": "bottom_jeans",
+     "label": "Quần bò ống rộng",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#3f5f9a",
+     "tints": [
+      "#3f5f9a",
+      "#1c1c22",
+      "#6b7f9a"
+     ]
+    },
+    {
+     "id": "skirt_denim",
+     "mesh": "bottom_skirt_denim",
+     "label": "Chân váy bò",
+     "hides": [
+      "skin_hip",
+      "skin_knee"
+     ],
+     "baked": false,
+     "tint": "#3f5f9a",
+     "tints": [
+      "#3f5f9a",
+      "#1c1c22",
+      "#c9b79a",
+      "#7a2d3a"
+     ],
+     "flaps": true
+    },
+    {
+     "id": "skirt",
+     "mesh": "bottom_skirt",
+     "label": "Chân váy dài",
+     "hides": [
+      "skin_hip",
+      "skin_knee"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#3f5f9a",
+      "#1c1c22",
+      "#c9b79a",
+      "#7a2d3a"
+     ],
+     "flaps": true
+    }
+   ],
+   "shoes": [
+    {
+     "id": "sneakers",
+     "mesh": "shoes_sneakers",
+     "label": "Giày thể thao",
+     "hides": [
+      "skin_foot"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#1c1c22",
+      "#c9ccd4"
+     ]
+    },
+    {
+     "id": "dress",
+     "mesh": "shoes_dress",
+     "label": "Giày bệt",
+     "hides": [
+      "skin_foot"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#1c1c22",
+      "#f4f3ee",
+      "#7a2d3a"
+     ]
+    },
+    {
+     "id": "heels",
+     "mesh": "shoes_heels",
+     "label": "Cao gót",
+     "hides": [
+      "skin_foot"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#1c1c22",
+      "#c9b79a",
+      "#7a2d3a",
+      "#f4f3ee"
+     ],
+     "lift": 0.0296,
+     "footPitch": 19.6
+    },
+    {
+     "id": "sandals",
+     "mesh": "shoes_sandals",
+     "label": "Dép quai hậu",
+     "hides": [],
+     "baked": false,
+     "tint": "#4a2f22",
+     "tints": [
+      "#4a2f22",
+      "#1c1c22",
+      "#c9b79a",
+      "#f4f3ee"
+     ],
+     "lift": 0.0027
+    }
+   ],
+   "bytes": 13889084,
+   "aodaiBones": [
+    {
+     "name": "aodaiFront1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9879,
+      0.1346
+     ],
+     "tail": [
+      0.0,
+      0.7504,
+      0.1303
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront2",
+     "parent": "aodaiFront1",
+     "head": [
+      0.0,
+      0.7504,
+      0.1303
+     ],
+     "tail": [
+      0.0,
+      0.5096,
+      0.1516
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront3",
+     "parent": "aodaiFront2",
+     "head": [
+      0.0,
+      0.5096,
+      0.1516
+     ],
+     "tail": [
+      0.0,
+      0.2681,
+      0.17
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront4",
+     "parent": "aodaiFront3",
+     "head": [
+      0.0,
+      0.2681,
+      0.17
+     ],
+     "tail": [
+      0.0,
+      0.029,
+      0.1853
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9879,
+      -0.0265
+     ],
+     "tail": [
+      0.0,
+      0.7504,
+      -0.0698
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack2",
+     "parent": "aodaiBack1",
+     "head": [
+      0.0,
+      0.7504,
+      -0.0698
+     ],
+     "tail": [
+      0.0,
+      0.5096,
+      -0.0845
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack3",
+     "parent": "aodaiBack2",
+     "head": [
+      0.0,
+      0.5096,
+      -0.0845
+     ],
+     "tail": [
+      0.0,
+      0.2681,
+      -0.1041
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack4",
+     "parent": "aodaiBack3",
+     "head": [
+      0.0,
+      0.2681,
+      -0.1041
+     ],
+     "tail": [
+      0.0,
+      0.029,
+      -0.1105
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    }
+   ]
+  },
+  "m": {
+   "file": "m_wardrobe.glb",
+   "height": 1.7287,
+   "hipsRestHeight": 0.9861,
+   "hairStyles": [
+    "side",
+    "crew",
+    "fringe",
+    "shaved"
+   ],
+   "glasses": 3,
+   "skin": [
+    "skin_head",
+    "skin_torso",
+    "skin_upperarm",
+    "skin_forearm",
+    "skin_hand",
+    "skin_hip",
+    "skin_knee",
+    "skin_shin",
+    "skin_foot"
+   ],
+   "tops": [
+    {
+     "id": "uniform",
+     "mesh": "top_uniform",
+     "label": "Sơ mi đồng phục",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#cfe0f2"
+     ]
+    },
+    {
+     "id": "class",
+     "mesh": "top_class",
+     "label": "Áo lớp",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": true
+    },
+    {
+     "id": "polo",
+     "mesh": "top_polo",
+     "label": "Áo polo",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": false,
+     "tint": "#1f2a4d",
+     "tints": [
+      "#1f2a4d",
+      "#f4f3ee",
+      "#7a2d3a",
+      "#2f6b4f",
+      "#6b6f78"
+     ]
+    },
+    {
+     "id": "shirt",
+     "mesh": "top_shirt",
+     "label": "Sơ mi dài tay",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm",
+      "skin_forearm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#cfe0f2",
+      "#f2d5dc"
+     ]
+    },
+    {
+     "id": "jacket",
+     "mesh": "top_jacket",
+     "label": "Áo khoác đồng phục",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm",
+      "skin_forearm"
+     ],
+     "baked": false,
+     "tint": "#1f2a4d",
+     "tints": [
+      "#1f2a4d",
+      "#1c1c22"
+     ]
+    },
+    {
+     "id": "pe",
+     "mesh": "top_pe",
+     "label": "Áo thể dục",
+     "hides": [
+      "skin_torso"
+     ],
+     "baked": false,
+     "tint": "#d9dde6",
+     "tints": [
+      "#d9dde6",
+      "#f4f3ee",
+      "#1f2a4d"
+     ]
+    }
+   ],
+   "bottoms": [
+    {
+     "id": "pe",
+     "mesh": "bottom_pe",
+     "label": "Quần thể dục",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#1f2a4d",
+     "tints": [
+      "#1f2a4d",
+      "#1c1c22",
+      "#6b6f78"
+     ]
+    },
+    {
+     "id": "trousers",
+     "mesh": "bottom_trousers",
+     "label": "Quần âu",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#1c1c22",
+      "#1f2a4d",
+      "#6b6f78",
+      "#c9b79a"
+     ]
+    },
+    {
+     "id": "jeans",
+     "mesh": "bottom_jeans",
+     "label": "Quần bò",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#3f5f9a",
+     "tints": [
+      "#3f5f9a",
+      "#1c1c22",
+      "#6b7f9a"
+     ]
+    },
+    {
+     "id": "khaki",
+     "mesh": "bottom_khaki",
+     "label": "Quần kaki",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#c9b79a",
+     "tints": [
+      "#c9b79a",
+      "#6b6f78",
+      "#4a4f3a"
+     ]
+    }
+   ],
+   "shoes": [
+    {
+     "id": "dress",
+     "mesh": "shoes_dress",
+     "label": "Giày da",
+     "hides": [
+      "skin_foot"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#1c1c22",
+      "#4a2f22"
+     ]
+    },
+    {
+     "id": "sneakers",
+     "mesh": "shoes_sneakers",
+     "label": "Giày thể thao",
+     "hides": [
+      "skin_foot"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#1c1c22",
+      "#c9ccd4"
+     ]
+    },
+    {
+     "id": "sandals",
+     "mesh": "shoes_sandals",
+     "label": "Dép quai hậu",
+     "hides": [],
+     "baked": false,
+     "tint": "#4a2f22",
+     "tints": [
+      "#4a2f22",
+      "#1c1c22",
+      "#c9b79a"
+     ],
+     "lift": -0.0116
+    }
+   ],
+   "bytes": 10867792,
+   "aodaiBones": []
+  },
+  "m_ai": {
+   "file": "m_wardrobe_ai.glb",
+   "height": 1.7287,
+   "hipsRestHeight": 0.9861,
+   "hairStyles": [
+    "side",
+    "crew",
+    "fringe",
+    "shaved"
+   ],
+   "glasses": 3,
+   "skin": [
+    "skin_head",
+    "skin_torso",
+    "skin_upperarm",
+    "skin_forearm",
+    "skin_hand",
+    "skin_hip",
+    "skin_knee",
+    "skin_shin",
+    "skin_foot"
+   ],
+   "tops": [
+    {
+     "id": "uniform",
+     "mesh": "top_uniform",
+     "label": "Sơ mi đồng phục",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#cfe0f2"
+     ]
+    },
+    {
+     "id": "class",
+     "mesh": "top_class",
+     "label": "Áo lớp",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": true
+    },
+    {
+     "id": "polo",
+     "mesh": "top_polo",
+     "label": "Áo polo",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": false,
+     "tint": "#1f2a4d",
+     "tints": [
+      "#1f2a4d",
+      "#f4f3ee",
+      "#7a2d3a",
+      "#2f6b4f",
+      "#6b6f78"
+     ]
+    },
+    {
+     "id": "shirt",
+     "mesh": "top_shirt",
+     "label": "Sơ mi dài tay",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm",
+      "skin_forearm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#cfe0f2",
+      "#f2d5dc"
+     ]
+    },
+    {
+     "id": "jacket",
+     "mesh": "top_jacket",
+     "label": "Áo khoác đồng phục",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm",
+      "skin_forearm"
+     ],
+     "baked": false,
+     "tint": "#1f2a4d",
+     "tints": [
+      "#1f2a4d",
+      "#1c1c22"
+     ]
+    },
+    {
+     "id": "pe",
+     "mesh": "top_pe",
+     "label": "Áo thể dục",
+     "hides": [
+      "skin_torso"
+     ],
+     "baked": false,
+     "tint": "#d9dde6",
+     "tints": [
+      "#d9dde6",
+      "#f4f3ee",
+      "#1f2a4d"
+     ]
+    }
+   ],
+   "bottoms": [
+    {
+     "id": "pe",
+     "mesh": "bottom_pe",
+     "label": "Quần thể dục",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#1f2a4d",
+     "tints": [
+      "#1f2a4d",
+      "#1c1c22",
+      "#6b6f78"
+     ]
+    },
+    {
+     "id": "trousers",
+     "mesh": "bottom_trousers",
+     "label": "Quần âu",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#1c1c22",
+      "#1f2a4d",
+      "#6b6f78",
+      "#c9b79a"
+     ]
+    },
+    {
+     "id": "jeans",
+     "mesh": "bottom_jeans",
+     "label": "Quần bò",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#3f5f9a",
+     "tints": [
+      "#3f5f9a",
+      "#1c1c22",
+      "#6b7f9a"
+     ]
+    },
+    {
+     "id": "khaki",
+     "mesh": "bottom_khaki",
+     "label": "Quần kaki",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#c9b79a",
+     "tints": [
+      "#c9b79a",
+      "#6b6f78",
+      "#4a4f3a"
+     ]
+    }
+   ],
+   "shoes": [
+    {
+     "id": "dress",
+     "mesh": "shoes_dress",
+     "label": "Giày da",
+     "hides": [
+      "skin_foot"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#1c1c22",
+      "#4a2f22"
+     ]
+    },
+    {
+     "id": "sneakers",
+     "mesh": "shoes_sneakers",
+     "label": "Giày thể thao",
+     "hides": [
+      "skin_foot"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#1c1c22",
+      "#c9ccd4"
+     ]
+    },
+    {
+     "id": "sandals",
+     "mesh": "shoes_sandals",
+     "label": "Dép quai hậu",
+     "hides": [],
+     "baked": false,
+     "tint": "#4a2f22",
+     "tints": [
+      "#4a2f22",
+      "#1c1c22",
+      "#c9b79a"
+     ],
+     "lift": -0.0116
+    }
+   ],
+   "bytes": 11402432,
+   "aodaiBones": [],
+   "heads": [
+    {
+     "id": 1,
+     "label": "Chín chắn",
+     "age": 42
+    },
+    {
+     "id": 2,
+     "label": "Trẻ trung",
+     "age": 28,
+     "morph": "head_2",
+     "textures": {
+      "head": "heads/m2/head.jpg",
+      "body": "heads/m2/body.jpg",
+      "headNormal": "heads/m2/head_n.jpg"
+     }
+    }
+   ]
+  },
+  "f_ai": {
+   "file": "f_wardrobe_ai.glb",
+   "height": 1.5769,
+   "hipsRestHeight": 0.8716,
+   "hairStyles": [
+    "bob",
+    "long",
+    "braid",
+    "pixie",
+    "bob_bangs",
+    "pony"
+   ],
+   "glasses": 3,
+   "skin": [
+    "skin_head",
+    "skin_torso",
+    "skin_upperarm",
+    "skin_forearm",
+    "skin_hand",
+    "skin_hip",
+    "skin_knee",
+    "skin_shin",
+    "skin_foot"
+   ],
+   "tops": [
+    {
+     "id": "uniform",
+     "mesh": "top_uniform",
+     "label": "Sơ mi đồng phục",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee"
+     ]
+    },
+    {
+     "id": "class",
+     "mesh": "top_class",
+     "label": "Áo lớp",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": true
+    },
+    {
+     "id": "polo",
+     "mesh": "top_polo",
+     "label": "Áo polo",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#1f2a4d",
+      "#7a2d3a",
+      "#2f6b4f",
+      "#f2c6cf"
+     ]
+    },
+    {
+     "id": "aodai",
+     "mesh": "top_aodai",
+     "label": "Áo dài cổ tàu",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm",
+      "skin_forearm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#f2c6cf",
+      "#8e1b2c",
+      "#f1e6cf",
+      "#3fa7a0",
+      "#b79ad6"
+     ],
+     "flaps": true,
+     "bottoms": [
+      "aodai"
+     ]
+    },
+    {
+     "id": "aodai_modern",
+     "mesh": "top_aodai_modern",
+     "label": "Áo dài cách tân",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm"
+     ],
+     "baked": false,
+     "tint": "#f2c6cf",
+     "tints": [
+      "#f4f3ee",
+      "#f2c6cf",
+      "#8e1b2c",
+      "#f1e6cf",
+      "#3fa7a0",
+      "#b79ad6"
+     ],
+     "flaps": true,
+     "bottoms": [
+      "aodai"
+     ]
+    },
+    {
+     "id": "shirt",
+     "mesh": "top_shirt",
+     "label": "Sơ mi dài tay",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm",
+      "skin_forearm"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#cfe0f2",
+      "#f2d5dc"
+     ]
+    },
+    {
+     "id": "jacket",
+     "mesh": "top_jacket",
+     "label": "Áo khoác đồng phục",
+     "hides": [
+      "skin_torso",
+      "skin_upperarm",
+      "skin_forearm"
+     ],
+     "baked": false,
+     "tint": "#1f2a4d",
+     "tints": [
+      "#1f2a4d",
+      "#1c1c22"
+     ]
+    },
+    {
+     "id": "pe",
+     "mesh": "top_pe",
+     "label": "Áo thể dục",
+     "hides": [
+      "skin_torso"
+     ],
+     "baked": false,
+     "tint": "#d9dde6",
+     "tints": [
+      "#d9dde6",
+      "#f4f3ee",
+      "#1f2a4d"
+     ]
+    }
+   ],
+   "bottoms": [
+    {
+     "id": "pe",
+     "mesh": "bottom_pe",
+     "label": "Quần thể dục",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#1f2a4d",
+     "tints": [
+      "#1f2a4d",
+      "#1c1c22",
+      "#6b6f78"
+     ]
+    },
+    {
+     "id": "aodai",
+     "mesh": "bottom_aodai",
+     "label": "Quần lụa",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#1c1c22",
+      "#f1e6cf"
+     ]
+    },
+    {
+     "id": "trousers",
+     "mesh": "bottom_trousers",
+     "label": "Quần âu",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#1c1c22",
+      "#1f2a4d",
+      "#6b6f78",
+      "#c9b79a"
+     ]
+    },
+    {
+     "id": "jeans",
+     "mesh": "bottom_jeans",
+     "label": "Quần bò ống rộng",
+     "hides": [
+      "skin_hip",
+      "skin_knee",
+      "skin_shin"
+     ],
+     "baked": false,
+     "tint": "#3f5f9a",
+     "tints": [
+      "#3f5f9a",
+      "#1c1c22",
+      "#6b7f9a"
+     ]
+    },
+    {
+     "id": "skirt_denim",
+     "mesh": "bottom_skirt_denim",
+     "label": "Chân váy bò",
+     "hides": [
+      "skin_hip",
+      "skin_knee"
+     ],
+     "baked": false,
+     "tint": "#3f5f9a",
+     "tints": [
+      "#3f5f9a",
+      "#1c1c22",
+      "#c9b79a",
+      "#7a2d3a"
+     ],
+     "flaps": true
+    },
+    {
+     "id": "skirt",
+     "mesh": "bottom_skirt",
+     "label": "Chân váy dài",
+     "hides": [
+      "skin_hip",
+      "skin_knee"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#3f5f9a",
+      "#1c1c22",
+      "#c9b79a",
+      "#7a2d3a"
+     ],
+     "flaps": true
+    }
+   ],
+   "shoes": [
+    {
+     "id": "sneakers",
+     "mesh": "shoes_sneakers",
+     "label": "Giày thể thao",
+     "hides": [
+      "skin_foot"
+     ],
+     "baked": false,
+     "tint": "#f4f3ee",
+     "tints": [
+      "#f4f3ee",
+      "#1c1c22",
+      "#c9ccd4"
+     ]
+    },
+    {
+     "id": "dress",
+     "mesh": "shoes_dress",
+     "label": "Giày bệt",
+     "hides": [
+      "skin_foot"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#1c1c22",
+      "#f4f3ee",
+      "#7a2d3a"
+     ]
+    },
+    {
+     "id": "heels",
+     "mesh": "shoes_heels",
+     "label": "Cao gót",
+     "hides": [
+      "skin_foot"
+     ],
+     "baked": false,
+     "tint": "#1c1c22",
+     "tints": [
+      "#1c1c22",
+      "#c9b79a",
+      "#7a2d3a",
+      "#f4f3ee"
+     ],
+     "lift": 0.0296,
+     "footPitch": 19.6
+    },
+    {
+     "id": "sandals",
+     "mesh": "shoes_sandals",
+     "label": "Dép quai hậu",
+     "hides": [],
+     "baked": false,
+     "tint": "#4a2f22",
+     "tints": [
+      "#4a2f22",
+      "#1c1c22",
+      "#c9b79a",
+      "#f4f3ee"
+     ],
+     "lift": 0.0027
+    }
+   ],
+   "bytes": 14684516,
+   "aodaiBones": [
+    {
+     "name": "aodaiFront1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9879,
+      0.1346
+     ],
+     "tail": [
+      0.0,
+      0.7504,
+      0.1303
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront2",
+     "parent": "aodaiFront1",
+     "head": [
+      0.0,
+      0.7504,
+      0.1303
+     ],
+     "tail": [
+      0.0,
+      0.5096,
+      0.1516
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront3",
+     "parent": "aodaiFront2",
+     "head": [
+      0.0,
+      0.5096,
+      0.1516
+     ],
+     "tail": [
+      0.0,
+      0.2681,
+      0.17
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiFront4",
+     "parent": "aodaiFront3",
+     "head": [
+      0.0,
+      0.2681,
+      0.17
+     ],
+     "tail": [
+      0.0,
+      0.029,
+      0.1853
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack1",
+     "parent": "mixamorigHips",
+     "head": [
+      0.0,
+      0.9879,
+      -0.0265
+     ],
+     "tail": [
+      0.0,
+      0.7504,
+      -0.0698
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack2",
+     "parent": "aodaiBack1",
+     "head": [
+      0.0,
+      0.7504,
+      -0.0698
+     ],
+     "tail": [
+      0.0,
+      0.5096,
+      -0.0845
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack3",
+     "parent": "aodaiBack2",
+     "head": [
+      0.0,
+      0.5096,
+      -0.0845
+     ],
+     "tail": [
+      0.0,
+      0.2681,
+      -0.1041
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    },
+    {
+     "name": "aodaiBack4",
+     "parent": "aodaiBack3",
+     "head": [
+      0.0,
+      0.2681,
+      -0.1041
+     ],
+     "tail": [
+      0.0,
+      0.029,
+      -0.1105
+     ],
+     "swingAxisLocal": "z",
+     "forwardSign": -1
+    }
+   ],
+   "heads": [
+    {
+     "id": 1,
+     "label": "Chín chắn",
+     "age": 42
+    },
+    {
+     "id": 2,
+     "label": "Trẻ trung",
+     "age": 27,
+     "morph": "head_2",
+     "textures": {
+      "head": "heads/f2/head.jpg",
+      "body": "heads/f2/body.jpg",
+      "headNormal": "heads/f2/head_n.jpg"
+     }
+    }
+   ]
+  }
+ }
+}
