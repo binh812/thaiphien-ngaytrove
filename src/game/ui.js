@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { QNAME, clamp, param } from '../engine/util.js';
 import { WEATHERS } from '../engine/sky.js';
 import { SKINS, HAIR_COLORS, HAIRS, OUTFITS, FACES, AGES, POSES, HAIR_LABELS, GLASSES } from './human.js';
-import { poseNames, hairStyles, modelFiles, wardrobe, OUTFIT_PRESETS } from './rigged.js';
+import { poseNames, hairStyles, modelFiles, wardrobe, OUTFIT_PRESETS, pickHead } from './rigged.js';
 
 const $ = (id) => document.getElementById(id);
 const LOCS = [
@@ -74,7 +74,7 @@ export function init(ctx) {
   }
   function headRow() {
     const w = wOf(), hs = w && w.heads; if (!hs || hs.length < 2) return '';
-    return `<div class="row"><label>Gương mặt</label>${sg(hs.map(h => [h.id, h.label || ('Mặt ' + h.id)]), look.head ?? hs[0].id, 'head')}</div>`;
+    return `<div class="row"><label>Gương mặt</label>${sg(hs.map(h => [h.id, h.label || ('Mặt ' + h.id)]), (pickHead(w, look) || hs[0]).id, 'head')}</div>`;
   }
   function wardrobeRows() {
     const w = wOf(); if (!w) return null; let html = '';

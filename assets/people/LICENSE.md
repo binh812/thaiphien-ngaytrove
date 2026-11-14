@@ -73,3 +73,5 @@ Bản hoạt hoạ Mixamo cũ (mục dưới) không còn nằm trong thư mục
 - Mặt thêm (14/11/2026): thư mục `heads/m2/`, `heads/f2/` (kết cấu `head.jpg`, `body.jpg`, `head_n.jpg`) và morph `head_2` trong hai tệp `*_wardrobe_ai.glb`
   được làm cùng cách, từ hai bản vẽ ba góc khác cũng do công cụ AI tạo sinh vẽ theo mô tả nhân vật HƯ CẤU (nam khoảng 28 tuổi, nữ khoảng 27 tuổi);
   không dựa trên ảnh hay danh tính người thật nào. Bản vẽ nguồn: `tools/blender/ai_heads/m2_head_sheet.png`, `f2_head_sheet.png`; đóng gói: `tools/blender/pack_head.py`.
+- Mặt số 3 (14/11/2026): `heads/m3/`, `heads/f3/` và morph `head_3`, cùng cách làm, từ hai bản vẽ ba góc khác do công cụ AI tạo sinh vẽ theo mô tả
+  nhân vật HƯ CẤU (nam và nữ khoảng 35 tuổi); không dựa trên ảnh hay danh tính người thật nào. Bản vẽ nguồn: `tools/blender/ai_heads/m3_head_sheet.png`, `f3_head_sheet.png`.

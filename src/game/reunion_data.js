@@ -13,26 +13,27 @@ export const SAMPLE_ROSTER = [
   'Hải, nam', 'Yến, nữ', 'Cường, nam', 'Diệp, nữ', 'Khánh, nam',
 ].join('\n');
 
+// head = gương mặt (1 chín chắn, 2 trẻ trung, 3 phúc hậu; thiếu mặt nào thì tự về mặt 1) để cả nhóm không chung một mặt
 // ngoại hình theo vị trí vai (0..6), mỗi giới một bộ: bạn trong danh sách là nam hay nữ thì lấy bộ tương ứng. Chỉ F[1] mặc váy (váy ngồi ghế băng bị xoè)
 const A = { age: 'mid', outfit: 'class' };
 export const LOOKS = {
   m: [
-    { ...A, gender: 'm', hair: 'side', hairColor: 0, glasses: 1, skin: 1, face: 2, height: 1.71, build: 1, stance: 'back' },
-    { ...A, gender: 'm', hair: 'fringe', hairColor: 1, skin: 1, face: 5, height: 1.68, build: 0, outfit: 'classJ', stance: 'side' },
-    { ...A, gender: 'm', hair: 'crew', hairColor: 0, skin: 2, face: 4, height: 1.74, build: 0, outfit: 'classJ', stance: 'side' },
-    { ...A, gender: 'm', hair: 'side', hairColor: 3, glasses: 2, skin: 1, face: 1, height: 1.66, build: 1, bottom: 'khaki', stance: 'front' },
-    { ...A, gender: 'm', hair: 'crew', hairColor: 0, skin: 2, face: 6, height: 1.69, build: 2, bottom: 'khaki', stance: 'side' },
-    { ...A, gender: 'm', hair: 'fringe', hairColor: 0, glasses: 2, skin: 0, face: 3, height: 1.72, build: 1, stance: 'side' },
-    { ...A, gender: 'm', hair: 'shaved', hairColor: 0, skin: 2, face: 0, height: 1.76, build: 1, outfit: 'classJ', stance: 'side' },
+    { ...A, gender: 'm', hair: 'side', hairColor: 0, glasses: 1, skin: 1, face: 2, height: 1.71, build: 1, stance: 'back', head: 1 },
+    { ...A, gender: 'm', hair: 'fringe', hairColor: 1, skin: 1, face: 5, height: 1.68, build: 0, outfit: 'classJ', stance: 'side', head: 3 },
+    { ...A, gender: 'm', hair: 'crew', hairColor: 0, skin: 2, face: 4, height: 1.74, build: 0, outfit: 'classJ', stance: 'side', head: 2 },
+    { ...A, gender: 'm', hair: 'side', hairColor: 3, glasses: 2, skin: 1, face: 1, height: 1.66, build: 1, bottom: 'khaki', stance: 'front', head: 3 },
+    { ...A, gender: 'm', hair: 'crew', hairColor: 0, skin: 2, face: 6, height: 1.69, build: 2, bottom: 'khaki', stance: 'side', head: 1 },
+    { ...A, gender: 'm', hair: 'fringe', hairColor: 0, glasses: 2, skin: 0, face: 3, height: 1.72, build: 1, stance: 'side', head: 2 },
+    { ...A, gender: 'm', hair: 'shaved', hairColor: 0, skin: 2, face: 0, height: 1.76, build: 1, outfit: 'classJ', stance: 'side', head: 3 },
   ],
   f: [
-    { ...A, gender: 'f', hair: 'bob', hairColor: 0, glasses: 1, skin: 0, face: 2, height: 1.58, build: 1, stance: 'front' },
-    { ...A, gender: 'f', hair: 'long', hairColor: 1, skin: 0, face: 4, height: 1.6, build: 0, outfit: 'classS', stance: 'front' },
-    { ...A, gender: 'f', hair: 'pony', hairColor: 0, skin: 1, face: 5, height: 1.62, build: 0, outfit: 'classJ', stance: 'side' },
-    { ...A, gender: 'f', hair: 'bob_bangs', hairColor: 2, skin: 0, face: 1, height: 1.56, build: 0, outfit: 'classJ', stance: 'side' },
-    { ...A, gender: 'f', hair: 'pixie', hairColor: 0, skin: 1, face: 6, height: 1.55, build: 2, stance: 'side' },
-    { ...A, gender: 'f', hair: 'braid', hairColor: 0, glasses: 2, skin: 1, face: 3, height: 1.54, build: 1, stance: 'front' },
-    { ...A, gender: 'f', hair: 'pixie', hairColor: 4, skin: 0, face: 0, height: 1.61, build: 1, outfit: 'classJ', stance: 'side' },
+    { ...A, gender: 'f', hair: 'bob', hairColor: 0, glasses: 1, skin: 0, face: 2, height: 1.58, build: 1, stance: 'front', head: 3 },
+    { ...A, gender: 'f', hair: 'long', hairColor: 1, skin: 0, face: 4, height: 1.6, build: 0, outfit: 'classS', stance: 'front', head: 2 },
+    { ...A, gender: 'f', hair: 'pony', hairColor: 0, skin: 1, face: 5, height: 1.62, build: 0, outfit: 'classJ', stance: 'side', head: 1 },
+    { ...A, gender: 'f', hair: 'bob_bangs', hairColor: 2, skin: 0, face: 1, height: 1.56, build: 0, outfit: 'classJ', stance: 'side', head: 2 },
+    { ...A, gender: 'f', hair: 'pixie', hairColor: 0, skin: 1, face: 6, height: 1.55, build: 2, stance: 'side', head: 3 },
+    { ...A, gender: 'f', hair: 'braid', hairColor: 0, glasses: 2, skin: 1, face: 3, height: 1.54, build: 1, stance: 'front', head: 1 },
+    { ...A, gender: 'f', hair: 'pixie', hairColor: 4, skin: 0, face: 0, height: 1.61, build: 1, outfit: 'classJ', stance: 'side', head: 2 },
   ],
 };
 

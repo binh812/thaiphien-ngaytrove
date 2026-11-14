@@ -113,7 +113,8 @@ export async function wardrobe() {
 }
 /** chọn món cho một ngoại hình: trả về { w, top, bottom, shoes, hide (tên lưới da bị che), colors } hoặc null nếu giới này chưa có tủ đồ */
 export function pickWardrobe(man, look) {
-  const gk = look.gender === 'f' ? 'f' : 'm', w = man.wardrobe && (param('ai', '1') !== '0' && man.wardrobe[gk + '_ai'] || man.wardrobe[gk]);      // mặc định dùng bản có da đầu chiếu từ bản vẽ; ?ai=0 để so với bản cũ if (!w || param('wardrobe', '1') === '0') return null;
+  const gk = look.gender === 'f' ? 'f' : 'm', w = man.wardrobe && (param('ai', '1') !== '0' && man.wardrobe[gk + '_ai'] || man.wardrobe[gk]);      // mặc định dùng bản có da đầu chiếu từ bản vẽ; ?ai=0 để so với bản cũ
+  if (!w || param('wardrobe', '1') === '0') return null;
   const P = OUTFIT_PRESETS[look.outfit] || {}, pick = (list, id) => (list || []).find(x => x.id === id) || null, first = (list) => (list && list[0]) || null;
   // bộ gợi ý cần một kiểu áo mà tủ đồ chưa có (áo khoác, thể dục…) → dùng tệp mỗi-bộ-một-tệp kiểu cũ thay vì mặc nhầm áo khác
   if (look.top === undefined && P.top && !(w.tops || []).some(x => x.id === P.top)) return null;
@@ -129,7 +130,7 @@ export function pickWardrobe(man, look) {
 const texLoader = new THREE.TextureLoader(), headTex = new Map();
 /** kết cấu rời của một gương mặt (assets/people/heads/…): nạp một lần, dùng chung; cùng quy ước với ảnh trong glb (không lật, sRGB cho ảnh màu) */
 function headTexture(path, srgb) {
-  if (!headTex.has(path)) headTex.set(path, texLoader.loadAsync(DIR + path).then((t) => { t.flipY = false; if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; }));
+  if (!headTex.has(path)) headTex.set(path, texLoader.loadAsync(DIR + path).then((t) => { t.flipY = false; if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; }, (e) => { headTex.delete(path); throw e; }));
   return headTex.get(path);
 }
 /** gương mặt dùng cho một ngoại hình: look.head (id) nếu có; không thì người 'teen'/'adult' lấy mặt trẻ nhất, còn lại lấy mặt đầu */
@@ -189,8 +190,12 @@ async function buildFrom(look, man, key, info, W) {
   const head = W ? pickHead(W.w, look) : null, hmaps = {};
   if (head && head.textures) {
     // nạp xong mới dựng, để nhân vật không chớp từ mặt này sang mặt khác; thiếu ảnh thì giữ mặt có sẵn trong tệp và báo một lần
-    try { for (const k in head.textures) hmaps[k] = await headTexture(head.textures[k], k !== 'headNormal'); }      // đường dẫn theo manifest
+    try { const ks = Object.keys(head.textures), ts = await Promise.all(ks.map(k => headTexture(head.textures[k], k !== 'headNormal'))); ks.forEach((k, i) => { hmaps[k] = ts[i]; }); }
     catch (e) { if (!missingWarned.has('head' + head.id)) { missingWarned.add('head' + head.id); console.warn('[người] không nạp được gương mặt ' + head.id + ', dùng mặt mặc định:', e && e.message ? e.message : e); } for (const k in hmaps) delete hmaps[k]; }
+  }
+  if (head && head.morph && Object.keys(hmaps).length) {
+    let has = false; gltf.scene.traverse((o) => { if (o.morphTargetDictionary && o.morphTargetDictionary[head.morph] !== undefined) has = true; });
+    if (!has) { if (!missingWarned.has('morph' + head.morph)) { missingWarned.add('morph' + head.morph); console.warn('[người] mô hình thiếu hình khối ' + head.morph + ', dùng mặt mặc định'); } for (const k in hmaps) delete hmaps[k]; }
   }
   if (W) {
     // mặt trẻ đã trẻ sẵn trong hình khối và da → chỉ pha thêm chút nét trẻ cho 'teen'; mặt 42 tuổi thì pha age_teen như cũ

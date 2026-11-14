@@ -195,6 +195,14 @@ def mesh_warp_field(cfg: dict, marks: dict, skin_points: np.ndarray):
         shift = rbf(points * 1000.0)
         length = np.linalg.norm(shift, axis=1, keepdims=True)
         shift *= np.minimum(1.0, cap / np.maximum(length, 1e-9))
+        puff = warp.get("cheek_puff")                         # má đầy: đẩy da quanh mốc `jaw_mouth` ra ngoài (ngang + hơi ra trước), tắt dần theo khoảng cách
+        if puff:
+            centre = marks["jaw_mouth"] + np.array(puff.get("offset_mm", [0.0, 0.0, 0.0])) / 1000.0
+            folded = points * np.array([1.0, 1.0, 1.0])
+            folded[:, 0] = np.abs(folded[:, 0])
+            weight = np.exp(-(np.linalg.norm(folded - centre, axis=1) / (puff["radius_mm"] / 1000.0)) ** 2) * smooth(0.004, 0.02, folded[:, 0])
+            shift[:, 0] += np.sign(points[:, 0]) * weight * puff["out_mm"] / 1000.0
+            shift[:, 2] += weight * puff.get("forward_mm", 0.0) / 1000.0
         return shift * smooth(warp["zero_below_y"], warp["full_above_y"], points[:, 1])[:, None]
 
     return field, {name: np.array(shift) for name, shift in zip(warp["move"], [s for s, src in zip(shifts, sources) if src[0] >= 0])}

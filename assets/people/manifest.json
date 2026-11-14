@@ -8034,7 +8034,7 @@
      "lift": -0.0116
     }
    ],
-   "bytes": 11402432,
+   "bytes": 11631712,
    "aodaiBones": [],
    "heads": [
     {
@@ -8051,6 +8051,17 @@
       "head": "heads/m2/head.jpg",
       "body": "heads/m2/body.jpg",
       "headNormal": "heads/m2/head_n.jpg"
+     }
+    },
+    {
+     "id": 3,
+     "label": "Phúc hậu",
+     "age": 35,
+     "morph": "head_3",
+     "textures": {
+      "head": "heads/m3/head.jpg",
+      "body": "heads/m3/body.jpg",
+      "headNormal": "heads/m3/head_n.jpg"
      }
     }
    ]
@@ -8390,7 +8401,7 @@
      "lift": 0.0027
     }
    ],
-   "bytes": 14684516,
+   "bytes": 15039412,
    "aodaiBones": [
     {
      "name": "aodaiFront1",
@@ -8536,6 +8547,17 @@
       "head": "heads/f2/head.jpg",
       "body": "heads/f2/body.jpg",
       "headNormal": "heads/f2/head_n.jpg"
+     }
+    },
+    {
+     "id": 3,
+     "label": "Hiền hậu",
+     "age": 35,
+     "morph": "head_3",
+     "textures": {
+      "head": "heads/f3/head.jpg",
+      "body": "heads/f3/body.jpg",
+      "headNormal": "heads/f3/head_n.jpg"
      }
     }
    ]
