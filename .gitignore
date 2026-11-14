@@ -14,3 +14,5 @@ assets/people/f_aodai.glb
 assets/people/f_aodai_teacher.glb
 assets/people/anims_cc0.glb
 tools/_req.mjs
+tools/_low.mjs
+/net_*.png

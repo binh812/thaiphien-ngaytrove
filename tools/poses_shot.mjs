@@ -16,7 +16,7 @@ try {
   page.on('console', (m) => { if (m.type() === 'error' && !/404/.test(m.text()) || m.type() === 'warn' && /người|chụp ảnh/.test(m.text())) console.log(`  ${m.type()}: ${m.text().slice(0, 300)}`); });
   page.on('pageerror', (e) => console.log('  LỖI TRANG:', String(e).slice(0, 600)));
   const cam = opt.cam || '41,1.05,58.9', lookAt = opt.look || '41,0.9,62.5';
-  await page.goto(`http://127.0.0.1:8137/?ui=0&cam=${cam}&look=${lookAt}&t=10.5&w=cloudy`, { waitUntil: 'load' });
+  await page.goto(`http://127.0.0.1:8137/?ui=0&q=high&cam=${cam}&look=${lookAt}&t=10.5&w=cloudy`, { waitUntil: 'load' });
   await page.waitForFunction('window.__ready === true || /Lỗi/.test(document.getElementById("loadMsg").textContent)', { timeout: 120000 });
   const poses = await page.evaluate(`(async()=>{const t=window.__tp,p=t.player;t.camera.fov=30;t.camera.updateProjectionMatrix();p.setLook(${look});p.st.started=true;const R=await import('/src/game/rigged.js');return await R.poseNames()})()`);
   console.log('dáng có trong tệp:', poses.join(', '));

@@ -57,9 +57,10 @@ export async function init(ctx) {
   const pcol = world.createCollider(RAPIER.ColliderDesc.capsule(HH, R).setCollisionGroups(G.PLAYER), pbody);
 
   const ray = new RAPIER.Ray({ x: 0, y: 0, z: 0 }, { x: 0, y: -1, z: 0 });
-  function cast(origin, dir, max, groups = 0xffff0003, exclude = pcol) {
+  /** pred (tuỳ chọn): hàm (collider) → false để tia bỏ qua khối đó */
+  function cast(origin, dir, max, groups = 0xffff0003, exclude = pcol, pred) {
     ray.origin.x = origin.x; ray.origin.y = origin.y; ray.origin.z = origin.z; ray.dir.x = dir.x; ray.dir.y = dir.y; ray.dir.z = dir.z;
-    const hit = world.castRay(ray, max, true, undefined, groups, exclude);
+    const hit = world.castRay(ray, max, true, undefined, groups, exclude, undefined, pred);
     return hit ? { toi: hit.timeOfImpact ?? hit.toi, collider: hit.collider, body: hit.collider.parent() } : null;
   }
 

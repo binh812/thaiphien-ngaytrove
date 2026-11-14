@@ -33,16 +33,16 @@ export function initFood(K) {
     if (order) { if (ctx.ui) ctx.ui.toast(K.fill(order.served ? F.servedElsewhere : F.waiting, { nm: order.nm }), 3.5); return; }
     if (!K.lock(OWNER)) return;
     try {
-      await ui.dialog.say(name, hello);      // người bán chào một câu rồi mới hỏi món
-      const i = await ui.dialog.choose(name, v.hello, [...v.menu.map(m => m[0]), F.cancel]); if (i >= v.menu.length) return;
+      if (hello) await ui.dialog.say(name, hello);      // quán không có người bán hiện hình: chào một câu rồi mới hỏi món (người bán có sẵn đã chào trong phần trò chuyện)
+      const i = await ui.dialog.choose(name, v.hello, [...v.menu.map(m => m[0]), F.cancel]); if (typeof i !== 'number' || i >= v.menu.length) return;
       const [nm, kind, color] = v.menu[i]; order = { v, nm, kind, color, served: false, t: 0, table: null, off: null }; if (ctx.ui) ctx.ui.toast(K.fill(F.ordered, { nm }), 5);
     } finally { ui.dialog.close(); K.unlock(OWNER); }
   }
   for (const v of D.VENDORS) {
     const n = v.npc && ctx.people && ctx.people.byId(v.npc);
-    if (n) { v.pos = n.h.g.position; n.it.label = F.label + n.c.n; n.it.fn = () => ask(v, n.c.n, n.c.say[n.i++ % n.c.say.length]); }      // người bán có sẵn: câu chào cũ của họ, rồi bảng chọn món
+    if (n) { v.pos = n.h.g.position; v.live = true; }      // người bán có sẵn: bấm E là trò chuyện (campus_talk.js), trong đó có lựa chọn "Gọi món"
     else if (v.at) { v.pos = new THREE.Vector3(v.at[0], v.at[1], v.at[2]); let k = 0; ctx.interact.push({ x: v.at[0], y: v.at[1] + 0.8, z: v.at[2], r: 2.2, label: F.label + v.seller, fn: () => ask(v, v.seller, v.greet[k++ % v.greet.length]) }); }
-    else console.warn('[sân trường] không có người bán "' + v.npc + '" (mức đồ hoạ thấp bỏ bớt nhân vật), bỏ quán này');
+    else console.warn('[sân trường] quán "' + v.id + '" không có người bán và không khai chỗ đặt quầy, bỏ quán này');
   }
   K.addHud(() => (state.food ? `🍜 ${state.food}` : ''));
 
@@ -83,5 +83,5 @@ export function initFood(K) {
       if (!K.play.sitting || r.mode !== 'hang') stopHosting();      // người chơi đứng dậy: cả nhóm đi theo tiếp
     }
   }
-  return { update, ask, stoolsNear, get order() { return order; }, get hosting() { return hosting; }, dish, vendors: D.VENDORS, eat: () => eatIt.fn() };
+  return { update, ask, stoolsNear, byNpc: (id) => D.VENDORS.find(v => v.npc === id && v.live) || null, get order() { return order; }, get hosting() { return hosting; }, dish, vendors: D.VENDORS, eat: () => eatIt.fn() };
 }

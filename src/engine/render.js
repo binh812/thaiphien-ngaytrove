@@ -5,6 +5,7 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 import { Q } from './util.js';
+import { installDepthVariants } from './depthvar.js';
 
 const VS = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4( position.xy, 0.0, 1.0 ); }';
 const DEPTH_FN = `
@@ -187,7 +188,7 @@ export function createPipeline(container, scene, camera) {
   if (!renderer.capabilities.isWebGL2 || !renderer.extensions.has('EXT_color_buffer_float')) throw new Error('Trình duyệt/GPU này không hỗ trợ WebGL2 với bộ đệm màu số thực, không chạy được bản đồ họa này.');
   const dpr = Math.min(window.devicePixelRatio || 1, Q.dpr);
   renderer.setPixelRatio(dpr); renderer.setSize(innerWidth, innerHeight);
-  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap; installDepthVariants();
   renderer.toneMapping = THREE.NoToneMapping; renderer.outputColorSpace = THREE.LinearSRGBColorSpace;   // tự tone map ở pass cuối
   renderer.info.autoReset = false;
   container.appendChild(renderer.domElement);

@@ -82,7 +82,7 @@ export function initFest(R) {
 
   /* ----- chào hỏi, chụp giúp ----- */
   async function greet(g) {
-    if (R.busy || g.helping) return; R.busy = true; R.lock(true); const def = g.def;
+    if (R.busy || g.helping || !R.lock(true)) return; R.busy = true; const def = g.def;
     try {
       await ui.dialog.say(def.nm, R.fill(def.hello[g.hi++ % def.hello.length]));
       if (!R.state.helped[def.id]) { const i = await ui.dialog.choose(def.nm, R.fill(def.ask), ['Để tôi chụp cho cả nhóm', 'Chào mọi người rồi đi tiếp']); if (i === 0) await help(g); }

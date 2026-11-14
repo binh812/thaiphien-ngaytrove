@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { canvasTex } from '../engine/textures.js';
 import { U } from '../engine/materials.js';
-import { mulberry32 } from '../engine/util.js';
+import { mulberry32, QNAME } from '../engine/util.js';
 import { stoolGeometry, stoolMaterial, stoolColor, STOOL } from './stool.js';
 
 const plastic = () => new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.42, metalness: 0 });
@@ -36,7 +36,10 @@ function makeCloth(ctx, f) {
   const mat = new THREE.MeshStandardMaterial({ map: f.tex || null, color: f.color ?? 0xffffff, side: THREE.DoubleSide, roughness: 0.85 });
   const mesh = new THREE.Mesh(geo, mat); mesh.castShadow = !f.small; mesh.receiveShadow = true; mesh.frustumCulled = false; ctx.scene.add(mesh);
   const cons = []; for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) { const a = j * NX + i; if (i < NX - 1) cons.push([a, a + 1, dx]); if (j < NY - 1) cons.push([a, a + NX, dy]); if (i < NX - 1 && j < NY - 1) cons.push([a, a + NX + 1, Math.hypot(dx, dy)]); }
-  return { pos, prev, geo, cons, NX, NY, f, seed: f.x * 3.1 + f.z, far: false };
+  // ràng buộc dẹt (kiểu số, bỏ cặp ghim cả hai đầu, trọng số đã tính sẵn): vòng lặp nóng không còn duyệt mảng của mảng và không gọi Math.hypot
+  const live = cons.filter(([a, b]) => !(a % NX === 0 && b % NX === 0)), cn = live.length, cA = new Int32Array(cn), cB = new Int32Array(cn), cL = new Float64Array(cn), cWA = new Float32Array(cn), cWB = new Float32Array(cn);
+  live.forEach(([a, b, L], i) => { const pa = a % NX === 0, pb = b % NX === 0; cA[i] = a * 3; cB[i] = b * 3; cL[i] = L; cWA[i] = pa ? 0 : pb ? 2 : 1; cWB[i] = pb ? 0 : pa ? 2 : 1; });
+  return { pos, prev, geo, cons, cn, cA, cB, cL, cWA, cWB, NX, NY, f, seed: f.x * 3.1 + f.z, far: false };
 }
 function stepCloth(c, dt, t, wind) {
   const { pos, prev, NX, NY, cons, f } = c, n = NX * NY, damp = 0.985, wx = (0.6 + wind * 3.2) * (f.dir || 1), g = -3.2;
@@ -48,9 +51,9 @@ function stepCloth(c, dt, t, wind) {
     prev[k] = pos[k]; prev[k + 1] = pos[k + 1]; prev[k + 2] = pos[k + 2];
     pos[k] += vx + ax * dt * dt; pos[k + 1] += vy + ay * dt * dt; pos[k + 2] += vz + az * dt * dt;
   }
-  for (let it = 0; it < 3; it++) for (const [a, b, L] of cons) {
-    const ka = a * 3, kb = b * 3, ex = pos[kb] - pos[ka], ey = pos[kb + 1] - pos[ka + 1], ez = pos[kb + 2] - pos[ka + 2], d = Math.hypot(ex, ey, ez) || 1e-6, k = (d - L) / d * 0.5, pa = a % NX === 0, pb = b % NX === 0;
-    if (pa && pb) continue; const wa = pa ? 0 : pb ? 2 : 1, wb = pb ? 0 : pa ? 2 : 1;
+  const { cn, cA, cB, cL, cWA, cWB } = c;
+  for (let it = 0; it < 3; it++) for (let ci = 0; ci < cn; ci++) {
+    const ka = cA[ci], kb = cB[ci], L = cL[ci], wa = cWA[ci], wb = cWB[ci], ex = pos[kb] - pos[ka], ey = pos[kb + 1] - pos[ka + 1], ez = pos[kb + 2] - pos[ka + 2], d = Math.sqrt(ex * ex + ey * ey + ez * ez) || 1e-6, k = (d - L) / d * 0.5;
     pos[ka] += ex * k * wa; pos[ka + 1] += ey * k * wa; pos[ka + 2] += ez * k * wa; pos[kb] -= ex * k * wb; pos[kb + 1] -= ey * k * wb; pos[kb + 2] -= ez * k * wb;
   }
   c.geo.attributes.position.needsUpdate = true; c.geo.computeVertexNormals();
@@ -120,14 +123,14 @@ export function init(ctx) {
   const cloths = B.flags.map(f => makeCloth(ctx, f)); let ct = 0;
   // Mô phỏng vải đo được 4,6–6,2 ms JS mỗi khung khi cờ nào cũng chạy đủ. Chỉ cờ ở gần (35 m) và nằm trong nón nhìn mới chạy mọi khung;
   // cờ xa trong tầm nhìn 2 khung một lần, cờ ngoài tầm nhìn 6 khung một lần (vẫn nhúc nhích để quay máy lại không thấy cờ đứng hình). So le theo số thứ tự.
-  const cfw = new THREE.Vector3(), CLOTH_NEAR2 = 35 * 35, CLOTH_CONE = 0.42; let cframe = 0;
+  const cfw = new THREE.Vector3(), CLOTH_NEAR2 = 35 * 35, CLOTH_CONE = 0.42, CLOTH_EVERY = QNAME === 'low' || QNAME === 'medium' ? 2 : 1; let cframe = 0;      // mức thấp/vừa: cờ gần mô phỏng 30 Hz (bước thời gian gấp đôi), mức cao giữ mọi khung  ctx.updaters.push((dt) => {
   ctx.updaters.push((dt) => {
     ct += dt; cframe++; const cp = ctx.camera.position; ctx.camera.getWorldDirection(cfw);
     for (let i = 0; i < cloths.length; i++) {
       const c = cloths[i], dx = c.f.x - cp.x, dy = (c.f.y || 3) - cp.y, dz = c.f.z - cp.z, d2 = dx * dx + dz * dz; if (d2 > (c.f.small ? 45 * 45 : 150 * 150)) continue;
-      const seen = d2 < 64 || (dx * cfw.x + dy * cfw.y + dz * cfw.z) / Math.sqrt(d2 + dy * dy) > CLOTH_CONE, every = seen ? (d2 < CLOTH_NEAR2 ? 1 : 2) : 6;
+      const seen = d2 < 64 || (dx * cfw.x + dy * cfw.y + dz * cfw.z) / Math.sqrt(d2 + dy * dy) > CLOTH_CONE, near = seen && d2 < CLOTH_NEAR2, every = seen ? (near ? CLOTH_EVERY : 2) : 6;
       if ((cframe + i) % every) continue;
-      stepCloth(c, Math.min(dt, 1 / 40), ct, U.uWind.value);
+      stepCloth(c, Math.min(dt * (near ? CLOTH_EVERY : 1), CLOTH_EVERY > 1 ? 1 / 30 : 1 / 40), ct, U.uWind.value);
     }
   });
   // màn LED
@@ -148,11 +151,12 @@ export function init(ctx) {
     const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3)); scene.add(new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: 0x15151a }))); }
   // mặt nước hồ
   const water = B.spots.filter(s => s.type === 'water'); if (water.length) ctx.updaters.push((dt) => { for (const w of water) { const nm = w.mesh.material.normalMap; if (nm) { nm.offset.x += dt * 0.012; nm.offset.y += dt * 0.007; } } });
-  // rổ: đếm bóng vào
+  // rổ: đếm bóng vào (campus_hoop.js tính điểm qua ctx.hoopHit nếu có)
   for (const s of B.spots.filter(s => s.type === 'hoop')) ctx.hoops.push(s);
   let score = 0;
-  ctx.updaters.push(() => { for (const b of ctx.balls) { const t = b.body.translation(); for (const h of ctx.hoops) { if (b.lastY > h.y && t.y <= h.y && (t.x - h.x) ** 2 + (t.z - h.z) ** 2 < 0.2 * 0.2) { score++; if (ctx.ui) ctx.ui.toast(`🏀 Vào rổ! (${score})`); if (ctx.audio) ctx.audio.swish(); } } b.lastY = t.y; } });
+  ctx.updaters.push(() => { for (const b of ctx.balls) { const t = b.body.translation(); for (const h of ctx.hoops) { if (b.lastY > h.y && t.y <= h.y && (t.x - h.x) ** 2 + (t.z - h.z) ** 2 < 0.2 * 0.2) { if (ctx.hoopHit) ctx.hoopHit(b, h); else { score++; if (ctx.ui) ctx.ui.toast(`🏀 Vào rổ! (${score})`); if (ctx.audio) ctx.audio.swish(); } } } b.lastY = t.y; } });
   // trống trường
-  const drum = B.spots.find(s => s.type === 'drum'); if (drum) ctx.interact.push({ x: drum.x, y: drum.y, z: drum.z, r: 2.3, label: 'Đánh trống trường', fn: () => { if (ctx.audio) ctx.audio.drum(); if (ctx.ui) ctx.ui.toast('🥁 Tùng! Tùng! Tùng! – Trống vào lớp rồi!'); } });
+  const drum = B.spots.find(s => s.type === 'drum'); if (drum) ctx.interact.push({ x: drum.x, y: drum.y, z: drum.z, r: 2.3, label: 'Đánh trống trường', fn: () => { const t = performance.now(); if (t - (drum.hitAt || -1e9) < 1300) return; drum.hitAt = t;      // một hồi trống xong mới đánh hồi kế
+      if (ctx.audio) ctx.audio.drum(); if (ctx.ui) ctx.ui.toast('🥁 Tùng! Tùng! Tùng! – Trống vào lớp rồi!'); for (const f of ctx.onDrum || []) f(drum); } });
   ctx.mangoSet = mangoSet;
 }

@@ -16,13 +16,15 @@ export function initLesson(R) {
   const o = P(0, AISLE), ob = P(-1, AISLE), toBoard = Math.atan2(ob.x - o.x, ob.z - o.z), toClass = toBoard + Math.PI, oy = P(0, AISLE + 1), toYard = Math.atan2(oy.x - o.x, oy.z - o.z);      // hướng nhìn lên bảng / từ bục xuống lớp
   const rowU = (j) => rw - 1.6 - (4 - j) * ROW_GAP, seat = ([c, j], off = BENCH) => ({ ...P(rowU(j) + off, SEAT_W[c]), u: rowU(j) + off, w: SEAT_W[c] });
   const door = { ...P(...DOOR_OUT), y: y0 }, tAt = P(...TEACHER_AT), tY = y0 + PODIUM, v3 = (p, y) => new THREE.Vector3(p.x, y, p.z);
-  const cam = (u, w, y, lu, lw, ly) => { const a = P(u, w), l = P(lu, lw); ctx.camera.position.set(a.x, y0 + y, a.z); ctx.camera.lookAt(l.x, y0 + ly, l.z); };
+  // cảnh cắt tĩnh: cam() chỉ đổi tư thế đích, giàn máy quay (camrig.js, chế độ 'lesson') mới ghi vào máy quay
+  const shotPos = new THREE.Vector3(), shotAt = new THREE.Vector3(), camLesson = (dt, out) => { out.pos.copy(shotPos); out.dir.copy(shotAt).sub(shotPos); };
+  const cam = (u, w, y, lu, lw, ly) => { const a = P(u, w), l = P(lu, lw); shotPos.set(a.x, y0 + y, a.z); shotAt.set(l.x, y0 + ly, l.z); };
   const tHead = v3(tAt, tY + 1.45);
 
   // cô chủ nhiệm: dùng cô chủ nhiệm (id chunhiem) của people.js; ở mức đồ hoạ thấp người đó không được dựng thì dựng riêng một cô cho tiết học
   let own = null; const borrowed = ctx.people && ctx.people.byId(D.TEACHER_ID);
   if (!borrowed) own = actors.add({ x: tAt.x, y: tY, z: tAt.z, f: toClass }, { gender: 'f', skin: 0, hair: 'bob', outfit: 'aodaiT', age: 'adult', height: 1.58, build: 1, stance: 'front' }, { off: true });
-  let home = null, sitting = true, active = false, skipped = false, shot = 0, prevCam = false, prevFp = false, lookV = new THREE.Vector3();
+  let home = null, sitting = true, active = false, skipped = false, shot = 0, prevFp = false, lookV = new THREE.Vector3();
   function teacherIn() {
     if (own) { own.off = false; actors.place(own, tAt.x, tY, tAt.z, toClass); actors.solid(own, false); return; }
     home = ctx.people.relocate(borrowed, tAt.x, tY, tAt.z, toClass); borrowed.script = { face: toClass, look: null };
@@ -34,15 +36,15 @@ export function initLesson(R) {
   function sit(sl) { const s = seat(sl.def.seat, sitting ? BENCH : STAND), a = sl.a; actors.place(a, s.x, y0, s.z, toBoard); a.face = toBoard; a.clip = sitting ? 'sit_idle' : null; a.look = tHead; a.pose = null; a.smile = null; a.off = false; sl.seated = true; }
   function setup() {
     sitting = R.present().every(sl => sl.a.h.rig);      // hình tạm dựng bằng mã (?people=0, nạp mô hình lỗi) không có clip ngồi: cả lớp đứng cạnh bàn
-    prevCam = ctx.fixedCam; ctx.fixedCam = true; prevFp = player.st.fp; player.st.fp = false; R.setMode('lesson'); teacherIn(); document.body.classList.add('rvCine');
+    prevFp = player.st.fp; player.st.fp = false; R.setMode('lesson'); teacherIn(); document.body.classList.add('rvCine');
     for (const sl of R.present()) { actors.solid(sl.a, false); sl.a.probe = false; sit(sl); }
     const late = R.slots.find(s => s.def.id === 'dung'); if (late.present) { late.a.off = true; late.seated = false; }      // bạn chuyên đi muộn: lúc điểm danh mới xuất hiện ở cửa
     const s = seat(ME_SEAT, sitting ? BENCH : STAND), st = player.st; st.pinned = true; st.pinBy = 'lesson'; st.clip = sitting ? 'sit_idle' : null; st.pose = null;
     player.pos.set(s.x, y0 + phys.HH + phys.R, s.z); phys.pbody.setTranslation(player.pos, true); phys.world.propagateModifiedBodyPositionsToColliders(); player.holder.rotation.y = toBoard;
-    cam(0.9, -4.2, 2.0, 4.4, -8, 0.8);
+    cam(0.9, -4.2, 2.0, 4.4, -8, 0.8); ctx.cam.setMode('lesson', camLesson);
   }
   function teardown() {
-    const st = player.st; document.body.classList.remove('rvCine'); st.pinned = false; st.pinBy = null; st.clip = null; st.fp = prevFp; ctx.fixedCam = prevCam; teacherOut();
+    const st = player.st; document.body.classList.remove('rvCine'); st.pinned = false; st.pinBy = null; st.clip = null; st.fp = prevFp; ctx.cam.clearMode('lesson'); teacherOut();
     R.present().forEach((sl, k) => { const p = P(DOOR_OUT[0] + 1.2 + (k >> 1) * 0.9, k % 2 ? -0.9 : -2.1), a = sl.a; a.off = false; a.clip = null; actors.place(a, p.x, y0, p.z, toBoard); });
     player.teleport(door.x, y0, door.z, toYard); R.setMode('follow');
   }
@@ -66,7 +68,7 @@ export function initLesson(R) {
     if (skipped) throw SKIP;
   }
   async function lines(arr, extra) { for (const [id, raw] of arr) await line(id, raw, extra); }
-  async function ask(name, q, opts) { if (skipped) throw SKIP; const i = await ui.dialog.choose(name, q, opts); if (skipped) throw SKIP; return i; }
+  async function ask(name, q, opts) { if (skipped) throw SKIP; const i = await ui.dialog.choose(name, q, opts); if (skipped) throw SKIP; return typeof i === 'number' ? i : 0; }
   function laugh() {
     const P_ = R.present(); for (const sl of P_) sl.a.smile = 0.95; setTimeout(() => { for (const sl of P_) if (R.mode === 'lesson') sl.a.smile = null; }, 2600);
     P_.filter((_, i) => (i + shot) % 3 === 0).forEach((sl, i) => ui.bubble(() => actors.head(sl.a, new THREE.Vector3()), i % 2 ? 'Hì hì!' : 'Ha ha ha!', 1.8));
@@ -125,7 +127,7 @@ export function initLesson(R) {
   }
 
   async function start() {
-    if (active || R.busy || R.mode !== 'follow') return; active = true; skipped = false; R.busy = true; R.lock(true);
+    if (active || R.busy || R.mode !== 'follow' || !R.lock(true)) return; active = true; skipped = false; R.busy = true;
     await ui.fade(true);
     try {
       setup(); ui.dialog.skippable(() => { skipped = true; ui.dialog.answer(0); ui.cardClose(); });

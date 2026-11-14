@@ -5,11 +5,12 @@ import * as THREE from 'three';
 import { param, Q } from '../engine/util.js';
 import { floorY } from './people.js';
 import * as D from './reunion_data.js';
-import { getUI } from './reunion_ui.js';
+import { getUI, typing } from './reunion_ui.js';
 import { makeActors } from './reunion_actors.js';
 import { loadClass, saveClass, parseRoster, isSample, buildClassForm } from './reunion_class.js';
 import { initLesson } from './reunion_lesson.js';
 import { initFest } from './reunion_fest.js';
+import { MATE_TOPICS, MATE_COMMON, MATE_HELLO, MATE_BACK, MATE_BYE } from './reunion_talk_data.js';
 
 const KEY = 'tp2_reunion';
 const GATE_PT = { x: 40.5, z: 49.7 }, SHOW_PT = { x: 36.5, z: -5.5 }, PHOTO_PT = { x: 41, z: 51.4 }, STAGE_PT = { x: 46, z: -2 };
@@ -33,7 +34,7 @@ export function init(ctx) {
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { if (!saveWarned) { saveWarned = true; console.warn('[ngày về] trình duyệt không cho lưu tiến trình:', e.message); } } };
   const male = () => player.getLook().gender !== 'f';
   const ground = (x, y, z, col) => floorY(phys, x, y, z, col ?? undefined);
-  const lock = (on) => { const st = player.st; if (on) { st.locked = 'reunion'; if (ctx.ui) ctx.ui.prompt(''); } else if (st.locked === 'reunion') st.locked = false; };      // khoá có chủ: không nhả nhầm khoá của module khác
+  const lock = (on) => { const st = player.st; if (on) { if (st.locked) return false; st.locked = 'reunion'; if (ctx.ui) ctx.ui.prompt(''); return true; } if (st.locked === 'reunion') st.locked = false; return true; };      // khoá có chủ: không nhả nhầm khoá của module khác
 
   /* ----- phân vai theo danh sách lớp ----- */
   const slots = D.MATES.map((def, i) => ({ def, i, a: null, present: false, name: '', note: '', g: def.g, lineI: 0, it: null, go: false, gave: -1 }));
@@ -57,14 +58,20 @@ export function init(ctx) {
     const P = present(); if (!P.length) return null;
     const c = P[sl.i % P.length]; return c === speaker && P.length > 1 ? P[(sl.i + 1) % P.length] : c;
   }
+  /** "hai mươi mấy năm": số năm từ lúc ra trường, tính theo năm cuối của khoá người chơi nhập; không đọc được thì nói chung chung */
+  function yearsAgo() {
+    const ys = String(cls.year).match(/\d{4}/g), n = ys ? new Date().getFullYear() - Number(ys[ys.length - 1]) : NaN;
+    if (!(n > 0 && n < 80)) return 'bao nhiêu năm'; if (n < 10) return 'mấy năm'; if (n < 20) return 'mười mấy năm';
+    return ['hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy'][Math.floor(n / 10) - 2] + (n % 10 ? ' mươi mấy năm' : ' mươi năm');
+  }
   /** điền ký hiệu thay thế (xem đầu reunion_data.js); speaker = vai đang nói */
   function fill(s, speaker, extra) {
     const out = s.replace(/\{(@?)(\w+)\}/g, (m, at, k) => {
       if (extra && k in extra) return extra[k];
       if (k === 'me') return cls.me || 'bạn hiền'; if (k === 'em') return cls.me ? 'em ' + cls.me : 'em';
       if (k === 'x') return male() ? 'ông' : 'bà'; if (k === 'ac') return male() ? 'anh' : 'chị'; if (k === 'Ac') return male() ? 'Anh' : 'Chị';
-      if (k === 'lop') return cls.cls; if (k === 'khoa') return cls.year;
-      if (k === 'vang') return absent.length ? absent[vangI++ % absent.length] : '';
+      if (k === 'lop') return cls.cls; if (k === 'khoa') return cls.year; if (k === 'nam') return yearsAgo();
+      if (k === 'vang') return absent.length ? absent[vangI++ % absent.length] : 'mấy đứa ở xa';
       const sl = slotFor(k, speaker); return sl ? (at ? (sl.g === 'm' ? 'thằng ' : 'cái ') : '') + sl.name : m;
     });
     return out.replace(/(^|[.!?]\s+)(\p{Ll})/gu, (m, a, b) => a + b.toUpperCase());      // tên/đại từ điền vào đầu câu thì viết hoa
@@ -91,13 +98,15 @@ export function init(ctx) {
 
   /* ----- chặng 1: gặp lại lớp mình ở cổng ----- */
   async function chat(sl) {
-    if (busy || !sl.present) return; busy = true; lock(true);
+    if (busy || !sl.present || !lock(true)) return; busy = true;
     try {
       const id = sl.def.id, sayAs = (raw, extra) => speak(id, raw, extra);
       if (!state.met.includes(id)) {
         if (custom && sl.note) await ui.dialog.say(cls.me || 'Bạn', fill(D.NOTE_GREET, null, { n: sl.name, note: sl.note }));
         await sayAs(sl.def.greet); state.met.push(id); save();
       } else {
+        const talk = ctx.campus && ctx.campus.talk;
+        if (talk) { await talk.converse(mateDesc(sl)); return; }      // trò chuyện theo chủ đề (campus_talk.js); không có module đó thì nói từng câu như cũ
         const n = sl.def.say.length; let raw = null;
         for (let k = 0; k < n && raw == null; k++) { const c = sl.def.say[sl.lineI++ % n]; if (text(c, sl) != null) raw = c; }      // bỏ qua câu không dùng được với danh sách hiện tại
         if (raw != null) await sayAs(raw);
@@ -105,6 +114,9 @@ export function init(ctx) {
       checkGate();
     } finally { ui.dialog.close(); lock(false); busy = false; }
   }
+  /** mô tả một bạn cùng lớp cho trình trò chuyện: bốn chủ đề riêng theo vai + hai chủ đề chung; bên này đã giữ khoá nên noLock */
+  const mateDesc = (sl) => ({ id: 'mate_' + sl.def.id, name: label(sl), short: sl.name, kind: 'mate', self: 'tôi', topics: [...(MATE_TOPICS[sl.def.id] || []), ...MATE_COMMON], hello: MATE_HELLO, back: MATE_BACK, bye: MATE_BYE,
+    fill: (s) => fill(s, sl), talk: (on) => { sl.a.clip = on ? 'talk' : null; }, noLock: true, absent: absent.length });
   /** đã chào hết các bạn đang có mặt thì xong chặng 1 — gọi sau mỗi lần nói chuyện và mỗi lần sửa danh sách (danh sách thu nhỏ có thể làm "đủ mặt" ngay) */
   function checkGate() {
     const P = present(); if (state.done.gate || mode !== 'gate' || !P.length || !P.every(s => state.met.includes(s.def.id))) return;
@@ -116,7 +128,8 @@ export function init(ctx) {
       const a = sl.a, g = a.h.g.position, [x, z, f] = sl.def.spot, near = (g.x - p.x) ** 2 + (g.z - p.z) ** 2 < 4.5 * 4.5;
       if (a.to && Math.hypot(a.to.x - g.x, a.to.z - g.z) < 0.1) a.to = null;
       if (!a.to) actors.solid(a, true);
-      a.face = near ? 'player' : f; a.look = near ? 'player' : null; a.smile = near ? 0.55 : null;
+      const cheese = performance.now() < cheeseUntil;      // được rủ chụp ảnh khi còn đứng ở cổng: cũng vào dáng
+      a.face = cheese ? 'cam' : near ? 'player' : f; a.look = cheese ? 'cam' : near ? 'player' : null; a.smile = cheese ? 0.8 : near ? 0.55 : null; if (cheese) a.pose = BACK_POSES[sl.i % BACK_POSES.length]; else if (a.pose && a.pose !== 'wave') a.pose = null;
       if (a.to && a.stuck > STUCK_SECS) actors.place(a, x, ground(x, g.y, z, a.col) ?? g.y, z, f);      // đường về chỗ đứng bị chắn: đặt thẳng về chỗ
     }
   }
@@ -146,7 +159,8 @@ export function init(ctx) {
     P.forEach((sl, k) => {
       const a = sl.a, g = a.h.g.position, [ox, oz] = FORMATION[k], tx = anchor.x - fx * oz - fz * ox, tz = anchor.z - fz * oz + fx * ox;
       const d = Math.hypot(tx - g.x, tz - g.z), dp = Math.hypot(p.x - g.x, p.z - g.z);
-      actors.solid(a, false); a.face = watching ? STAGE_PT : 'player'; a.look = watching ? null : 'player';
+      const cheese = performance.now() < cheeseUntil;      // được rủ chụp ảnh: quay về máy quay, vào dáng trong ít giây
+      actors.solid(a, false); a.face = cheese ? 'cam' : watching ? STAGE_PT : 'player'; a.look = cheese ? 'cam' : watching ? null : 'player'; a.pose = cheese ? BACK_POSES[k % BACK_POSES.length] : null; a.smile = cheese ? 0.8 : null;
       if (dp > FAR || (Math.abs(g.y - feet) > 2.5 && dp > 8)) { warp(sl, k); return; }
       if (!sl.go && d > START_AT && sl.gave !== anchor.ver) sl.go = true;
       if (sl.go && d < STOP_AT) sl.go = false;
@@ -180,7 +194,7 @@ export function init(ctx) {
   }
   /** chữ nổi trên đầu bạn đang giữ vai id (cho module khác: tán gẫu ở quán, quanh lửa) */
   function bubbleAs(id, raw, secs = 4) { const sp = who(id), s = sp && text(raw, sp.sl); if (s != null) ui.bubble(() => actors.head(sp.sl.a, tmp2), s, secs); }
-  let waveT = 0;
+  let waveT = 0, cheeseUntil = 0;
   function setMode(m) {
     mode = m; anchor.set = false;
     for (const sl of present()) { const a = sl.a; a.pose = null; a.clip = null; a.smile = null; a.stuck = 0; sl.go = false; sl.arrived = false; a.armsDown = false; a.probe = true; a.vmax = 1.5; if (m === 'gate') { const [x, z] = sl.def.spot; a.to = { x, z }; actors.solid(a, false); } else a.to = null; }
@@ -204,9 +218,10 @@ export function init(ctx) {
     const stand = (sl, x, z, pose) => { const a = sl.a, g = a.h.g.position; if (Math.hypot(g.x - x, g.z - z) > 7) actors.place(a, x, y, z, Math.PI); a.probe = false; a.vmax = 1.6; a.to = { x, z, y }; a.face = 'cam'; a.look = 'cam'; a.smile = 0.8; a.pose = pose; actors.solid(a, false); };
     back.forEach((sl, i) => stand(sl, PHOTO_PT.x + (i % 2 ? 1 : -1) * (Math.floor(i / 2) + 1) * 0.7, ROW_BACK, BACK_POSES[i % BACK_POSES.length]));      // người chơi đứng giữa hàng sau
     front.forEach((sl, i) => stand(sl, PHOTO_PT.x + (i - (front.length - 1) / 2) * 0.8, ROW_FRONT, 'squat'));                                        // hàng trước ngồi xổm (mặc váy thì rigged.js tự đổi sang dáng duyên)
-    ctx.camera.position.set(PHOTO_CAM.x, y + PHOTO_CAM.y, PHOTO_CAM.z); player.st.yaw = 0; player.st.pitch = 0.09;
     if (ctx.people) ctx.people.taken = P.map(s => s.a.to);      // "chụp cùng" (G) không được xếp nhân vật phụ vào đúng ô của lớp
-    ctx.ui.photo(); ctx.ui.toast(D.PHOTO.tip, 8); ui.caption(fill(D.PHOTO.caption)); photoOn = true;
+    ctx.ui.photo({ pos: { x: PHOTO_CAM.x, y: y + PHOTO_CAM.y, z: PHOTO_CAM.z }, yaw: 0, pitch: 0.09 });
+    if (!player.st.photo) { busy = false; if (ctx.people) ctx.people.taken = null; setMode('follow'); ctx.ui.toast('Chưa chụp được lúc này — xong việc đang dở rồi thử lại nhé.', 3); return; }      // giao diện từ chối vào chế độ chụp ảnh: không tính là đã chụp
+    ctx.ui.toast(D.PHOTO.tip, 8); ui.caption(fill(D.PHOTO.caption)); photoOn = true;
     const sp = who(D.PHOTO.call[0]); if (sp) ui.bubble(() => actors.head(sp.sl.a, tmp2), fill(D.PHOTO.call[1]), 5);
   }
   function watchPhoto() {
@@ -216,7 +231,7 @@ export function init(ctx) {
 
   /* ----- chặng 5: chia tay ----- */
   async function startBye() {
-    if (busy || mode !== 'follow') return; busy = true; lock(true);
+    if (busy || mode !== 'follow' || !lock(true)) return; busy = true;      // module khác đang giữ người chơi: chưa bắt đầu, lần bấm sau thử lại
     try {
       for (const sl of present()) { sl.a.to = null; sl.go = false; }
       for (const [id, raw] of D.BYE.lines) await speak(id, raw);
@@ -244,7 +259,7 @@ export function init(ctx) {
   }
   const marks = new Map();
   { const ring = new THREE.RingGeometry(0.85, 1.05, 40).rotateX(-Math.PI / 2), col = new THREE.CylinderGeometry(0.42, 0.42, 7, 20, 1, true).translate(0, 3.5, 0);
-    const mat = (o) => new THREE.MeshBasicMaterial({ color: 0xffd66a, transparent: true, opacity: o, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false });
+    const mat = (o) => new THREE.MeshBasicMaterial({ color: 0xffd66a, transparent: true, opacity: o, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, forceSinglePass: true, fog: false });
     const mRing = mat(0.75), mCol = mat(0.13);
     for (const s of D.STAGES) { const pt = points[s.id]; if (!pt) continue; const g = new THREE.Group(); g.add(new THREE.Mesh(ring, mRing), new THREE.Mesh(col, mCol)); g.userData.noBake = true; g.visible = false; g.position.set(pt.x, 0.05, pt.z); ctx.scene.add(g); marks.set(s.id, g); } }
   const spots = [];      // điểm tương tác của các chặng: bán kính 0 khi chưa tới lượt
@@ -269,14 +284,14 @@ export function init(ctx) {
   /* ----- bảng chương trình, danh sách lớp, làm lại ----- */
   function toggleBoard(force) { state.board = ui.board.toggle(force); boardT = 0; save(); }
   const hudBtn = document.getElementById('bPlan'); if (hudBtn) { hudBtn.classList.remove('hidden'); hudBtn.addEventListener('click', () => { hudBtn.blur(); toggleBoard(); }); }
-  addEventListener('keydown', (e) => { const a = document.activeElement; if (e.code !== 'KeyJ' || e.repeat || e.ctrlKey || e.altKey || e.metaKey || !player.st.started || player.st.photo || (a && /INPUT|SELECT|TEXTAREA/.test(a.tagName))) return; toggleBoard(); });
+  addEventListener('keydown', (e) => { const a = document.activeElement; if (e.code !== 'KeyJ' || e.repeat || e.ctrlKey || e.altKey || e.metaKey || !player.st.started || player.st.photo || typing()) return; toggleBoard(); });
   const applyClass = () => { saveClass(cls); recast(false); checkGate(); boardT = 0; };
   { const host = document.querySelector('#start .box'), keys = host && host.querySelector('.keys');
     if (host) { const det = ui.el('details', 'rvClassBox'); det.append(ui.el('summary', null, 'Lớp mình – tên bạn và danh sách lớp'), buildClassForm(cls, applyClass)); host.insertBefore(det, keys || null); }
     else console.warn('[ngày về] không thấy màn bắt đầu để gắn mục "Lớp mình"'); }
   let modal = null;
   ui.board.onEdit = () => {
-    if (modal || busy) return; busy = true; lock(true); if (document.pointerLockElement) document.exitPointerLock();
+    if (modal || busy || player.st.locked) { if (player.st.locked && ctx.ui) ctx.ui.toast('Đang dở câu chuyện — xong rồi hãy sửa danh sách.', 2.5); return; } busy = true; lock(true); if (document.pointerLockElement) document.exitPointerLock();
     const genders = slots.map(s => s.g).join('');
     modal = ui.el('div', 'rvModal'); const box = ui.el('div', 'box'), done = ui.el('button', 'primary', 'Xong'); ui.stopEv(modal);
     box.append(ui.el('h2', null, 'Lớp mình'), buildClassForm(cls, applyClass), done); modal.appendChild(box); ui.root.appendChild(modal);
@@ -284,7 +299,7 @@ export function init(ctx) {
   };
   let resetArm = 0;
   ui.board.onReset = () => {
-    if (busy) return;
+    if (busy || player.st.locked) return;
     if (performance.now() > resetArm) { resetArm = performance.now() + 4000; if (ctx.ui) ctx.ui.toast('Bấm “Làm lại từ đầu” lần nữa để xoá tiến trình ngày về', 4); return; }
     resetArm = 0; state = { ...freshState(), board: state.board }; save(); for (const sl of slots) sl.lineI = 0;
     for (const sl of present()) { const [x, z, f] = sl.def.spot, a = sl.a; actors.place(a, x, ground(x, 0.3, z, a.col) ?? 0.02, z, f); }
@@ -302,6 +317,6 @@ export function init(ctx) {
     actors.update(dt); ui.update(dt);
   });
   // cho kịch bản kiểm thử và bảng điều khiển: trạng thái + các lối tắt
-  ctx.reunion = { get state() { return state; }, get mode() { return mode; }, get busy() { return busy; }, ui, slots, actors, fest, lesson, chat, startPhoto, startBye, hangout, resume, bubbleAs, present, recast: () => recast(false), cls,
+  ctx.reunion = { get state() { return state; }, get mode() { return mode; }, get busy() { return busy; }, ui, slots, actors, fest, lesson, chat, startPhoto, startBye, hangout, resume, bubbleAs, present, mateDesc, cheese: (secs) => { cheeseUntil = performance.now() + secs * 1000; }, recast: () => recast(false), cls,
     meetAll() { for (const sl of present()) if (!state.met.includes(sl.def.id)) state.met.push(sl.def.id); complete('gate'); setMode('follow'); } };
 }

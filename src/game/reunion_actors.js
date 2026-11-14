@@ -49,7 +49,7 @@ export function makeActors(ctx) {
   /** đi một bước về a.to; có a.probe thì thử lách sang hai bên khi bị chắn, không bước ra chỗ hẫng/bậc cao, không chen vào người chơi. Trả về tốc độ (m/s) */
   function advance(a, dt) {
     const g = a.h.g.position, to = a.to, mx = to.x - g.x, mz = to.z - g.z, dist = Math.hypot(mx, mz);
-    if (dist < 0.05 || dt <= 0) return 0;
+    if (dist < 0.05 || !(dt > 0)) return 0;
     const v = Math.min(a.vmax, dist * 3 + 0.4); a.heading = Math.atan2(mx, mz);
     if (!a.probe) return stepToward(a, to.x, to.z, to.y ?? g.y, v, dt);
     const step = Math.min(dist, v * dt), p = player.pos, feet = player.holder.position.y, near0 = (g.x - p.x) ** 2 + (g.z - p.z) ** 2;

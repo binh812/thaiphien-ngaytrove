@@ -18,7 +18,7 @@ try {
     page.on('console', (m) => { const t = m.text(); if (m.type() === 'error' || m.type() === 'warn' || t.startsWith('[')) console.log(`  ${m.type()}: ${t.slice(0, 400)}`); });
     page.on('pageerror', (e) => console.log('  LỖI TRANG:', String(e).slice(0, 600)));
     const t0 = Date.now();
-    await page.goto(`http://127.0.0.1:8137/?${query.includes("ui=") ? "" : "ui=0&"}${query}`, { waitUntil: 'load' });
+    await page.goto(`http://127.0.0.1:8137/?${query.includes("ui=") ? "" : "ui=0&"}${/(^|&)q=/.test(query) ? "" : "q=high&"}${query}`, { waitUntil: 'load' });
     await page.waitForFunction('window.__ready === true || /Lỗi/.test(document.getElementById("loadMsg").textContent)', { timeout: 120000 });
     const msg = await page.evaluate('document.getElementById("loadMsg").textContent');
     if (opt.eval) { const r = await page.evaluate(opt.eval); if (r !== undefined) console.log('  eval →', JSON.stringify(r)); }

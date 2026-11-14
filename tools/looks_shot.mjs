@@ -17,7 +17,7 @@ try {
   const page = await browser.newPage();
   page.on('console', (m) => { if (m.type() === 'error' && !/404/.test(m.text()) || m.type() === 'warn' && /người|chụp ảnh/.test(m.text())) console.log(`  ${m.type()}: ${m.text().slice(0, 300)}`); });
   page.on('pageerror', (e) => console.log('  LỖI TRANG:', String(e).slice(0, 600)));
-  await page.goto(`http://127.0.0.1:8137/?ui=0&cam=${opt.cam || '41,1.5,60.9'}&look=${opt.look || '41,1.5,62.5'}&t=${opt.t || '10.5'}&w=${opt.w || 'cloudy'}${opt.q ? '&' + opt.q : ''}`, { waitUntil: 'load' });
+  await page.goto(`http://127.0.0.1:8137/?ui=0&q=high&cam=${opt.cam || '41,1.5,60.9'}&look=${opt.look || '41,1.5,62.5'}&t=${opt.t || '10.5'}&w=${opt.w || 'cloudy'}${opt.q ? '&' + opt.q : ''}`, { waitUntil: 'load' });
   await page.waitForFunction('window.__ready === true || /Lỗi/.test(document.getElementById("loadMsg").textContent)', { timeout: 120000 });
   const n = await page.evaluate(`(()=>{const t=window.__tp;t.camera.fov=${Number(opt.fov || 14)};t.camera.updateProjectionMatrix();t.player.st.started=true;window.__looks=${looks};return window.__looks.length})()`);
   for (let i = 0; i < n; i++) {

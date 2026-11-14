@@ -22,6 +22,7 @@ import { init as initEffects } from './game/effects.js';
 import { init as initUI } from './game/ui.js';
 import { init as initReunion } from './game/reunion.js';
 import { init as initCampus } from './game/campus_life.js';
+import { init as initNet } from './net/index.js';
 
 const $ = (id) => document.getElementById(id);
 const setLoad = (p, msg) => { $('loadBar').style.width = Math.round(p * 100) + '%'; $('loadMsg').textContent = msg; return new Promise(r => setTimeout(r, 0)); };
@@ -44,7 +45,7 @@ async function boot() {
   await setLoad(0.6, 'Gộp hình học…');
   const zones = B.build(scene);
   const ctx = { scene, camera, pipeline, sky, B, blocks, zones, updaters: [] };
-  const inits = [[initTrees, 'Trồng cây…'], [initPhysics, 'Khởi động vật lý…'], [initProps, 'Bày đồ vật…'], [initPlayer, 'Nhân vật…'], [initPeople, 'Thầy cô, học sinh…'], [initEffects, 'Hiệu ứng, âm thanh…'], [initUI, 'Giao diện…'], [initReunion, 'Lớp mình, ngày hội…'], [initCampus, 'Góc kỷ niệm, sân trường…']];
+  const inits = [[initTrees, 'Trồng cây…'], [initPhysics, 'Khởi động vật lý…'], [initProps, 'Bày đồ vật…'], [initPlayer, 'Nhân vật…'], [initPeople, 'Thầy cô, học sinh…'], [initEffects, 'Hiệu ứng, âm thanh…'], [initUI, 'Giao diện…'], [initReunion, 'Lớp mình, ngày hội…'], [initCampus, 'Góc kỷ niệm, sân trường…'], [initNet, 'Chơi cùng bạn bè…']];
   for (let i = 0; i < inits.length; i++) { await setLoad(0.65 + i * 0.035, inits[i][1]); await inits[i][0](ctx); }
 
   // máy quay thử nghiệm: ?cam=x,y,z&look=x,y,z

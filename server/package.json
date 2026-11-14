@@ -1,0 +1,14 @@
+{
+  "name": "thaiphien-room",
+  "private": true,
+  "type": "module",
+  "description": "Máy chủ phòng chơi nhiều người cho Thái Phiên – Ngày trở về (Cloudflare Workers + Durable Objects)",
+  "scripts": {
+    "dev": "wrangler dev --port 8788 --ip 127.0.0.1 --var MAX_PER_IP:16",
+    "deploy": "wrangler deploy",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}

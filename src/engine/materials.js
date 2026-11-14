@@ -166,7 +166,7 @@ export function kindMat(kind) {
 export const kindMeters = (kind) => (KINDS[kind] && KINDS[kind].tex ? texSet(KINDS[kind].tex).meters : 1);
 
 // kính: phản chiếu môi trường, hơi xanh
-export const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x2a3436, roughness: 0.03, metalness: 0, transparent: true, opacity: 0.42, envMapIntensity: 2.2, ior: 1.52, depthWrite: false, side: THREE.DoubleSide });
+export const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x2a3436, roughness: 0.03, metalness: 0, transparent: true, opacity: 0.42, envMapIntensity: 2.2, ior: 1.52, depthWrite: false, side: THREE.DoubleSide, forceSinglePass: true });
 // vật phát sáng (bóng đèn, màn LED): màu đỉnh × cường độ
 export const glowMat = new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: false });
 export const glowDim = { value: 1 };

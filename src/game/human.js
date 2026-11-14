@@ -138,7 +138,8 @@ export function buildHuman(look = {}) {
 export function animateHuman(h, speed, dt, air, holding, t = 0) {
   if (h.rig) {
     // lỗi hoạt hoạ của một người (ví dụ tệp mô hình hỏng) không được làm dừng cả vòng lặp game
-    if (!h.rigBroken) { try { const r = h.rig; r.pose = h.clip || (h.pose ? 'pose_' + h.pose : null); r.kick = h.kick || 0; r.armsDown = !!h.armsDown; r.eat = h.eat || 0; r.lookAt = h.lookAt || null; r.smileT = h.smile ?? null; animateRigged(r, speed, dt, air, holding, h.g); } catch (e) { h.rigBroken = true; console.error('[người] lỗi hoạt hoạ, giữ nguyên tư thế:', e); } }
+    const ge = h.gest; if (ge) { ge.t += dt; if (ge.t >= ge.dur) h.gest = null; }      // cử chỉ tay ngắn (vẫy, ném, gõ trống…): xem gesture() ở rigged.js
+    if (!h.rigBroken) { try { const r = h.rig; r.fineAlways = !!h.fine; r.gest = h.gest || null; r.pose = h.clip || (h.pose ? 'pose_' + h.pose : null); r.kick = h.kick || 0; r.armsDown = !!h.armsDown; r.eat = h.eat || 0; r.lookAt = h.lookAt || null; r.smileT = h.smile ?? null; animateRigged(r, speed, dt, air, holding, h.g); } catch (e) { h.rigBroken = true; console.error('[người] lỗi hoạt hoạ, giữ nguyên tư thế:', e); } }
     return;
   }
   h.phase += dt * (3 + speed * 2.1); const a = Math.min(1, speed / 3.2), sw = Math.sin(h.phase) * 0.72 * a, idle = 1 - a, br = Math.sin(t * 1.4 + h.phase * 0.01) * 0.012 * idle;

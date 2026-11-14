@@ -41,7 +41,7 @@ export const PLANE = {
   label: 'Lấy tờ giấy gấp máy bay', busy: 'Thả vật đang cầm trước (Q) rồi hãy lấy giấy.', short: 'Máy bay chúi xuống ngay — ra chỗ thoáng mà phi.', folding: 'Đang gấp máy bay giấy…', ready: 'Gấp xong! Ra hành lang, chuột trái để phi.', flew: 'Máy bay thứ {n} — bay được {d} m.',
 };
 
-export const SIT = { hint: 'C · Ngồi xuống', up: 'C · Đứng dậy' };
+export const SIT = { hint: 'C · Ngồi xuống', up: 'C · Đứng dậy', none: 'Chưa có ghế nào trong tầm — lại gần ghế đá, ghế nhựa hoặc ghế băng trong lớp.' };
 
 /** câu chào khi người chơi đi ngang (thầy cô, người lớn gọi "em"; học sinh gọi "anh/chị"); bộ không tên dùng khi người chơi chưa nhập tên */
 export const GREET = {
@@ -57,7 +57,8 @@ export const GREET = {
 export const VENDORS = [
   { id: 'hoasua', at: [35.3, 0.14, 79.2], seller: 'Chị Hoà – quán Hoa Sữa', greet: ['Lâu lắm mới thấy mặt! Vẫn bàn cũ nhé.', 'Khách quen đây rồi. Hôm nay nếp cẩm mới đồ, thơm lắm.'], hello: 'Ăn gì chị làm?',
     menu: [['Sữa chua nếp cẩm', 'bowl', 0x6a3a6a], ['Sữa chua trân châu', 'cup', 0xf4f0e6], ['Ca cao dầm', 'cup', 0x6a4a32], ['Nước mía', 'cup', 0xb8c860]] },
-  { id: 'xoi', npc: 'xoi', hello: 'Xôi gì nào? Vẫn gói lá như ngày xưa nhé.',
+  // at/seller/greet: dùng khi người bán không có mặt (mức đồ hoạ thấp bỏ bớt nhân vật) — quầy vẫn bán được, khách tự chọn
+  { id: 'xoi', npc: 'xoi', at: [52.1, 0.14, 57.6], seller: 'Hàng xôi cổng trường', greet: ['Người bán vừa chạy đi lấy thêm lá gói. Tấm bìa ghi: “Khách quen cứ tự chọn, tiền để vào hộp.”', 'Vẫn tấm bìa ấy: “Khách quen cứ tự chọn, tiền để vào hộp.”'], hello: 'Xôi gì nào? Vẫn gói lá như ngày xưa nhé.',
     menu: [['Xôi xéo', 'pack', 0xe8c23a], ['Xôi lạc', 'pack', 0xe6dcc0], ['Bánh mì trứng', 'plate', 0xd8a45a]] },
   { id: 'trada', npc: 'trada', hello: 'Ngồi đi cháu. Uống gì bà rót?',
     menu: [['Trà đá', 'cup', 0xc8963a], ['Trà chanh', 'cup', 0xd8c84a], ['Nhân trần', 'cup', 0x8a5a2a], ['Hướng dương', 'plate', 0x3a3632]] },
@@ -81,12 +82,38 @@ export const FIRE = {
 };
 
 export const CAU = {
-  at: [-31.5, -5.5], label: 'Vào đá cầu cùng', join: 'Cầu tới thì bấm Space đúng lúc để tâng. E hoặc Esc để thôi.', leave: 'Nghỉ đá cầu.',
-  coming: 'Cầu đang tới…', now: 'BẤM SPACE!', streak: 'Tâng liên tiếp: {n} · kỷ lục {m}', early: 'Sớm quá!', late: 'Hụt mất rồi!', record: 'Kỷ lục mới: {n} lần tâng liên tiếp!',
+  at: [-31.5, -5.5], label: 'Vào đá cầu cùng', join: 'Chạy tới dưới cầu (vòng vàng là chỗ cầu rơi) rồi đá: F chuyền cho bạn · Space tâng lên đầu mình · giữ F rồi thả là búng xa. E hoặc Esc để thôi.', leave: 'Nghỉ đá cầu.',
+  streak: 'Chạm liên tiếp: {n} · kỷ lục {m}', miss: 'Hụt!', wait: 'Chờ phát cầu…', best: 'Kỷ lục mới của vòng cầu!', late: 'Cầu rơi mất rồi!', down: 'Cầu rơi — cả vòng được {n} chạm.', tPass: 'Đá', tFlick: 'Búng',
   cheer: ['Đẹp!', 'Chuẩn!', 'Nữa đi!', 'Dẻo chân thế!'], oops: ['Ôi…', 'Hụt rồi!', 'Làm lại, làm lại!'],
   looks: [
     { gender: 'm', outfit: 'pe', age: 'teen', hair: 'crew', skin: 2, face: 3, height: 1.71, build: 0 },
     { gender: 'f', outfit: 'pe', age: 'teen', hair: 'pony', skin: 0, face: 5, height: 1.57, build: 0 },
     { gender: 'm', outfit: 'pe', age: 'teen', hair: 'fringe', skin: 1, face: 1, height: 1.68, build: 1 },
+  ],
+};
+
+export const HOOP = {
+  hint: 'Đang cầm bóng rổ: giữ chuột trái (hoặc Space) để lấy lực, thả ra để ném (chấm xanh là sẽ vào) · B nhồi bóng, đang nhồi bấm Space để cầm lên ném · E dưới rổ: thi ném 60 giây', power: 'Lực ném — thả ra để ném',
+  two: '🏀 Vào! +2 điểm · chuỗi {n}', three: '🏀 Ba điểm từ {d} m! · chuỗi {n}', other: '🏀 Vào rổ!', miss: 'Trượt — mất chuỗi {n} quả.', missOne: 'Trượt rồi.',
+  mode: 'Thi ném 60 giây', modeStop: 'Thôi thi ném', modeStart: 'Sáu mươi giây bắt đầu! Ném được bao nhiêu thì ném, bóng có người nhặt trả.', modeBar: 'Còn {s} giây · {n} điểm',
+  modeEnd: 'Hết giờ: {n} điểm (kỷ lục {m}).', modeBest: 'Hết giờ: {n} điểm — kỷ lục mới!', tDribble: 'Nhồi bóng', tPick: 'Cầm bóng',
+  pass: { young: ['Bóng này ạ!', 'Em ném trả đây ạ!', 'Bắt lấy ạ!'], mate: ['Bóng này, bắt lấy!', 'Ném thế mà cũng đòi ba điểm. Bóng đây!', 'Tôi nhặt cho lần này thôi nhé!'] },
+};
+
+export const GOAL = {
+  hint: 'Sân cỏ: lại gần quả bóng, giữ F để lấy lực, thả ra để sút (ngước máy lên thì bóng bổng) · E ở chấm trắng: đá phạt đền 5 quả',
+  power: 'Lực sút — thả F để sút', lost: 'Bóng lăn khỏi chân rồi — lại gần lấy lực lại.', goal: '⚽ Vào!!! Bàn thứ {n}.', cheer: ['Vào rồi!', 'Đẹp quá ạ!', 'Sút căng thế!'], save: ['Bắt được rồi nhé!', 'Còn lâu mới qua!', 'Sút nhẹ thế ạ?'],
+  penLabel: 'Đá phạt đền 5 quả', penStart: 'Phạt đền 5 quả: giữ F lấy lực, thả ra để sút. Thủ môn sẽ đổ người theo bóng — sút vào góc. E hoặc Esc để thôi.',
+  penBar: 'Phạt đền: quả {k}/5 · vào {n}', penIn: 'Vào! {n}/{k}', saved: 'Thủ môn bắt được. {n}/{k}', penOut: 'Ra ngoài mất rồi. {n}/{k}',
+  penEnd: 'Hết loạt: vào {n}/5 (kỷ lục {m}/5).', penBest: 'Hết loạt: vào {n}/5 — kỷ lục mới!', penQuit: 'Thôi đá phạt đền.', tQuit: 'Thôi phạt đền',
+};
+
+export const ROPE = {
+  at: [-26, 48.3], label: 'Vào nhảy dây', join: 'Nhảy dây: bấm Space đúng lúc dây sắp quét qua chân (nghe tiếng dây chạm đất làm nhịp). Dây quay nhanh dần. E hoặc Esc để thôi.',
+  bar: 'Nhảy dây: {n} · kỷ lục {m}', trip: 'Vướng dây rồi — được {n} cái.', tripFirst: 'Vướng dây! Nhảy sớm hơn một chút.', best: 'Kỷ lục nhảy dây mới!', leave: 'Nghỉ nhảy dây.',
+  tJump: 'Nhảy', tQuit: 'Thôi nhảy', cheer: ['Giỏi thế!', 'Nhanh nữa này!', 'Đừng vướng nhé!'], oops: ['Ối, vướng rồi!', 'Làm lại nào!', 'Tại dây đấy, không phải tại chân đâu.'],
+  looks: [
+    { gender: 'f', outfit: 'pe', age: 'teen', hair: 'pony', skin: 1, face: 2, height: 1.58, build: 0 },
+    { gender: 'f', outfit: 'pe', age: 'teen', hair: 'bob', skin: 0, face: 6, height: 1.6, build: 1 },
   ],
 };

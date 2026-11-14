@@ -1,0 +1,22 @@
+{
+  // Máy chủ phòng chơi (Cloudflare Workers + Durable Objects, gói miễn phí)
+  "name": "thaiphien-room",
+  "main": "src/index.js",
+  "compatibility_date": "2026-04-07",
+  "durable_objects": {
+    "bindings": [{ "name": "ROOMS", "class_name": "Room" }]
+  },
+  // gói miễn phí chỉ cho lớp Durable Object dùng kho SQLite → phải khai new_sqlite_classes (không phải new_classes)
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Room"] }],
+  "vars": {
+    // Các nguồn (Origin) được phép nối vào, cách nhau bằng dấu phẩy; ":*" = mọi cổng (chỉ nên dùng cho máy cục bộ).
+    // Đổi tên miền GitHub Pages ở đây nếu trang game chuyển chỗ.
+    "ALLOWED_ORIGINS": "https://binh812.github.io,http://localhost:*,http://127.0.0.1:*",
+    // Số kết nối tối đa từ cùng một địa chỉ mạng trong MỘT phòng. Cả lớp ngồi chung một wifi (quán cà phê, trường) thì nâng lên.
+    // Khi thử trên máy mình mọi cửa sổ đều chung địa chỉ: `npm run dev` đã tự đặt 16.
+    // Đặt 8 vì họp lớp thường chung một wifi; mặc định trong mã là 3.
+    "MAX_PER_IP": "8"
+  },
+  // không bật ghi log phía Cloudflare
+  "observability": { "enabled": false }
+}

@@ -59,6 +59,11 @@ body.photo #poses{display:flex}
 
 /* ----- Ngày về (reunion*.js) ----- */
 .rvBoard{position:fixed;left:10px;top:44px;z-index:30;width:min(270px,calc(100vw - 20px));background:rgba(12,17,24,.78);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:10px 12px;box-sizing:border-box;font-size:13px}
+.rvBoard.mini{width:auto;max-width:calc(100vw - 20px);padding:5px 10px;cursor:pointer}
+.rvBoard.mini h3,.rvBoard.mini .rvSub,.rvBoard.mini .rvNote,.rvBoard.mini .rvFoot,.rvBoard.mini li:not(.cur){display:none}
+.rvBoard.mini:not(:has(li.cur)) h3{display:block}
+.rvBoard.mini li.cur{padding-top:1px;padding-bottom:1px}
+@media (max-width:520px){#toast{top:88px;z-index:40}}
 .rvBoard h3{margin:0;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#f2c94c}
 .rvSub{font-size:11.5px;opacity:.65;margin:2px 0 6px}
 .rvBoard ol{list-style:none;margin:0;padding:0}
@@ -94,7 +99,7 @@ body.photo .rvBoard,body.photo .rvProg,body.photo .rvDlg{display:none}
 .rvCard p{margin:8px 0;font-size:16px;line-height:1.5}
 .rvCard .rvSub{font-size:13px;opacity:.75;margin-bottom:12px}
 .rvCard .primary,.rvModal .primary{margin-top:14px;padding:9px 22px;font-size:14px}
-.rvProg{position:fixed;left:50%;top:84px;transform:translateX(-50%);z-index:20;background:rgba(10,14,20,.7);border-radius:10px;padding:7px 14px;font-size:13px;text-align:center;min-width:240px}
+.rvProg{position:fixed;left:50%;bottom:calc(18% + 88px);transform:translateX(-50%);z-index:20;background:rgba(10,14,20,.7);border-radius:10px;padding:7px 14px;font-size:13px;text-align:center;min-width:240px}
 .rvProg .bar{margin-top:6px}
 .rvProg .bar i{transition:none}
 .rvCap{position:fixed;left:50%;top:100px;transform:translateX(-50%);z-index:20;font:italic 700 21px "Times New Roman",Cambria,serif;color:#fff6d0;text-shadow:0 2px 8px #000,0 0 2px #000;pointer-events:none;white-space:nowrap}
@@ -117,6 +122,7 @@ body.rvCine .rvBoard,body.rvCine #topbar,body.rvCine #cross,body.rvCine #where,b
 .rvNote{font-size:11.5px;opacity:.75;margin-top:6px}
 .clHud{position:fixed;left:8px;bottom:22px;z-index:12;font-size:12.5px;background:rgba(10,14,20,.55);border-radius:9px;padding:4px 10px;pointer-events:none;display:none;white-space:nowrap}
 .clHud.on{display:block}
+body.touch .clHud{left:50%;bottom:3px;transform:translateX(-50%);font-size:11.5px;max-width:calc(100vw - 16px);overflow:hidden;text-overflow:ellipsis}
 body.rvCine .clHud,body.rvCine .clHint{display:none}
 .clHint{position:fixed;left:50%;bottom:calc(18% + 44px);transform:translateX(-50%);background:rgba(10,14,20,.6);border:1px solid rgba(255,255,255,.16);padding:6px 14px;border-radius:20px;font-size:13px;white-space:nowrap;opacity:0;transition:opacity .15s;pointer-events:none;z-index:12}
 .clHint.on{opacity:1}
@@ -134,3 +140,7 @@ body.photo .clHint{display:none}
 body.touch .clTouch{display:flex}
 .clTouch button{min-width:92px;height:42px;border-radius:11px;background:rgba(10,14,20,.6);border:1px solid rgba(242,201,76,.6);color:#fff;font-size:14px;font-weight:700;font-family:inherit;padding:0 12px}
 .clTouch button[hidden]{display:none}
+.rvDlg .opts .say{display:flex;gap:6px;margin-top:2px}
+.rvDlg .opts .say input{flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#fff;border-radius:9px;padding:8px 11px;font:inherit;font-size:14.5px;user-select:text;-webkit-user-select:text}
+.rvDlg .opts .say button{flex:0 0 auto;text-align:center;padding:8px 16px}
+.rvDlg{max-height:calc(100vh - 44px);overflow:auto}

@@ -70,7 +70,7 @@ export function spawnNpc(ctx, c, look) {
 /** bước một đoạn về phía (tx, tz) với tốc độ v, cao độ trượt dần tới ty; kéo khối va chạm theo. Trả về tốc độ thực (m/s), 0 nếu đã tới nơi */
 export function stepToward(n, tx, tz, ty, v, dt) {
   const g = n.h.g.position, mx = tx - g.x, mz = tz - g.z, dist = Math.hypot(mx, mz);
-  if (dist <= 0.04 || dt <= 0) return 0;
+  if (dist <= 0.04 || !(dt > 0)) return 0;
   const step = Math.min(dist, v * dt); g.x += mx / dist * step; g.z += mz / dist * step; g.y += (ty - g.y) * Math.min(1, step / dist);
   n.col.setTranslation({ x: g.x, y: g.y + 0.8, z: g.z });
   return step / dt;
@@ -97,15 +97,16 @@ export function init(ctx) {
    * quay về máy ảnh và tạo dáng; on = false thì ai về chỗ nấy. Người đứng ở cao độ khác (trên sân khấu, bậc thềm) tạo dáng tại chỗ.
    * Trả về số người tham gia.
    */
-  function poseNear(on) {
+  function poseNear(on, only) {      // only: chỉ rủ đúng nhân vật này (lời rủ chụp ảnh trong trò chuyện)
     let k = 0; const p = player.pos, q = ctx.camera.position, feet = player.holder.position.y;
     let dx = p.x - q.x, dz = p.z - q.z; const dl = Math.hypot(dx, dz); if (dl < 0.3) { dx = 0; dz = 1; } else { dx /= dl; dz /= dl; }      // hướng máy ảnh → người chơi; hàng người xếp vuông góc với nó
     let slot = 0;
     for (const n of npcs) {
-      const near = on && Math.min((n.c.x - p.x) ** 2 + (n.c.z - p.z) ** 2, (n.c.x - q.x) ** 2 + (n.c.z - q.z) ** 2) < NEAR2;
+      const at = n.h.g.position;      // vị trí THẬT (người đang đi tuần/đi dạo có thể đứng xa chỗ gốc n.c)
+      const near = on && (!only || n === only) && Math.min((at.x - p.x) ** 2 + (at.z - p.z) ** 2, (at.x - q.x) ** 2 + (at.z - q.z) ** 2) < NEAR2;
       if (!near) { n.pose = null; n.goal = null; continue; }
       const idx = n.idx, set = n.teacher ? (n.c.look.gender === 'f' ? TEACHER_F : TEACHER_M) : STUDENT_POSES; n.pose = set[idx % set.length]; k++;
-      if (Math.abs(n.homeY - feet) > MAX_STEP || (n.c.x - p.x) ** 2 + (n.c.z - p.z) ** 2 >= NEAR2) { n.goal = null; continue; }
+      if (Math.abs(n.homeY - feet) > MAX_STEP || (at.x - p.x) ** 2 + (at.z - p.z) ** 2 >= NEAR2) { n.goal = null; continue; }
       let gx, gz;
       for (let tries = 0; tries < 16; tries++) {      // ô đã có người khác đứng (lớp đang xếp hàng chụp kỷ yếu — ctx.people.taken) thì lấy ô kế tiếp ra phía ngoài
         const side = slot % 2 ? -1 : 1, off = (Math.floor(slot / 2) + 1) * GAP, row = Math.floor(slot / 2); slot++;

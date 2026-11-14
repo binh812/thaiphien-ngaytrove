@@ -4,6 +4,7 @@ import { QNAME, clamp, param } from '../engine/util.js';
 import { WEATHERS } from '../engine/sky.js';
 import { SKINS, HAIR_COLORS, HAIRS, OUTFITS, FACES, AGES, POSES, HAIR_LABELS, GLASSES } from './human.js';
 import { poseNames, hairStyles, modelFiles, wardrobe, OUTFIT_PRESETS, pickHead } from './rigged.js';
+import { typing } from './reunion_ui.js';      // đang gõ chữ (trò chuyện, sửa tên): phím không phải của máy ảnh
 
 const $ = (id) => document.getElementById(id);
 const LOCS = [
@@ -43,7 +44,10 @@ export function init(ctx) {
   segClick('uLayers', (k, b) => { pipeline.layers[k] = !pipeline.layers[k]; b.classList.toggle('on', pipeline.layers[k]); });
   $('uLayers').querySelectorAll('button').forEach(b => { const ok = pipeline.available[b.dataset.k]; b.classList.toggle('on', ok); b.disabled = !ok; if (!ok) { b.style.opacity = 0.4; b.title = 'Tắt ở mức đồ họa hiện tại'; } });
   segClick('uQ', (k) => { try { localStorage.setItem('tp2_quality', k); } catch (e) { console.warn('Không lưu được mức đồ họa', e); } const u = new URL(location.href); u.searchParams.set('q', k); location.href = u.toString(); });
-  $('uFov').addEventListener('input', (e) => { ctx.camera.fov = +e.target.value; ctx.camera.updateProjectionMatrix(); $('oFov').textContent = e.target.value + '°'; });
+  // góc nhìn: đang chụp ảnh thì thanh trượt chỉnh ống kính máy ảnh (thoát ảnh là hết), còn lại là góc nhìn lúc chơi; giàn máy quay (camrig.js) mới ghi camera.fov
+  const showFov = (v) => { $('uFov').value = v; $('oFov').textContent = Math.round(v) + '°'; };
+  ctx.cam.setUserFov(+$('uFov').value);
+  $('uFov').addEventListener('input', (e) => { const v = +e.target.value; if (player.st.photo) ctx.cam.free.fov = v; else ctx.cam.setUserFov(v); $('oFov').textContent = e.target.value + '°'; });
   $('uExp').addEventListener('input', (e) => { expUser = +e.target.value; sky.state.exposure = expUser; $('oExp').textContent = expUser.toFixed(2); });
   $('uDof').addEventListener('input', (e) => { pipeline.u.final.uDof.value = +e.target.value; $('oDof').textContent = (+e.target.value).toFixed(1); });
   map.addEventListener('click', (e) => { const b = e.target.closest('.loc'); if (!b) return; if (player.st.locked) { api.toast('Đang dở tay — xong việc này rồi hãy đi.', 2.5); return; } const l = LOCS[+b.dataset.i]; player.teleport(l[1], l[2], l[3], l[4]); api.toast('Đã tới: ' + l[0]); api.toggle('mapPanel', false); });
@@ -124,17 +128,23 @@ export function init(ctx) {
     toast(msg, s = 3) { const t = $('toast'); t.textContent = msg; t.classList.add('on'); toastT = s; },
     prompt(msg) { const p = $('prompt'); if (p.dataset.m === msg) return; p.dataset.m = msg; p.textContent = msg; p.classList.toggle('on', !!msg); },
     toggle(id, force) { const el = $(id), show = force ?? el.classList.contains('hidden'); for (const p of [panel, map]) p.classList.add('hidden'); el.classList.toggle('hidden', !show); if (show && document.pointerLockElement) document.exitPointerLock(); },
-    showStart() { $('start').classList.remove('hidden'); $('hud').classList.remove('hidden'); player.st.builder = true; },
+    showStart() { $('start').classList.remove('hidden'); $('hud').classList.remove('hidden'); player.st.builder = true; ctx.cam.cut(); },
     hideAll() { $('start').classList.add('hidden'); $('hud').classList.add('hidden'); player.st.started = true; },
-    photo() {
-      const st = player.st; if (st.locked && !st.photo) return;      // đang hội thoại/tiết học (st.locked) thì không vào chế độ chụp ảnh
+    /** bật/tắt chế độ chụp ảnh; from = { pos, yaw, pitch } đặt sẵn máy ảnh (ảnh kỷ yếu), bỏ trống thì bắt đầu từ góc nhìn đang có */
+    photo(from) {
+      const st = player.st; if ((st.locked || !st.started) && !st.photo) return;      // đang hội thoại/tiết học (st.locked) hoặc còn ở màn tạo nhân vật thì không vào chế độ chụp ảnh
       st.photo = !st.photo; document.body.classList.toggle('photo', st.photo);
-      if (st.photo) { api.toast('Chế độ chụp ảnh: WASD bay · Q/E xuống/lên · chuột xoay · phím 1–9 tạo dáng · G chụp cùng · L đèn · Enter lưu ảnh · P thoát', 6); pipeline.u.final.uDof.value = Math.max(pipeline.u.final.uDof.value, 0); }
-      else { if (pt && pt.isActive()) pt.stop(); setPose(null); setGroup(false); }
+      if (st.photo) {
+        api.toast('Chế độ chụp ảnh: WASD bay · Q/E xuống/lên · chuột xoay · phím 1–9 tạo dáng · G chụp cùng · L đèn · Enter lưu ảnh · P thoát', 6); pipeline.u.final.uDof.value = Math.max(pipeline.u.final.uDof.value, 0);
+        // máy ảnh có vị trí và góc riêng: hướng nhìn của nhân vật (st.yaw/st.pitch) giữ nguyên suốt lúc chụp và sau khi thoát
+        const f = ctx.cam.free; f.pos.copy(from ? from.pos : ctx.camera.position); f.yaw = from ? from.yaw : st.yaw; f.pitch = from ? from.pitch : st.pitch; f.fov = 0; showFov(ctx.cam.playFov);      // fov 0 = chưa tự kéo: theo góc nhìn lúc chơi (xoay màn hình vẫn đúng 78°/người chơi)
+        ctx.cam.setMode('photo', camPhoto); ctx.cam.commit(0);
+      }
+      else { ctx.cam.clearMode('photo'); showFov(ctx.cam.userFov); if (pt && pt.isActive()) pt.stop(); setPose(null); setGroup(false); }
     },
   };
-  $('go').addEventListener('click', () => { $('start').classList.add('hidden'); player.st.started = true; player.st.builder = false; player.holder.rotation.y = player.st.yaw; if (ctx.audio) ctx.audio.start(); const c = pipeline.renderer.domElement; lockMouse(c); });
-  $('bMenu').addEventListener('click', () => api.toggle('panel')); $('bMap').addEventListener('click', () => api.toggle('mapPanel')); $('bView').addEventListener('click', () => { player.st.fp = !player.st.fp; }); $('bPhoto').addEventListener('click', () => api.photo());
+  $('go').addEventListener('click', () => { $('start').classList.add('hidden'); player.st.started = true; player.st.builder = false; ctx.cam.cut(); player.holder.rotation.y = player.st.yaw; if (ctx.audio) ctx.audio.start(); const c = pipeline.renderer.domElement; lockMouse(c); });
+  $('bMenu').addEventListener('click', () => api.toggle('panel')); $('bMap').addEventListener('click', () => api.toggle('mapPanel')); $('bView').addEventListener('click', () => { if (!player.st.locked) player.st.fp = !player.st.fp; }); $('bPhoto').addEventListener('click', () => api.photo());
   // dáng chụp ảnh: thanh nút ở đáy màn hình (chỉ hiện trong chế độ chụp ảnh) + phím số
   const poseBar = document.createElement('div'); poseBar.id = 'poses'; document.body.appendChild(poseBar);
   let poseList = [], group = false;
@@ -154,12 +164,18 @@ export function init(ctx) {
   });
   const POSE_CODES = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal'];
   addEventListener('keydown', (e) => {
-    if (!player.st.photo || e.repeat || e.ctrlKey || e.altKey || e.metaKey) return;
+    if (!player.st.photo || e.repeat || e.ctrlKey || e.altKey || e.metaKey || typing()) return;
     const i = POSE_CODES.indexOf(e.code);
     if (i >= 0 && poseList[i]) setPose(poseList[i][0]); else if (e.code === 'Backquote') setPose(null); else if (e.code === 'KeyG') toggleGroup(); else if (e.code === 'KeyL') setFill(!fillOn);
   });
   // máy quay bay tự do ở chế độ chụp ảnh
-  const keys = {}, v = new THREE.Vector3(), d = new THREE.Vector3();
+  const keys = {}, v = new THREE.Vector3(), d = new THREE.Vector3(), side = new THREE.Vector3();
+  /** chế độ máy quay 'photo' của giàn (camrig.js): bay theo phím, chỉ điền tư thế vào out */
+  function camPhoto(dt, out) {
+    const f = ctx.cam.free, sp = (keys.ShiftLeft ? 14 : 4) * dt, cp = Math.cos(f.pitch); d.set(Math.sin(f.yaw) * cp, -Math.sin(f.pitch), Math.cos(f.yaw) * cp); v.set(0, 0, 0);
+    if (keys.KeyW) v.add(d); if (keys.KeyS) v.sub(d); side.set(-d.z, 0, d.x).normalize(); if (keys.KeyD) v.add(side); if (keys.KeyA) v.sub(side); if (keys.KeyE) v.y += 1; if (keys.KeyQ) v.y -= 1;
+    f.pos.addScaledVector(v, sp); f.pos.y = clamp(f.pos.y, 0.3, 120); out.pos.copy(f.pos); out.dir.copy(d); out.fov = f.fov;
+  }
   // ảnh dò tia lũy tiến (thử nghiệm): nạp mô-đun khi cần vì thư viện nặng
   let pt = null, ptBusy = false;
   async function togglePT() {
@@ -173,13 +189,14 @@ export function init(ctx) {
     } catch (e) { console.error(e); api.toast('Không bật được dò tia: ' + (e.message || e), 6); if (pt && pt.isActive()) pt.stop(); }
     finally { ptBusy = false; }
   }
-  addEventListener('keydown', (e) => { keys[e.code] = true; if (e.code === 'Enter' && player.st.photo) save(); if (e.code === 'KeyR' && player.st.photo) togglePT(); }); addEventListener('keyup', (e) => { keys[e.code] = false; });
+  addEventListener('keydown', (e) => { if (typing()) return; keys[e.code] = true; if (e.code === 'Enter' && player.st.photo) save(); if (e.code === 'KeyR' && player.st.photo) togglePT(); }); addEventListener('keyup', (e) => { keys[e.code] = false; });
+  addEventListener('blur', () => { for (const k in keys) keys[k] = false; });      // mất focus thì không nhận được keyup: nhả hết phím bay kẻo máy ảnh trôi mãi
   function save() { requestAnimationFrame(() => { try { pipeline.render(0, sky.sun, sky.state.lightDir); const a = document.createElement('a'); a.href = pipeline.renderer.domElement.toDataURL('image/png'); a.download = 'thai-phien-' + Date.now() + '.png'; a.click(); api.toast('Đã lưu ảnh'); } catch (e) { console.error(e); api.toast('Không lưu được ảnh: ' + e.message); } }); }
   function lockMouse(c) { if (!c.requestPointerLock || document.body.classList.contains('touch')) return; const p = c.requestPointerLock(); if (p && p.catch) p.catch(() => api.toast('Chưa khoá được chuột – bấm vào màn hình để xoay góc nhìn')); }
 
   ctx.updaters.push((dt) => {
     if (toastT > 0) { toastT -= dt; if (toastT <= 0) $('toast').classList.remove('on'); }
-    if (!panel.classList.contains('hidden')) { $('oHour').textContent = fmt(sky.state.hour); if (sky.state.speed) $('uHour').value = sky.state.hour; }
+    if (!panel.classList.contains('hidden')) { $('oHour').textContent = fmt(sky.state.hour); if (sky.state.speed) $('uHour').value = sky.state.hour; const f = Math.round(ctx.camera.fov) + '°', o = $('oFov'); if (o.textContent !== f) o.textContent = f; }      // số góc nhìn là số đang dùng thật (màn dọc nới lên 78°)
     // tên khu vực
     const p = player.pos, y = p.y - 0.77; let name = '';
     for (const k of ['A', 'B', 'C', 'P']) { const b = ctx.blocks[k]; for (const r of b.roomNames) { if (Math.abs(y - r.y) > 1.2) continue; const a = b.W(r.u1, -12), c = b.W(r.u2, -3.2); if (p.x > Math.min(a[0], c[0]) && p.x < Math.max(a[0], c[0]) && p.z > Math.min(a[1], c[1]) && p.z < Math.max(a[1], c[1])) name = `${k === 'P' ? 'Ban giám hiệu' : 'Nhà ' + k} · ${r.nm} · Tầng ${r.k + 1}`; } }
@@ -187,14 +204,8 @@ export function init(ctx) {
     const w = $('where'); if (w.dataset.n !== name) { w.dataset.n = name; w.textContent = name ? '📍 ' + name : ''; }
     // đèn chân dung theo máy ảnh; mạnh hơn khi trời tối, tắt dần khi thoát chế độ chụp
     { const want = player.st.photo && fillOn ? 1 : 0; fillK += (want - fillK) * Math.min(1, dt * 6);
-      if (fillK > 0.003) { const cam = ctx.camera; player.viewDir(d); fill.position.copy(cam.position).addScaledVector(v.set(-d.z, 0, d.x).normalize(), -0.7); fill.position.y += 0.45; fill.intensity = fillK * (2.2 + 5 * (ctx.sky.state.night || 0)); }
+      if (fillK > 0.003) { const cam = ctx.camera; cam.getWorldDirection(d); fill.position.copy(cam.position).addScaledVector(v.set(-d.z, 0, d.x).normalize(), -0.7); fill.position.y += 0.45; fill.intensity = fillK * (2.2 + 5 * (ctx.sky.state.night || 0)); }
       else if (fill.intensity) fill.intensity = 0; }
-    // bay tự do
-    if (player.st.photo) {
-      const cam = ctx.camera, sp = (keys.ShiftLeft ? 14 : 4) * dt; player.viewDir(d); v.set(0, 0, 0);
-      if (keys.KeyW) v.add(d); if (keys.KeyS) v.sub(d); const r = new THREE.Vector3(-d.z, 0, d.x).normalize(); if (keys.KeyD) v.add(r); if (keys.KeyA) v.sub(r); if (keys.KeyE) v.y += 1; if (keys.KeyQ) v.y -= 1;
-      cam.position.addScaledVector(v, sp); cam.position.y = clamp(cam.position.y, 0.3, 120); cam.lookAt(cam.position.x + d.x, cam.position.y + d.y, cam.position.z + d.z);
-    }
   });
   ctx.ui = api;
 }

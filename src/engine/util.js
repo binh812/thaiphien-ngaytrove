@@ -30,6 +30,6 @@ let stored = null; try { stored = localStorage.getItem('tp2_quality'); } catch (
 export const QNAME = (() => {
   const q = param('q', stored || 'auto');
   if (QUAL[q]) return q;
-  return isTouch ? 'medium' : 'high';
+  return 'low';      // mặc định mức thấp nhất để máy thường chạy mượt; người chơi tự nâng trong bảng Tab (lựa chọn được lưu)
 })();
 export const Q = QUAL[QNAME];
