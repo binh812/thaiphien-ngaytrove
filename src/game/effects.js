@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { U } from '../engine/materials.js';
 import { Q, mulberry32 } from '../engine/util.js';
+import { PENCIL_ON } from '../engine/pencil/style.js';
 
 function heightMap(ctx) {   // nướng 1 lần: độ cao mái/tán che tại mỗi điểm (x,z)
   const cam = new THREE.OrthographicCamera(-130, 130, 110, -110, 1, 80); cam.position.set(0, 60, 35); cam.up.set(0, 0, -1); cam.lookAt(0, 0, 35); cam.updateMatrixWorld(); cam.updateProjectionMatrix();
@@ -9,7 +10,7 @@ function heightMap(ctx) {   // nướng 1 lần: độ cao mái/tán che tại m
   const r = ctx.pipeline.renderer, old = ctx.scene.overrideMaterial, hidden = [];
   ctx.scene.traverse((o) => { if (o.visible && (o.userData.noBake || o.isPoints || o.isLine || o.name === 'sky' || o.name === 'leaves' || o.name === 'fronds' || o.name === 'grass' || o.name === 'litter' || (o.material && o.material.transparent))) { o.visible = false; hidden.push(o); } });
   const vis = []; for (const [, g] of ctx.zones) { vis.push([g, g.visible]); g.visible = true; }
-  ctx.scene.overrideMaterial = new THREE.MeshBasicMaterial(); r.setRenderTarget(rt); r.clear(); r.render(ctx.scene, cam); r.setRenderTarget(null);
+  ctx.scene.overrideMaterial = new THREE.MeshBasicMaterial(); if (PENCIL_ON) ctx.scene.overrideMaterial.defines = { PC_SKIP: 1 }; r.setRenderTarget(rt); r.clear(); r.render(ctx.scene, cam); r.setRenderTarget(null);
   ctx.scene.overrideMaterial = old; for (const o of hidden) o.visible = true; for (const [g, v] of vis) g.visible = v;
   U.uHeight.value = rt.depthTexture;
   return rt.depthTexture;

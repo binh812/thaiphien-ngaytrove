@@ -23,6 +23,8 @@ import { init as initUI } from './game/ui.js';
 import { init as initReunion } from './game/reunion.js';
 import { init as initCampus } from './game/campus_life.js';
 import { init as initNet } from './net/index.js';
+import { PENCIL_ON } from './engine/pencil/style.js';
+import { pencilScene, pencilSky, pencilUI } from './engine/pencil/pencil.js';
 
 const $ = (id) => document.getElementById(id);
 const setLoad = (p, msg) => { $('loadBar').style.width = Math.round(p * 100) + '%'; $('loadMsg').textContent = msg; return new Promise(r => setTimeout(r, 0)); };
@@ -60,6 +62,7 @@ async function boot() {
   if (timedOut) console.warn('[người] nạp mô hình quá 30 giây, vào chơi trước; các mô hình còn lại sẽ hiện dần');
   scene.traverse((o) => { if (o.isSkinnedMesh && o.material) for (const k of ['map', 'normalMap', 'roughnessMap']) if (o.material[k]) pipeline.renderer.initTexture(o.material[k]); });
 
+  if (PENCIL_ON) { pencilUI(); pencilScene(scene); pipeline.page.setLights(ctx.nightLights || null); const ps = pencilSky(sky, pipeline.renderer); ctx.updaters.push(ps.update); }      // kiểu chì màu (bản thử): trời vẽ + chỉnh vật liệu lá, cỏ, lửa
   const clock = new THREE.Clock(); let acc = 0, frames = 0;
   const fail = (e) => { console.error(e); $('loading').classList.remove('hidden'); $('start').classList.add('hidden'); $('loadMsg').textContent = 'Lỗi khi chạy: ' + (e && e.message ? e.message : e) + ' — hãy tải lại trang.'; };
   function loop() {

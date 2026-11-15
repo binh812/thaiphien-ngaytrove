@@ -32,6 +32,7 @@ void main() {
   gl_FragColor = vec4( col * uDim, 1.0 );
 }`;
 import { U, glowDim } from './materials.js';
+import { PENCIL_ON } from './pencil/style.js';
 
 const TILT = 0.72;                       // độ nghiêng quỹ đạo mặt trời về phía nam (rad) → trưa cao ~49°
 export const WEATHERS = {
@@ -59,7 +60,7 @@ export function createSky(scene, renderer, pipeline) {
   const setLayer = (slot, key, w, gain = 1) => { const e = tex[key]; if (!e) { if (!setLayer.warned) { setLayer.warned = true; console.warn('[trời] thiếu ảnh', key); } return; } du['t' + slot].value = e.t; du['u' + slot].value.set(e.sunU ?? 0, key === 'night' ? -1 : e.el, e.mean * gain, w); };
   // cảnh phụ để nướng ánh sáng môi trường: trời (không đĩa mặt trời) + mặt đất hắt sáng
   const envScene = new THREE.Scene(), envSky = new THREE.Mesh(new THREE.SphereGeometry(900, 32, 16), domeMat(false)); envScene.add(envSky);
-  const groundMat = new THREE.MeshBasicMaterial({ color: 0x555049 });
+  const groundMat = new THREE.MeshBasicMaterial({ color: 0x555049 }); if (PENCIL_ON) groundMat.defines = { PC_SKIP: 1 };      // cảnh nướng IBL không vẽ kiểu chì màu
   const ground = new THREE.Mesh(new THREE.CircleGeometry(900, 24), groundMat); ground.rotation.x = -Math.PI / 2; ground.position.y = -2; envScene.add(ground);
   const pmrem = new THREE.PMREMGenerator(renderer);
   let envRT = null;

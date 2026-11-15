@@ -4,8 +4,11 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
-import { Q } from './util.js';
+import { Q, isTouch } from './util.js';
 import { installDepthVariants } from './depthvar.js';
+import { PENCIL_ON } from './pencil/style.js';
+import { installPencil } from './pencil/pencil.js';
+import { createPage } from './pencil/page.js';
 
 const VS = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4( position.xy, 0.0, 1.0 ); }';
 const DEPTH_FN = `
@@ -191,11 +194,12 @@ export function createPipeline(container, scene, camera) {
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap; installDepthVariants();
   renderer.toneMapping = THREE.NoToneMapping; renderer.outputColorSpace = THREE.LinearSRGBColorSpace;   // tự tone map ở pass cuối
   renderer.info.autoReset = false;
+  if (PENCIL_ON) installPencil(renderer);      // kiểu chì màu (bản thử): vá shader của three trước khi vật liệu đầu tiên biên dịch
   container.appendChild(renderer.domElement);
   const maxTex = renderer.capabilities.maxTextureSize;
 
   const size = new THREE.Vector2();
-  const sceneRT = new THREE.WebGLRenderTarget(4, 4, { type: THREE.HalfFloatType, samples: Q.msaa, depthTexture: new THREE.DepthTexture(4, 4, THREE.UnsignedIntType) });
+  const sceneRT = new THREE.WebGLRenderTarget(4, 4, { type: THREE.HalfFloatType, samples: PENCIL_ON ? Math.max(Q.msaa, Math.min(isTouch ? 2 : 4, renderer.capabilities.maxSamples)) : Q.msaa, depthTexture: new THREE.DepthTexture(4, 4, THREE.UnsignedIntType) });
   const mkRT = (type) => new THREE.WebGLRenderTarget(4, 4, { type, depthBuffer: false, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter });
   const aoRT = mkRT(THREE.HalfFloatType), aoRT2 = mkRT(THREE.HalfFloatType), volRT = mkRT(THREE.HalfFloatType);
 
@@ -216,6 +220,7 @@ export function createPipeline(container, scene, camera) {
     toneMappingExposure: { value: 1 }, uVig: { value: 0.32 }, uGrain: { value: 0.032 }, uCA: { value: 0.004 }, uFocus: { value: 6 }, uDof: { value: 0 }, uProjInv: { value: camera.projectionMatrixInverse },
   });
   const fsq = new FullScreenQuad(aoMat);
+  const page = PENCIL_ON ? createPage(renderer, sceneRT, camera) : null;      // chì màu: một lượt "trang giấy" thay cả chuỗi hậu kỳ
 
   const composer = new EffectComposer(renderer);
   const compPass = new ShaderPass(compMat, 'tNone'); composer.addPass(compPass);
@@ -241,6 +246,7 @@ export function createPipeline(container, scene, camera) {
   function render(dt, sun, sunDir) {
     frame++; renderer.info.reset();
     renderer.setRenderTarget(sceneRT); renderer.render(scene, camera);
+    if (page) { page.render(); return; }
     common.uFrame.value = frame % 64;
     if (Q.ao && layers.ao) {
       fsq.material = aoMat; renderer.setRenderTarget(aoRT); fsq.render(renderer);
@@ -264,5 +270,5 @@ export function createPipeline(container, scene, camera) {
     renderer.setRenderTarget(null); composer.render(dt);
   }
   const available = { ao: Q.ao > 0, vol: Q.vol > 0, bloom: !!Q.bloom, lens: true, gi: Q.ao > 0, cs: Q.ao >= 12, ssr: Q.ao >= 12 };
-  return { renderer, render, resize, layers, available, maxTex, setContact: (k) => { csK = k; }, u: { ao: aoMat.uniforms, vol: volMat.uniforms, comp: compMat.uniforms, final: finalMat.uniforms }, bloom };
+  return { page, renderer, render, resize, layers, available, maxTex, setContact: (k) => { csK = k; }, u: { ao: aoMat.uniforms, vol: volMat.uniforms, comp: compMat.uniforms, final: finalMat.uniforms }, bloom };
 }

@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { clone as cloneSkinned } from 'three/addons/utils/SkeletonUtils.js';
 import { Q, param } from '../engine/util.js';
+import { PENCIL_ON } from '../engine/pencil/style.js';
+import { pencilPerson } from '../engine/pencil/pencil.js';
 
 const DIR = 'assets/people/';
 const CLIP_HIPS = 0.9311;                // độ cao hông của nhân vật mà clip được chuyển sang (m_white)
@@ -243,6 +245,7 @@ async function buildFrom(look, man, key, info, W) {
     if (o.morphTargetDictionary && o.morphTargetDictionary.blink !== undefined) blinkMeshes.push(o);
     o.castShadow = true; o.receiveShadow = true; o.frustumCulled = false;
     const name = o.material.name || o.name, m = o.material.clone(); mats.push(m); o.material = m;
+    if (PENCIL_ON) pencilPerson(m, name);      // kiểu chì màu (bản thử): da, tóc, mắt mày có cách vẽ riêng
     if (m.side === THREE.DoubleSide) m.shadowSide = THREE.BackSide;      // vải hai mặt: chỉ mặt khuất nắng ghi vào bản đồ bóng, nếu không mặt được chiếu sáng tự đổ bóng lốm đốm lên chính nó
     const gl = /glasses_(\d+)/.exec(o.name + '/' + (o.parent ? o.parent.name : ''));                // kính: lưới glasses_N, vật liệu lens/frame
     if (gl) { o.visible = +gl[1] === glasses; o.castShadow = false; if (name === 'lens') { m.transparent = true; m.opacity = Math.min(m.opacity, 0.35); m.roughness = 0.05; m.depthWrite = false; m.forceSinglePass = true; } return; }

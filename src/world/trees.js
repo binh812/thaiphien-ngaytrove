@@ -4,6 +4,7 @@ import { mulberry32, Q } from '../engine/util.js';
 import { U, kindMat } from '../engine/materials.js';
 import { canvasTex } from '../engine/textures.js';
 import { roundPlanter } from './kit.js';
+import { PENCIL_ON } from '../engine/pencil/style.js';
 
 /* ---------- texture ---------- */
 function leafShape(g, len, wid) { g.beginPath(); g.moveTo(0, 0); g.bezierCurveTo(wid, -len * 0.25, wid * 0.9, -len * 0.8, 0, -len); g.bezierCurveTo(-wid * 0.9, -len * 0.8, -wid, -len * 0.25, 0, 0); }
@@ -52,11 +53,12 @@ class Cards {
     const P = [[-1, -1], [1, -1], [1, 1], [-1, 1]], UV = [[uv[0], uv[1]], [uv[2], uv[1]], [uv[2], uv[3]], [uv[0], uv[3]]];
     for (let i = 0; i < 4; i++) { this.pos.push(c[0] + a[0] * P[i][0] + b[0] * P[i][1], c[1] + a[1] * P[i][0] + b[1] * P[i][1], c[2] + a[2] * P[i][0] + b[2] * P[i][1]); this.nrm.push(n[0], n[1], n[2]); this.uv.push(UV[i][0], UV[i][1]); this.col.push(col[0], col[1], col[2]); this.flex.push(Array.isArray(flex) ? flex[i] : flex); }
     this.idx.push(this.n, this.n + 1, this.n + 2, this.n, this.n + 2, this.n + 3); this.n += 4;
+    if (PENCIL_ON) { const k = this.cur || [c[0], c[1], c[2], 1]; (this.cen || (this.cen = [])).push(...k, ...k, ...k, ...k); }      // kiểu chì màu: tâm + bán kính cụm lá của thẻ này (nét cong theo khối)
   }
   mesh(mat, depthMat) {
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute(this.pos, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(this.nrm, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(this.uv, 2));
-    g.setAttribute('color', new THREE.Float32BufferAttribute(this.col, 3)); g.setAttribute('aFlex', new THREE.Float32BufferAttribute(this.flex, 1)); g.setIndex(this.n > 65535 ? new THREE.Uint32BufferAttribute(this.idx, 1) : new THREE.Uint16BufferAttribute(this.idx, 1));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(this.col, 3)); g.setAttribute('aFlex', new THREE.Float32BufferAttribute(this.flex, 1)); if (this.cen) g.setAttribute('aCen', new THREE.Float32BufferAttribute(this.cen, 4)); g.setIndex(this.n > 65535 ? new THREE.Uint32BufferAttribute(this.idx, 1) : new THREE.Uint16BufferAttribute(this.idx, 1));
     const m = new THREE.Mesh(g, mat); m.castShadow = m.receiveShadow = true; if (depthMat) m.customDepthMaterial = depthMat; m.matrixAutoUpdate = false; return m;
   }
 }
@@ -66,6 +68,7 @@ const PAL = { green: [0x5d8a36, 0x4a7a2c, 0x6a9a3c, 0x3f6d28], red: [0xc2401c, 0
 function rndDir(rnd) { const y = rnd() * 2 - 1, a = rnd() * 6.283, r = Math.sqrt(1 - y * y); return [Math.cos(a) * r, y, Math.sin(a) * r]; }
 
 function blobCards(cards, rnd, cx, cy, cz, r, n, pal, canopy, size) {
+  cards.cur = [cx, cy, cz, r];
   for (let i = 0; i < n; i++) {
     const d = rndDir(rnd), rr = r * (0.55 + 0.45 * Math.pow(rnd(), 0.5)), p = [cx + d[0] * rr, cy + d[1] * rr * 0.8, cz + d[2] * rr];
     const t1 = rndDir(rnd), s = size * (0.75 + rnd() * 0.6);
@@ -75,6 +78,7 @@ function blobCards(cards, rnd, cx, cy, cz, r, n, pal, canopy, size) {
     const shade = (0.38 + 0.62 * depth) * (0.62 + 0.38 * low) * (0.85 + rnd() * 0.3);
     cards.quad(p, [t1[0] * s, t1[1] * s * 0.6, t1[2] * s], [b[0] / bl * s, b[1] / bl * s, b[2] / bl * s], [nx, ny, nz], lin(pal[Math.floor(rnd() * pal.length)], shade), 0.6 + depth * 0.6);
   }
+  cards.cur = null;
 }
 function trunkGeo(B, rnd, x, y, z, h, r0, r1, color, branches) {
   const pts = [], bend = [(rnd() - 0.5) * 0.5, (rnd() - 0.5) * 0.5];

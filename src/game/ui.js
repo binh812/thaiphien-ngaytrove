@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { QNAME, clamp, param } from '../engine/util.js';
 import { WEATHERS } from '../engine/sky.js';
+import { STYLE, setStyle } from '../engine/pencil/style.js';
 import { SKINS, HAIR_COLORS, HAIRS, OUTFITS, FACES, AGES, POSES, HAIR_LABELS, GLASSES } from './human.js';
 import { poseNames, hairStyles, modelFiles, wardrobe, OUTFIT_PRESETS, pickHead } from './rigged.js';
 import { typing } from './reunion_ui.js';      // đang gõ chữ (trò chuyện, sửa tên): phím không phải của máy ảnh
@@ -31,7 +32,9 @@ export function init(ctx) {
     <div class="row"><label>Phơi sáng</label><input id="uExp" type="range" min="0.4" max="2" step="0.02" value="1"><output id="oExp">1.00</output></div>
     <div class="row"><label>Xoá phông</label><input id="uDof" type="range" min="0" max="3" step="0.05" value="0"><output id="oDof">0</output></div>
     <h3>Lớp hiệu ứng</h3><span id="uLayers">${seg([['ao', 'Bóng khe'], ['vol', 'Tia nắng'], ['bloom', 'Quầng sáng'], ['lens', 'Loá ống kính']], '')}</span>
-    <h3>Chất lượng đồ họa (tải lại trang)</h3><span id="uQ">${seg([['low', 'Thấp'], ['medium', 'Vừa'], ['high', 'Cao'], ['ultra', 'Cực cao']], QNAME)}</span>`;
+    <h3>Chất lượng đồ họa (tải lại trang)</h3><span id="uQ">${seg([['low', 'Thấp'], ['medium', 'Vừa'], ['high', 'Cao'], ['ultra', 'Cực cao']], QNAME)}</span>
+    <h3>Kiểu vẽ (tải lại trang)</h3><span id="uStyle">${seg([['real', 'Tả thực'], ['pencil', 'Chì màu (thử)']], STYLE)}</span>`;
+  if (STYLE === 'pencil') { for (const id of ['uExp', 'uDof']) $(id).closest('.row').style.display = 'none'; $('uLayers').style.display = 'none'; $('uLayers').previousElementSibling.style.display = 'none'; }      // chì màu: các mục này không có tác dụng
   map.innerHTML = '<h3>Dịch chuyển tới</h3>' + LOCS.map((l, i) => `<button class="loc" data-i="${i}">${l[0]}</button>`).join('');
   const stop = (el) => { for (const ev of ['mousedown', 'wheel', 'touchstart']) el.addEventListener(ev, (e) => e.stopPropagation(), { passive: true }); };
   stop(panel); stop(map);
@@ -43,6 +46,7 @@ export function init(ctx) {
   segClick('uWeather', (k, b) => { sky.setWeather(k); only('uWeather', b); });
   segClick('uLayers', (k, b) => { pipeline.layers[k] = !pipeline.layers[k]; b.classList.toggle('on', pipeline.layers[k]); });
   $('uLayers').querySelectorAll('button').forEach(b => { const ok = pipeline.available[b.dataset.k]; b.classList.toggle('on', ok); b.disabled = !ok; if (!ok) { b.style.opacity = 0.4; b.title = 'Tắt ở mức đồ họa hiện tại'; } });
+  segClick('uStyle', (k) => { if (k !== STYLE) setStyle(k); });
   segClick('uQ', (k) => { try { localStorage.setItem('tp2_quality', k); } catch (e) { console.warn('Không lưu được mức đồ họa', e); } const u = new URL(location.href); u.searchParams.set('q', k); location.href = u.toString(); });
   // góc nhìn: đang chụp ảnh thì thanh trượt chỉnh ống kính máy ảnh (thoát ảnh là hết), còn lại là góc nhìn lúc chơi; giàn máy quay (camrig.js) mới ghi camera.fov
   const showFov = (v) => { $('uFov').value = v; $('oFov').textContent = Math.round(v) + '°'; };
@@ -179,6 +183,7 @@ export function init(ctx) {
   // ảnh dò tia lũy tiến (thử nghiệm): nạp mô-đun khi cần vì thư viện nặng
   let pt = null, ptBusy = false;
   async function togglePT() {
+    if (STYLE === 'pencil') { api.toast('Chế độ dò tia không dùng với kiểu vẽ chì màu — đổi sang Tả thực trong bảng Tab.', 5); return; }
     if (ptBusy) return; ptBusy = true;
     try {
       if (pt && pt.isActive()) { pt.stop(); api.toast('Đã tắt dò tia'); return; }
@@ -191,7 +196,7 @@ export function init(ctx) {
   }
   addEventListener('keydown', (e) => { if (typing()) return; keys[e.code] = true; if (e.code === 'Enter' && player.st.photo) save(); if (e.code === 'KeyR' && player.st.photo) togglePT(); }); addEventListener('keyup', (e) => { keys[e.code] = false; });
   addEventListener('blur', () => { for (const k in keys) keys[k] = false; });      // mất focus thì không nhận được keyup: nhả hết phím bay kẻo máy ảnh trôi mãi
-  function save() { requestAnimationFrame(() => { try { pipeline.render(0, sky.sun, sky.state.lightDir); const a = document.createElement('a'); a.href = pipeline.renderer.domElement.toDataURL('image/png'); a.download = 'thai-phien-' + Date.now() + '.png'; a.click(); api.toast('Đã lưu ảnh'); } catch (e) { console.error(e); api.toast('Không lưu được ảnh: ' + e.message); } }); }
+  function save() { requestAnimationFrame(() => { try { if (pipeline.page) { const cap = ctx.reunion && ctx.reunion.mode === 'photo' ? document.querySelector('.rvCap:not(.hidden)') : null; pipeline.page.sign((cap && cap.textContent) || 'Thái Phiên · ngày trở về · ' + new Date().toLocaleDateString('vi-VN')); }      /* chữ ký: chú thích ảnh kỷ yếu (tên lớp – khoá) khi đang chụp cả lớp, còn lại là tên trường + ngày */ pipeline.render(0, sky.sun, sky.state.lightDir); const a = document.createElement('a'); a.href = pipeline.renderer.domElement.toDataURL('image/png'); a.download = 'thai-phien-' + Date.now() + '.png'; a.click(); api.toast('Đã lưu ảnh'); } catch (e) { console.error(e); api.toast('Không lưu được ảnh: ' + e.message); } finally { if (pipeline.page) pipeline.page.sign(null); } }); }
   function lockMouse(c) { if (!c.requestPointerLock || document.body.classList.contains('touch')) return; const p = c.requestPointerLock(); if (p && p.catch) p.catch(() => api.toast('Chưa khoá được chuột – bấm vào màn hình để xoay góc nhìn')); }
 
   ctx.updaters.push((dt) => {

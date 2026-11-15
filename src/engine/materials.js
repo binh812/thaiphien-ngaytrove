@@ -2,6 +2,8 @@
 import * as THREE from 'three';
 import { texSet, grungeTex } from './textures.js';
 import { Q } from './util.js';
+import { PENCIL_ON } from './pencil/style.js';
+import { pencilKind, pencilGlass } from './pencil/pencil.js';
 
 // uniform toàn cục gắn vào mọi shader có vá
 export const U = {
@@ -161,6 +163,7 @@ export function kindMat(kind) {
   const m = new THREE.MeshStandardMaterial(p); m.userData.meters = meters; m.name = kind;
   patch(m, (Q.ao > 0 && !k.side ? `#define TP_VIS ${Q.ao >= 12 ? 6 : 4}\n` : '') + (k.refl ? `#define TP_REFL ${k.refl.toFixed(2)}\n` : '') + (k.env ? `#define TP_ENV ${k.env.toFixed(2)}
 ` : '') + (k.w ? `#define TP_WALL\n#define TP_WEATHER ${k.w.toFixed(2)}\n` : '') + (k.g ? '#define TP_GROUND\n' : ''));
+  if (PENCIL_ON) pencilKind(m, kind);      // kiểu chì màu (bản thử): màu phẳng + nét, bỏ phần vá phong hoá
   cache.set(kind, m); return m;
 }
 export const kindMeters = (kind) => (KINDS[kind] && KINDS[kind].tex ? texSet(KINDS[kind].tex).meters : 1);
@@ -168,6 +171,7 @@ export const kindMeters = (kind) => (KINDS[kind] && KINDS[kind].tex ? texSet(KIN
 // kính: phản chiếu môi trường, hơi xanh
 export const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x2a3436, roughness: 0.03, metalness: 0, transparent: true, opacity: 0.42, envMapIntensity: 2.2, ior: 1.52, depthWrite: false, side: THREE.DoubleSide, forceSinglePass: true });
 // vật phát sáng (bóng đèn, màn LED): màu đỉnh × cường độ
+if (PENCIL_ON) pencilGlass(glassMat);
 export const glowMat = new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: false });
 export const glowDim = { value: 1 };
 glowMat.onBeforeCompile = (sh) => { sh.uniforms.uGlow = glowDim; sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform float uGlow;').replace('#include <color_fragment>', '#include <color_fragment>\ndiffuseColor.rgb *= uGlow;'); };

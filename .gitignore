@@ -17,3 +17,4 @@ tools/_req.mjs
 tools/_low.mjs
 /net_*.png
 tools/_live.mjs
+tools/_live_local.mjs
