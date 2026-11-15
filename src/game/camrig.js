@@ -8,11 +8,11 @@ const PORTRAIT_FOV = 78, PORTRAIT_ASPECT = 1 / 1.15;      // màn dọc (cao > 1
 export function init(ctx) {
   const camera = ctx.camera, modes = [], offsets = [], tmp = new THREE.Vector3(), off = { y: 0, fov: 0 };
   const mq = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null;
-  let userFov = camera.fov, askDist = 0;
+  let userFov = camera.fov, askDist = 0, askSide = 0;
   // tư thế gốc của khung này (trước độ lệch tạm): pos, dir = hướng nhìn, pivot = điểm tựa vai (góc ba), dist = khoảng lùi thực;
   // cut = true ở khung đầu sau cut()/đổi chế độ để hàm chế độ bỏ làm mượt; hàm chế độ có thể đặt fov (0 = theo người chơi),
   // shake (true = nhận rung/nhún); minDist = khoảng lùi tối thiểu module khác xin cho khung này
-  const base = { pos: new THREE.Vector3(), dir: new THREE.Vector3(0, 0, 1), pivot: new THREE.Vector3(), dist: 0, cut: true, fov: 0, shake: false, minDist: 0 };
+  const base = { pos: new THREE.Vector3(), dir: new THREE.Vector3(0, 0, 1), pivot: new THREE.Vector3(), dist: 0, cut: true, fov: 0, shake: false, minDist: 0, minSide: 0 };
   const api = {
     base,
     // máy ảnh bay tự do của chế độ chụp ảnh (ui.js): vị trí, góc và góc nhìn RIÊNG, không dùng chung st.yaw/st.pitch của nhân vật
@@ -37,10 +37,12 @@ export function init(ctx) {
     get playFov() { return Math.max(userFov, camera.aspect < PORTRAIT_ASPECT ? PORTRAIT_FOV : 0); },
     /** xin máy quay góc ba lùi ít nhất d mét; phải gọi lại MỖI KHUNG, ngừng gọi là hết — không đè st.dist người chơi đã chọn */
     askDist(d) { askDist = Math.max(askDist, d); },
+    /** xin máy quay góc ba lệch sang vai phải ít nhất m mét (ngắm rổ, lấy lực sút: để thân người không che đích); gọi lại MỖI KHUNG như askDist */
+    askSide(m) { askSide = Math.max(askSide, m); },
     /** gọi một lần mỗi khung ở cuối player.update */
     commit(dt) {
       if (ctx.shake) ctx.shake = Math.max(0, ctx.shake - dt * 1.2);      // rung tắt dần ở mọi chế độ (kể cả đang chụp ảnh, cắt cảnh) nên không dồn lại
-      const m = modes[modes.length - 1]; base.minDist = askDist; askDist = 0; if (ctx.fixedCam || !m) return;
+      const m = modes[modes.length - 1]; base.minDist = askDist; askDist = 0; base.minSide = askSide; askSide = 0; if (ctx.fixedCam || !m) return;
       base.fov = 0; base.shake = false; m.fn(dt, base); base.cut = false;
       off.y = 0; off.fov = 0; if (base.shake && !api.reduced) for (const f of offsets) f(dt, off);
       camera.position.copy(base.pos); camera.position.y += off.y; camera.lookAt(tmp.copy(camera.position).add(base.dir));

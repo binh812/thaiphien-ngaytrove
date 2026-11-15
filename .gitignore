@@ -16,3 +16,4 @@ assets/people/anims_cc0.glb
 tools/_req.mjs
 tools/_low.mjs
 /net_*.png
+tools/_live.mjs

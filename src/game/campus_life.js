@@ -12,6 +12,7 @@ import { initCau } from './campus_cau.js';
 import { initTalk } from './campus_talk.js';
 import { initHoop } from './campus_hoop.js';
 import { initFx } from './campus_fx.js';
+import { initGuide } from './campus_guide.js';
 import { initDaily } from './campus_daily.js';
 import { initGoal } from './campus_goal.js';
 import { initRope } from './campus_rope.js';
@@ -26,12 +27,16 @@ const num = (v) => { const n = typeof v === 'string' && v.trim() !== '' ? Number
  * Chuẩn hoá dữ liệu đã lưu về đúng hình dạng (người chơi sửa tay, bản cũ, tệp hỏng): số nào không phải số hữu hạn ≥ 0 thì về 0, thiếu khoá thì
  * thêm. Mọi trò ghi vào tp2_campus đều khai ở đây — module con chỉ đọc, không tự đoán hình dạng. (talk do campus_talk.js soát từng mục.)
  */
+const KEY_OK = /^[a-z]{1,12}$/;
+const counts = (o) => { const out = {}; for (const [k, v] of Object.entries(obj(o))) if (KEY_OK.test(k) && num(v)) out[k] = Math.min(99, num(v)); return out; };
+const flags = (o) => { const out = {}; for (const [k, v] of Object.entries(obj(o))) if (KEY_OK.test(k) && v === true) out[k] = true; return out; };
 export function normalise(s) {
   s = obj(s); const h = obj(s.hoop), g = obj(s.goal), r = obj(s.rope), book = {};
   for (const [k, v] of Object.entries(obj(s.book))) if (Array.isArray(v)) book[k] = v.filter(l => l && typeof l.d === 'string' && typeof l.t === 'string').map(l => ({ d: l.d.slice(0, 8), t: l.t.slice(0, 120) }));
   return { v: 1, mem: Array.isArray(s.mem) ? [...new Set(s.mem.filter(x => typeof x === 'string'))] : [], memDone: s.memDone === true, mango: num(s.mango), planes: num(s.planes), book,
     tag: ['off', 'on', 'photo'].includes(s.tag) ? s.tag : 'on', food: num(s.food), cau: num(s.cau), talk: obj(s.talk),
-    hoop: { pts: num(h.pts), best: num(h.best), best60: num(h.best60) }, goal: { n: num(g.n), pen: num(g.pen) }, rope: { best: num(r.best) } };
+    hoop: { pts: num(h.pts), best: num(h.best), best60: num(h.best60) }, goal: { n: num(g.n), pen: num(g.pen) }, rope: { best: num(r.best) },
+    guide: { seen: counts(obj(s.guide).seen), done: flags(obj(s.guide).done), marks: obj(s.guide).marks === 'off' ? 'off' : 'on' } };      // chỉ dẫn: số lần đã giới thiệu từng hoạt động, trò nào đã học xong, có hiện nhãn nổi không
 }
 const fresh = () => normalise({});
 function load() {
@@ -159,7 +164,8 @@ export function init(ctx) {
   const actors = makeActors(ctx);      // vài nhân vật có xương riêng của module (nhóm đá cầu), dùng chung cơ chế ẩn/bóng/hoạt hoạ theo khoảng cách
   const K = { ctx, ui, D, state, save, cls, fill, idle, rooms, roomAt, drawHud, setHint, addHud: (f) => extra.push(f), souls, headOf, tmp, actors, seatFns: [], touchDefs: [], lock, unlock, free, quiet: () => now < quietUntil, hush: (secs) => { quietUntil = Math.max(quietUntil, now + secs); } };      // touchDefs: nút cảm ứng theo ngữ cảnh do module con đăng ký { label(), fn }
   const fx = K.fx = initFx(K);      // phản hồi dùng chung: hạt, vòng lan, tiếng ngắn, giới hạn tần suất
-  const play = K.play = initPlay(K), food = K.food = initFood(K), night = initNight(K), cau = K.cau = initCau(K), talk = K.talk = initTalk(K), hoop = K.hoop = initHoop(K), daily = initDaily(K), goal = initGoal(K), rope = initRope(K);
+  const play = K.play = initPlay(K), food = K.food = initFood(K), night = initNight(K), cau = K.cau = initCau(K), talk = K.talk = initTalk(K), hoop = K.hoop = initHoop(K), daily = K.daily = initDaily(K), goal = K.goal = initGoal(K), rope = K.rope = initRope(K);
+  K.night = night; K.frames = frames; const guide = K.guide = initGuide(K);      // chỉ dẫn theo ngữ cảnh: đọc trạng thái mọi trò nên dựng sau cùng
   /* ----- nút cảm ứng theo ngữ cảnh (chỉ hiện trên máy cảm ứng): ngồi/đứng, ném dép, tâng cầu, thôi đá, xong ảnh ----- */
   const touch = ui.el('div', 'clTouch'); ui.root.appendChild(touch);
   const tBtn = (fn) => { const b = ui.el('button'), go = (e) => { e.preventDefault(); e.stopPropagation(); fn(); }; b.addEventListener('touchstart', go, { passive: false }); b.addEventListener('click', go); touch.appendChild(b); return b; };
@@ -177,8 +183,8 @@ export function init(ctx) {
     if (isTouchUi) tickTouch();
 
     const on = player.st.started && !player.st.builder; hud.classList.toggle('on', on && !player.st.photo);
-    tickMemories(dt); tickSouls(dt); play.update(dt); food.update(dt); night.update(dt); cau.update(dt); hoop.update(dt); goal.update(dt); rope.update(dt); talk.update(dt); daily.update(dt); actors.update(dt); fx.update(dt); tickTag();
+    tickMemories(dt); tickSouls(dt); play.update(dt); food.update(dt); night.update(dt); cau.update(dt); hoop.update(dt); goal.update(dt); rope.update(dt); talk.update(dt); daily.update(dt); actors.update(dt); fx.update(dt); guide.update(dt); tickTag();
     if (!ctx.reunion) ui.update(dt);      // chữ nổi: khi có Ngày về thì module đó đã cập nhật
   });
-  ctx.campus = { state, frames, pick, rooms, play, souls, food, night, cau, talk, hoop, daily, goal, rope, fx, wave: daily.wave, free };
+  ctx.campus = { state, frames, pick, rooms, play, souls, food, night, cau, talk, hoop, daily, goal, rope, fx, guide, wave: daily.wave, free };
 }

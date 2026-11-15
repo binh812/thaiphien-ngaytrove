@@ -6,22 +6,34 @@ import { typing } from './reunion_ui.js';
 
 const CHARGE_SECS = 1.5, V_MIN = 5.2, V_MAX = 11.5, LOFT = 2.4, DOTS = 14, DOT_DT = 0.085, DAMP = 0.12, G = 9.81;
 const THREE_PT = 6.75, MODE_SECS = 60, RETURN_AFTER = 2.0, RETURN_FAR = 5, HELPER_R = 18, PASS_SECS = 1.15, HINT_GAP = 40;
-const RIM_DV = 3, RIM_R = 0.95;
+const RIM_DV = 3, RIM_R = 0.95, AIM_FAR = 8;
 const AIM_NEAR = 1.0, AIM_GOOD = 0.2, AIM_STEP = 0.01, AIM_SPAN = 10, AIM_TURN = 0.0125, AIM_TURNS = 4, AIM_SECS = 2.4, KEY_REST = 0.25, TOP_Y = 2.6, DEAD_V = 0.5;      // trợ ngắm: lệch tâm rổ dưới 1 m thì chỉnh lực ngang tối đa ±10% và hướng tối đa ±2,9°; chấm xanh khi sẽ vào
-const DRIB_SIDE = 0.38, DRIB_FWD = 0.3, DRIB_H = 0.8, DRIB_HZ = 5.2;
+const DRIB_SIDE = 0.3, DRIB_FWD = 0.3, DRIB_H = 0.8, DRIB_HZ = 5.2;
 
 export function initHoop(K) {
   const { ctx, ui, D, state, save } = K, { player, scene } = ctx, st = player.st, H = D.HOOP, tmp = new THREE.Vector3(), v3 = new THREE.Vector3();
   const rec = state.hoop;
   const heldBall = () => (st.held && st.held.body.userData && st.held.body.userData.ball === 'basket' ? st.held.body : null);
-  let charge = null, drib = null, last = null, streak = 0, mode = null, hintAt = -HINT_GAP, now = 0, busyAt = -1;      // last = quả vừa ném: { body, from, t, scored, missed }
+  let charge = null, drib = null, last = null, streak = 0, mode = null, hintAt = -HINT_GAP, now = 0, busyAt = -1, missRun = 0;      // last = quả vừa ném: { body, from, t, scored, missed }
 
   /* ----- chấm dự đoán đường bay ----- */
   const dots = new THREE.InstancedMesh(new THREE.SphereGeometry(0.045, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffe9a8, transparent: true, opacity: 0.85, depthWrite: false }), DOTS);
   dots.visible = false; dots.frustumCulled = false; dots.userData.noBake = true; scene.add(dots); const mat = new THREE.Matrix4();
   const power = () => Math.min(1, charge.t / CHARGE_SECS);
   /** vận tốc ném theo hướng nhìn và mức lực p (0..1) */
-  function launchVel(p, out) { const d = player.viewDir(tmp), v = V_MIN + (V_MAX - V_MIN) * p; return out.set(d.x * v, d.y * v + LOFT * (0.7 + 0.3 * p), d.z * v); }
+  /**
+   * Hướng ném ngang nhắm vào ĐÚNG chỗ hồng tâm đang chỉ: máy quay đứng lệch vai (lúc ngắm rổ còn lệch thêm) nên tia ngắm và tia từ quả bóng
+   * song song chứ không trùng nhau; cho hai tia gặp nhau ở tầm rổ gần nhất phía trước (không có rổ thì 8 m) để đặt hồng tâm lên rổ là bóng tới rổ.
+   */
+  function launchVel(p, out) {
+    const d = player.viewDir(tmp), v = V_MIN + (V_MAX - V_MIN) * p, c = ctx.camera.position, b = heldBall(), hl = Math.hypot(d.x, d.z) || 1; let hx = d.x / hl, hz = d.z / hl;
+    if (b && !st.fp) {
+      const t = b.translation(); let L = AIM_FAR;
+      for (const q of ctx.hoops || []) { const along = (q.x - c.x) * hx + (q.z - c.z) * hz, off = Math.abs((q.x - c.x) * hz - (q.z - c.z) * hx); if (along > 1.5 && along < 14 && off < 2.5 && along < L) L = along; }
+      const ax = c.x + hx * L - t.x, az = c.z + hz * L - t.z, al = Math.hypot(ax, az); if (al > 0.5) { hx = ax / al; hz = az / al; }
+    }
+    return out.set(hx * hl * v, d.y * v + LOFT * (0.7 + 0.3 * p), hz * hl * v);
+  }
   const vd = new THREE.Vector3(), COL_AIM = new THREE.Color(0x7dff8a), COL_DOT = new THREE.Color(0xffe9a8);
   /** bay thử từ t0 với vận tốc v (trọng lực + cản như Rapier): khoảng lệch ngang nhỏ nhất so với tâm một rổ lúc bóng đi XUỐNG qua mặt vành; 9 nếu không qua */
   function arcMiss(t0, v, k, rot) {
@@ -54,7 +66,7 @@ export function initHoop(K) {
   function release(src) {
     if (!charge || (src && charge.src && src !== charge.src)) return; const body = heldBall(), p = power(); charge = null; dots.visible = false; ui.progress('', null); if (!body) return;
     const v = launchVel(p, v3); turn(v, assist(body.translation(), v)); body.setGravityScale(1, true); body.setLinvel({ x: v.x, y: v.y, z: v.z }, true); body.setAngvel({ x: -6 * Math.cos(st.yaw), y: 0, z: 6 * Math.sin(st.yaw) }, true);      // xoáy ngược như ném rổ thật
-    st.held = null; st.gest = { type: 'throw', t: 0, dur: 0.5 }; last = { body, from: player.pos.clone(), t: 0, scored: false, missed: false, top: false }; if (ctx.audio) ctx.audio.whoosh();
+    st.held = null; st.gest = { type: 'shoot', t: 0, dur: 0.75 }; last = { body, from: player.pos.clone(), t: 0, scored: false, missed: false, top: false }; if (ctx.audio) ctx.audio.whoosh();
   }
   addEventListener('mouseup', (e) => { if (e.button === 0) release('pointer'); });
   addEventListener('keydown', (e) => {
@@ -73,14 +85,15 @@ export function initHoop(K) {
     if (drib) { st.held = { body: drib.body }; st.heldT = 0; drib = null; dropGest(); return; }      // cầm bóng lên lại
     const body = heldBall(); if (!body || charge || !K.free()) return; drib = { body, ph: 0, beat: 0 }; st.held = null; body.setGravityScale(0, true); st.gest = dribGest; dribGest.t = 0;
   }
-  const dribGest = { type: 'drib', t: 0, dur: Infinity, ph: 0 }, dropGest = () => { if (st.gest === dribGest) st.gest = null; };      // bàn tay phải theo bóng suốt lúc nhồi
+  const dribAt = new THREE.Vector3(), dribGest = { type: 'drib', t: 0, dur: Infinity, ph: 0, at: null, r: 0.12 }, dropGest = () => { if (st.gest === dribGest) st.gest = null; };      // bàn tay phải theo bóng suốt lúc nhồi
   function tickDribble(dt) {
     if (!drib) { dropGest(); return; }
     if (st.locked || st.pinned || st.photo || st.held || st.game) { const b = drib.body; drib = null; dropGest(); b.setGravityScale(1, true); return; }      // bị kịch bản khác giữ, hoặc tay đã cầm thứ khác: thả bóng
     const yaw = player.holder.rotation.y, fx = Math.sin(yaw), fz = Math.cos(yaw), feet = player.holder.position.y;
     drib.ph += dt * (DRIB_HZ + st.speed * 1.3); const up = Math.abs(Math.cos(drib.ph)), beat = Math.floor(drib.ph / Math.PI + 0.5);
-    drib.body.setTranslation({ x: player.pos.x + fx * DRIB_FWD - fz * -DRIB_SIDE, y: feet + 0.13 + up * DRIB_H, z: player.pos.z + fz * DRIB_FWD + fx * -DRIB_SIDE }, true); drib.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
-    dribGest.ph = drib.ph; if (st.gest !== dribGest && !st.gest) st.gest = dribGest;
+    dribAt.set(player.pos.x + fx * DRIB_FWD - fz * DRIB_SIDE, feet + 0.13 + up * DRIB_H, player.pos.z + fz * DRIB_FWD + fx * DRIB_SIDE);      // bên tay PHẢI (trước đây đặt nhầm sang trái trong khi tay phải nhồi)
+    drib.body.setTranslation(dribAt, true); drib.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
+    dribGest.ph = drib.ph; dribGest.at = dribAt; if (st.gest !== dribGest && !st.gest) st.gest = dribGest;      // dribGest.at → rigged.js: bàn tay phải bám theo đỉnh bóng
     if (beat !== drib.beat) { drib.beat = beat; if (ctx.audio) ctx.audio.bounce(0.35); const t = drib.body.translation(); K.fx.puff(t.x, feet + 0.03, t.z, 'dust', 2); }      // mỗi lần chạm đất một tiếng và chút bụi
   }
 
@@ -91,7 +104,7 @@ export function initHoop(K) {
     if (!last || last.body !== ball.body || last.scored) { if (ctx.ui) ctx.ui.toast(H.other, 2); return; }
     const far = Math.hypot(last.from.x - h.x, last.from.z - h.z), pts = far >= THREE_PT ? 3 : 2; last.scored = true; last.t = 0; streak++;
     rec.pts += pts; if (streak > rec.best) rec.best = streak; if (mode) mode.pts += pts; save(); K.drawHud();
-    K.fx.puff(h.x, h.y - 0.25, h.z, 'spark', pts === 3 ? 18 : 12); K.fx.ring(h.x, h.y, h.z, 0xffe08a, 0.55); K.fx.sound(pts === 3 ? 'best' : 'good'); K.fx.cheer();
+    missRun = 0; K.fx.puff(h.x, h.y - 0.25, h.z, 'spark', pts === 3 ? 18 : 12); K.fx.ring(h.x, h.y, h.z, 0xffe08a, 0.55); K.fx.sound(pts === 3 ? 'best' : 'good'); K.fx.cheer();
     if (ctx.ui) ctx.ui.toast(K.fill(pts === 3 ? H.three : H.two, { n: streak, d: far.toFixed(1) }), 3);
   };
   /** người có thể ném trả: hai bạn bóng rổ của people.js hoặc bạn cùng lớp đang ở gần quả bóng */
@@ -112,7 +125,7 @@ export function initHoop(K) {
     if (last.pv && !last.scored && Math.hypot(lv.x - last.pv.x, lv.y - last.pv.y, lv.z - last.pv.z) > RIM_DV) for (const q of ctx.hoops || []) if (Math.hypot(t.x - q.x, t.y - q.y, t.z - q.z) < RIM_R && K.fx.once('rim', 0.2)) { K.fx.sound('rim'); K.fx.puff(t.x, t.y, t.z, 'spark', 3); }
     (last.pv || (last.pv = { x: 0, y: 0, z: 0 })).x = lv.x; last.pv.y = lv.y; last.pv.z = lv.z;
     // trượt: chạm đất, hoặc đã lên tới tầm rổ rồi rơi xuống dưới vành mà không vào, hoặc nằm yên trên chỗ cao (ghế, bục)
-    if (!last.scored && !last.missed && last.t > 0.5 && (t.y < 0.45 || (last.top && lv.y < 0 && t.y < TOP_Y - 0.6) || (last.t > 1.2 && Math.hypot(lv.x, lv.y, lv.z) < DEAD_V))) { last.missed = true; last.t = 0; K.fx.sound('bad', 0.9); if (t.y < 0.45) K.fx.puff(t.x, 0.05, t.z, 'dust', 4); if (ctx.ui) ctx.ui.toast(streak > 1 ? K.fill(H.miss, { n: streak }) : H.missOne, 1.6); streak = 0; }      // chạm đất mà chưa vào rổ: mất chuỗi
+    if (!last.scored && !last.missed && last.t > 0.5 && (t.y < 0.45 || (last.top && lv.y < 0 && t.y < TOP_Y - 0.6) || (last.t > 1.2 && Math.hypot(lv.x, lv.y, lv.z) < DEAD_V))) { last.missed = true; last.t = 0; if (++missRun >= 2 && K.guide) K.guide.nudge(); K.fx.sound('bad', 0.9); if (t.y < 0.45) K.fx.puff(t.x, 0.05, t.z, 'dust', 4); if (ctx.ui) ctx.ui.toast(streak > 1 ? K.fill(H.miss, { n: streak }) : H.missOne, 1.6); streak = 0; }      // chạm đất mà chưa vào rổ: mất chuỗi
     if (!(last.scored || last.missed) || last.t < RETURN_AFTER) { if (last.t > 12) last = null; return; }
     const far = Math.hypot(t.x - player.pos.x, t.z - player.pos.z), helper = helperNear(t.x, t.z);
     if (far > RETURN_FAR && far < 45 && (helper || mode) && !st.held && !drib) passBack(last.body, helper);      // thi 60 giây thì luôn có người nhặt hộ
@@ -134,8 +147,8 @@ export function initHoop(K) {
     // tay đang cầm bóng rổ: chuột trái là "bắt đầu lấy lực" (player.js gọi st.handUse khi bấm chuột); đang nhồi bóng thì chuột trái là cầm bóng lên
     if (drib) st.handUse = toggleDribble; else if (ball) st.handUse = startByHand; else if (st.handUse === startByHand || st.handUse === toggleDribble) st.handUse = null;
     if (st.locked || ui.dialog.open) busyAt = now;
-    if (ball && !charge && now - hintAt > HINT_GAP && K.free()) { hintAt = now; if (ctx.ui) ctx.ui.toast(H.hint, 5); }
     if (charge) { if (!ball || !K.free()) cancel(); else { charge.t += dt; drawDots(ball); ui.progress(H.power, power()); } }
+    st.aim = charge ? power() : null;      // rigged.js: dáng lấy lực (hai tay đưa bóng lên trước trán, gối khuỵu theo lực); player.js: bóng nằm trong tay
     tickDribble(dt); tickLast(dt);
     for (const q of nets) if (q.w > 0) { q.w = Math.max(0, q.w - dt); const k = Math.sin(q.w * 30) * q.w * 0.35; q.m.scale.set(1 + k * 0.4, 1 - k, 1 + k * 0.4); }      // lưới rung khi bóng lọt
     for (const it of items) it.label = mode ? H.modeStop : H.mode;

@@ -54,7 +54,9 @@ export function viewCone(camera) {
 }
 /** cao độ mặt nền (khối tĩnh) ngay dưới điểm (x, z), dò quanh cao độ y ± 0,6 m; null nếu không có nền. col = khối va chạm của chính người đó (bỏ qua) */
 export function floorY(phys, x, y, z, col) {
-  const hit = phys.cast({ x, y: y + 0.6, z }, DOWN, 1.2, 0xffff0001, col);
+  // bỏ qua viên nang của các nhân vật khác: hai người đứng chồng một chỗ (các bạn đá cầu sinh ra cùng tâm vòng) thì tia xuất phát TRONG nang của người kia,
+  // toi = 0 → 'nền' = y + 0,6 và người bị đặt lơ lửng 62 cm
+  const hit = phys.cast({ x, y: y + 0.6, z }, DOWN, 1.2, 0xffff0001, col, (c) => c.shape.type !== phys.RAPIER.ShapeType.Capsule);
   return hit ? y + 0.6 - hit.toi : null;
 }
 /**
@@ -63,7 +65,7 @@ export function floorY(phys, x, y, z, col) {
  */
 export function spawnNpc(ctx, c, look) {
   const { phys } = ctx, h = buildHuman(look), y = c.y || 0;
-  h.g.position.set(c.x, y, c.z); h.g.rotation.y = c.f || 0; ctx.scene.add(h.g);
+  h.npc = true; h.g.position.set(c.x, y, c.z); h.g.rotation.y = c.f || 0; ctx.scene.add(h.g);      // h.npc: rigged.js cho mỗi người một dáng đứng nghỉ riêng
   const col = phys.world.createCollider(phys.RAPIER.ColliderDesc.capsule(0.55, 0.24).setTranslation(c.x, y + 0.8, c.z).setCollisionGroups(G.STATIC), phys.fixed);
   return { h, c, base: c.f || 0, i: 0, col, pose: null, goal: null };
 }

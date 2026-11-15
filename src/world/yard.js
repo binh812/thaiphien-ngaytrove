@@ -34,7 +34,7 @@ export function build(B, { blocks }) {
   B.box('metalPaint', 0xf4f4f4, 48.1, 48.6, 4.3, 12.3, -13.2, 3.2, NS);
   B.spots.push({ type: 'led', x: 48.08, y: 8.3, z: -5, w: 15.2, h: 7.2, ry: RY.W });
   // sân khấu
-  B.box('wood', 0x8a5a3a, 44.8, 47.6, 0, 0.8, -14, 4); B.box('fabric', 0xb0202a, 44.9, 47.5, 0.8, 0.83, -13.9, 3.9, DECO);
+  B.box('wood', 0x8a5a3a, 44.8, 47.6, 0, 0.8, -14, 4); B.box('fabric', 0xb0202a, 44.9, 47.5, 0.8, 0.83, -13.9, 3.9);      // thảm có va chạm: mặt NHÌN THẤY của sân khấu là 0,83 m — trước đây thảm chỉ để trang trí, người chơi đứng ở 0,80 (chân lún 3 cm vào thảm) còn nhóm văn nghệ đứng ở 0,83
   for (let z = -14; z < 4; z += 0.45) { B.box('fabric', 0xc0202a, 44.76, 44.8, 0.02, 0.8, z, z + 0.23, DECO); B.box('fabric', 0x8e1820, 44.78, 44.8, 0.02, 0.8, z + 0.23, z + 0.45, DECO); }
   B.box('concrete', 0xa8a8a8, 44.2, 44.8, 0, 0.53, -7.5, -2.5); B.box('concrete', 0xa8a8a8, 43.6, 44.2, 0, 0.27, -7.5, -2.5);
   B.box('wood', 0x7a4a2a, 45.3, 46.1, 0.8, 1.95, -9.5, -8.6); label(B, 0.8, 0.5, [{ t: 'THÁI PHIÊN' }], { bg: '#7a4a2a', fg: '#ffd23f', ppm: 140 }, 45.28, 1.55, -9.05, RY.W);

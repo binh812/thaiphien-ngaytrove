@@ -11,6 +11,7 @@ const KNEE = 0.35, CHEST = 1.0, AHEAD = 0.32, MAX_STEP = 0.32, KEEP = 0.7;      
 export function makeActors(ctx) {
   const { phys, player } = ctx, list = [], eye = new THREE.Vector3(), fw = new THREE.Vector3(), dir = { x: 0, y: 0, z: 0 }, org = { x: 0, y: 0, z: 0 };
   let t = 0, frame = 0, snapped = false;
+  const footGround = (p) => floorY(phys, p.x, p.y - 0.15, p.z);      // nền tĩnh dưới một điểm của bàn chân (bỏ qua nang người), dò từ 0,45 m trên tới 0,75 m dưới
 
   /**
    * Thêm một diễn viên tại c = { x, y, z, f }. Các trường điều khiển (đặt trực tiếp):
@@ -57,7 +58,7 @@ export function makeActors(ctx) {
       const h = a.heading + ang, dx = Math.sin(h), dz = Math.cos(h); if (!clear(a, dx, dz, step + AHEAD)) continue;
       const nx = g.x + dx * step, nz = g.z + dz * step, fy = floorY(phys, nx, g.y, nz, a.col); if (fy === null || Math.abs(fy - g.y) > MAX_STEP) continue;
       const near = (nx - p.x) ** 2 + (nz - p.z) ** 2; if (near < KEEP * KEEP && near < near0 && Math.abs(g.y - feet) < 1.5) continue;
-      g.x = nx; g.z = nz; g.y = fy; a.col.setTranslation({ x: nx, y: fy + 0.8, z: nz }); a.heading = h; a.stuck = Math.max(0, a.stuck - dt * 2);
+      g.x = nx; g.z = nz; g.y += (fy - g.y) * Math.min(1, dt * 30); a.col.setTranslation({ x: nx, y: fy + 0.8, z: nz });      // lên/xuống vỉa hè: gốc trượt tới cao độ mới trong ~0,07 s (không nhảy cả người 14 cm trong một khung); từng bàn chân bám nền thật nhờ rig.groundAt a.heading = h; a.stuck = Math.max(0, a.stuck - dt * 2);
       return step / dt;
     }
     a.stuck += dt; return 0;
@@ -77,13 +78,14 @@ export function makeActors(ctx) {
       obj.visible = dc < (a.show || SHOW) && (dc < CULL_FROM || ahead > cosCone); if (!obj.visible) continue;
       const f = a.face, want = speed ? a.heading : typeof f === 'number' ? f : f === 'player' ? Math.atan2(p.x - g.x, p.z - g.z) : f === 'cam' ? Math.atan2(cam.x - g.x, cam.z - g.z) : Math.atan2(f.x - g.x, f.z - g.z);
       turnTo(a.h, want, speed ? 8 : 4, dt);
-      const h = a.h, lk = a.look; h.pose = speed ? null : a.pose; h.clip = speed ? null : a.clip; h.smile = a.smile; h.kick = a.kick || 0; h.armsDown = !!a.armsDown;
+      if (a.h.rig && a.probe && !a.h.rig.groundAt) { a.h.rig.groundAt = footGround; a.h.rig.stepReach = 0.2; }      // người đi theo người chơi qua bậc, vỉa hè: chân đặt theo nền thật dưới từng bàn chân (như người chơi)
+      const h = a.h, lk = a.look; h.pose = speed ? null : a.pose; h.clip = speed ? null : a.clip; h.smile = a.smile; h.kick = a.kick || 0; h.kickKind = a.kickKind || null; h.kickWind = a.kickWind || 0; h.kickLead = a.kickLead ?? null; h.kickAt = a.kickAt || null; h.armsDown = !!a.armsDown;
       h.lookAt = speed || !lk ? null : lk === 'player' ? eye.set(p.x, p.y + 0.72, p.z) : lk === 'cam' ? cam : lk;
       shadowLod(a.h, dc < shadowR);
       if (dc >= ANIM) continue;
       // Đo được: phần tốn nhất của mỗi nhân vật là CPU chỉnh xương sau khi trộn clip (~0,5 ms/người/khung), không phải vẽ. Nên người đứng yên
       // (đung đưa rất chậm) chỉ cập nhật vài khung một lần, dồn dt lại; người đang bước ở gần mới cập nhật mọi khung. a.k so le để chia đều tải.
-      const behind = ahead < cosCone, every = a.kick ? 1 : speed ? (dc > 20 || behind ? 2 : 1) : behind ? 8 : dc > 25 ? 6 : dc > 10 ? 4 : 2;
+      const behind = ahead < cosCone, every = a.kick || a.kickWind > 0.2 ? 1 : speed ? (dc > 20 || behind ? 2 : 1) : behind ? 8 : dc > 25 ? 6 : dc > 10 ? 4 : 2;
       a.acc += dt; if ((frame + a.k) % every) continue;
       animateHuman(h, speed, a.acc, false, a.holding && !speed, t + h.phase); a.acc = 0;
     }

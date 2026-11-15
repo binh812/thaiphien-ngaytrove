@@ -296,22 +296,23 @@ async function buildFrom(look, man, key, info, W) {
     const P = (o) => o.getWorldPosition(new THREE.Vector3()), d = P(mid).sub(P(hd)), n = new THREE.Vector3().crossVectors(d, P(idx).sub(P(pky))).multiplyScalar(sg), axis = new THREE.Vector3().crossVectors(d, n).normalize();
     for (const [fn, more] of [['Index', 0.85], ['Middle', 1], ['Ring', 1.1], ['Pinky', 1.2]]) for (let j = 1; j <= 3; j++) {
       const bn = bones[S + 'Hand' + fn + j]; if (!bn) continue;
-      curl.push({ bn, q: new THREE.Quaternion().setFromAxisAngle(axis.clone().applyQuaternion(bn.getWorldQuaternion(new THREE.Quaternion()).invert()).normalize(), FINGER_CURL[j - 1] * more) });
+      curl.push({ bn, rest: bn.quaternion.clone(), q: new THREE.Quaternion().setFromAxisAngle(axis.clone().applyQuaternion(bn.getWorldQuaternion(new THREE.Quaternion()).invert()).normalize(), FINGER_CURL[j - 1] * more) });
     }
   }
   const heel = {}, footLat = {}, toeUp = {}; for (const S of ['Left', 'Right']) { const ft = bones[S + 'Foot']; if (ft) { const p = ft.getWorldPosition(new THREE.Vector3()); p.y = 0; p.z -= HEEL_BACK * s * b; heel[S] = ft.worldToLocal(p); footLat[S] = new THREE.Vector3(1, 0, 0).applyQuaternion(ft.getWorldQuaternion(new THREE.Quaternion()).invert()); } const tb = bones[S + 'ToeBase']; if (tb) toeUp[S] = new THREE.Vector3(0, 1, 0).applyQuaternion(tb.getWorldQuaternion(new THREE.Quaternion()).invert()); }      // toeUp: phương thẳng đứng lúc nghỉ trong hệ của xương ngón chân
   mixer.update(0);
-  return { g, mixer, act, clips, poses: new Map(), pose: null, pw: 0, lookAt: null, lookPos: new THREE.Vector3(), lk: 0, smileMeshes, smile0: morph.smile, smileV: morph.smile, smileT: null, gfc: 0, flapDead: W && W.bottom && W.bottom.flaps && !(W.top && W.top.flaps) ? 0.16 : 0, twistMax: W && W.top && (W.top.hides || []).includes('skin_forearm') ? 0.3 : undefined, blinkMeshes, blinkIn: 1 + Math.random() * 4, blinkV: 0, bones, flaps, footY, toeY, heel, footLat, toeUp, armFlex, curl, stride: info.hipsRestHeight > 0 ? info.hipsRestHeight / CLIP_HIPS : 1, legOut: { Left: 0, Right: 0 }, curlAmt: 0, fine: true, fineAlways: false, rootP: new THREE.Vector3(), rootSeen: false, rootYaw: 0, carry: false, anchor: { Left: { on: false, p: new THREE.Vector3(), t: new THREE.Vector3(), near: 0, d: new THREE.Vector3(), rel: false, ik: false, near: 0, lag: 0, lift: 0, e: 0, v: 0 }, Right: { on: false, p: new THREE.Vector3(), t: new THREE.Vector3(), d: new THREE.Vector3(), rel: false, ik: false, near: 0, lag: 0, lift: 0, e: 0, v: 0 }, busy: false }, restQ, headRel, neckDir, female: look.gender === 'f', stance: look.stance || 'side', t: 0, seed: Math.random() * 6.28, w: { idle: 1, walk: 0, run: 0 }, rootShift: (name, t) => rootZAt(clips[name], t) * g.scale.z, dispose() { mixer.stopAllAction(); mixer.uncacheRoot(model); for (const m of mats) m.dispose(); model.traverse((o) => { if (o.isSkinnedMesh) o.skeleton.dispose(); }); } };
+  return { g, mixer, act, clips, poses: new Map(), pose: null, pw: 0, lookAt: null, lookPos: new THREE.Vector3(), lk: 0, smileMeshes, smile0: morph.smile, smileV: morph.smile, smileT: null, gfc: 0, flapDead: W && W.bottom && W.bottom.flaps && !(W.top && W.top.flaps) ? 0.16 : 0, twistMax: W && W.top && (W.top.hides || []).includes('skin_forearm') ? 0.3 : undefined, blinkMeshes, blinkIn: 1 + Math.random() * 4, blinkV: 0, bones, flaps, footY, toeY, heel, footLat, toeUp, armFlex, curl, stride: info.hipsRestHeight > 0 ? info.hipsRestHeight / CLIP_HIPS : 1, legOut: { Left: 0, Right: 0 }, curlAmt: 0, airT: 0, airK: 0, airV: 0, land: 0, landK: 1, jumpKind: null, jumpLead: 'Left', kickPrev: 0, windK: 0, kickWind: 0, npc: false, kickT: -1, kickC: 0.15, kickStyle: 'drive', kickKind: null, kickLead: null, kickAt: null, kickHas: false, kickP: new THREE.Vector3(), aim: null, hold: null, holdAt: null, holdR: 0, shotFrom: new THREE.Vector3(), shotR: 0.12, shotSet: false, fine: true, fineAlways: false, rootP: new THREE.Vector3(), rootSeen: false, rootYaw: 0, carry: false, anchor: { Left: { on: false, p: new THREE.Vector3(), t: new THREE.Vector3(), near: 0, d: new THREE.Vector3(), rel: false, ik: false, near: 0, lag: 0, lift: 0, e: 0, v: 0 }, Right: { on: false, p: new THREE.Vector3(), t: new THREE.Vector3(), d: new THREE.Vector3(), rel: false, ik: false, near: 0, lag: 0, lift: 0, e: 0, v: 0 }, busy: false }, restQ, headRel, neckDir, female: look.gender === 'f', stance: look.stance || 'side', t: 0, seed: Math.random() * 6.28, w: { idle: 1, walk: 0, run: 0 }, rootShift: (name, t) => rootZAt(clips[name], t) * g.scale.z, dispose() { mixer.stopAllAction(); mixer.uncacheRoot(model); for (const m of mats) m.dispose(); model.traverse((o) => { if (o.isSkinnedMesh) o.skeleton.dispose(); }); } };
 }
 
 const _q = new THREE.Quaternion(), _pq = new THREE.Quaternion(), _a = new THREE.Vector3(), _b = new THREE.Vector3(), _d = new THREE.Vector3();
 /** xoay xương sao cho đoạn xương→con chĩa theo hướng dir (toạ độ thế giới), mức k */
-function aim(bone, child, dir, k) {
+function aim(bone, child, dir, k, lazy) {      // lazy: không dựng lại ma trận của cả nhánh xương con ngay (cánh tay kéo theo 15 đốt ngón) — chỉ dùng khi mọi phép đọc sau đó đi qua getWorldPosition/getWorldQuaternion (tự dựng lại chuỗi cha)
   bone.getWorldPosition(_a); child.getWorldPosition(_b); _d.subVectors(_b, _a).normalize();
   _q.setFromUnitVectors(_d, dir); bone.parent.getWorldQuaternion(_pq);
-  const world = bone.getWorldQuaternion(new THREE.Quaternion()).premultiply(_q);
-  bone.quaternion.slerp(_pq.invert().multiply(world), k); bone.updateMatrixWorld(true);
+  const world = bone.getWorldQuaternion(_aw).premultiply(_q);
+  bone.quaternion.slerp(_pq.invert().multiply(world), k); if (!lazy) bone.updateMatrixWorld(true);
 }
+const _aw = new THREE.Quaternion();
 
 const _f = new THREE.Vector3(), _rq = new THREE.Quaternion(), _lq = new THREE.Quaternion(), _iq = new THREE.Quaternion(), _X = new THREE.Vector3(1, 0, 0);
 const FLAP_SHARE = [1, 0.1, -0.38, -0.2];      // đốt trên theo đùi tới gối, đốt dưới rủ thẳng xuống lại
@@ -346,18 +347,18 @@ const dirW = (x, y, z) => _dir.set(x, y, z).normalize().applyQuaternion(_wq).clo
 /** đứng thẳng tự nhiên: chân khép, tay buông sát thân, khuỷu hơi gập; k = mức áp (trọng số idle) */
 // hướng (hệ nhân vật, bên trái; bên phải lấy đối xứng x) của cánh tay trên và cẳng tay cho từng kiểu đứng
 const ARMS = {
-  side:  [[0.085, -1, -0.03], [0.03, -1, 0.10]],      // buông xuôi sát thân, khuỷu gập nhẹ
+  side:  [[0.12, -1, -0.03], [0.0, -1, 0.22]],      // buông thả lỏng: cánh tay dạng khỏi thân ~8° (nữ thêm ~3° vì hông rộng hơn vai), khuỷu gập ~10°, bàn tay ngay cạnh đường chỉ quần — đưa ra trước nhiều hơn thì nhìn ngang như sắp rút súng
   front: [[0.16, -1, 0.10], [-0.62, -0.72, 0.34]],      // hai tay chắp trước bụng dưới
   back:  [[0.15, -1, -0.10], [-0.55, -0.78, -0.30]],    // hai tay chắp sau lưng
 };
-const PALM = [-1, 0, -0.22], TWIST_MAX = 1.0;      // lòng bàn tay áp vào đùi, hơi quay ra sau; xoắn cẳng tay tối đa ~57° (quá nữa thì tay áo bị vặn)
+const PALM = [-1, 0, -0.08], TWIST_MAX = 1.0;      // lòng bàn tay quay vào đùi và chếch ra sau (tay buông tự nhiên hơi úp); xoắn cẳng tay tối đa ~57° (quá nữa thì tay áo bị vặn)
 const _pn = new THREE.Vector3(), _pt = new THREE.Vector3(), _px = new THREE.Vector3(), _hd = new THREE.Vector3(), _tq = new THREE.Quaternion();
 /**
  * Xoay cẳng tay quanh trục của nó để lòng bàn tay quay về hướng dir (hệ nhân vật, viết cho tay trái; tay phải lấy đối xứng x).
  * aim() chỉ lo hướng của đoạn xương, còn độ xoắn quanh trục thì bỏ mặc → bàn tay hay bị ngửa ra trước hoặc úp ra sau.
  * Pháp tuyến lòng bàn tay tính từ hình học: (gốc ngón giữa − cổ tay) × (gốc ngón trỏ − gốc ngón út), đổi dấu theo bên.
  */
-function palmTo(r, S, s, dir, k) {
+function palmTo(r, S, s, dir, k, lazy) {
   const B = r.bones, fore = B[S + 'ForeArm'], hand = B[S + 'Hand'], mid = B[S + 'HandMiddle1'], idx = B[S + 'HandIndex1'], pky = B[S + 'HandPinky1'];
   if (!fore || !hand || !mid || !idx || !pky) return;
   hand.getWorldPosition(_a); fore.getWorldPosition(_b); _px.subVectors(_a, _b).normalize();          // trục cẳng tay
@@ -369,31 +370,66 @@ function palmTo(r, S, s, dir, k) {
   const ang = THREE.MathUtils.clamp(Math.atan2(_hd.crossVectors(_pn, _pt).dot(_px), _pn.dot(_pt)), -(r.twistMax ?? TWIST_MAX), r.twistMax ?? TWIST_MAX);
   _tq.setFromAxisAngle(_px, ang); fore.parent.getWorldQuaternion(_pq);
   const world = fore.getWorldQuaternion(_q).premultiply(_tq);
-  fore.quaternion.slerp(_pq.invert().multiply(world), k); fore.updateMatrixWorld(true);
+  fore.quaternion.slerp(_pq.invert().multiply(world), k); if (!lazy) fore.updateMatrixWorld(true);
 }
-function relaxPose(r, k, root) {
-  const B = r.bones, f = r.female ? 1 : 0, t = r.t, br = Math.sin(t * 1.5 + r.seed) * 0.005;
-  // dồn trọng tâm chậm rãi sang một chân: hông lệch ngang ~1,5 cm, chân kia chùng gối nhẹ
-  const lean = Math.sin(t * 0.23 + r.seed) * 0.8 + Math.sin(t * 0.61 + r.seed * 2.3) * 0.2, side = THREE.MathUtils.clamp(lean * 1.6, -1, 1);
+/** khép ngón cái về phía ngón trỏ (tư thế gốc của mô hình để ngón cái choãi ~50°: tay buông mà ngón cái chĩa ngang vào đùi, nhìn như móc câu) */
+function thumbIn(r, S, k) {
+  const B = r.bones, t1 = B[S + 'HandThumb1'], t2 = B[S + 'HandThumb2'], i1 = B[S + 'HandIndex1'], i2 = B[S + 'HandIndex2']; if (!t1 || !t2 || !i1 || !i2 || k < 0.01) return;
+  i1.getWorldPosition(_pn); i2.getWorldPosition(_pt).sub(_pn).normalize(); t1.getWorldPosition(_pn); t2.getWorldPosition(_hd).sub(_pn).normalize();
+  _hd.lerp(_pt, 0.8).normalize(); _hs.copy(_hd); aim(t1, t2, _hs, k, true); const t3 = B[S + 'HandThumb3']; if (t3) aim(t2, t3, _hs, k * 0.7, true);
+}
+const FIDGETS = {      // cử chỉ nhỏ lúc đứng lâu / dáng nghỉ cơ sở của NPC: [tay, cánh tay, cẳng tay ([ra ngoài, lên, ra trước]), mức cúi đầu]
+  hip: ['Right', [0.6, -0.72, -0.3], [-0.72, -0.5, 0.42], 0],            // chống một tay vào hông
+  watch: ['Left', [0.18, -0.9, 0.36], [-0.78, 0.18, 0.58], 0.28],        // xem đồng hồ
+  scratch: ['Right', [0.5, 0.3, 0.45], [-0.55, 0.8, -0.12], 0.1],        // gãi đầu / sửa kính
+  cross: ['both', [0.06, -0.86, 0.5], [-1, 0.02, 0.1], 0],               // khoanh tay: khuỷu đưa ra trước sườn, cẳng tay nằm ngang trước bụng trên, bàn tay tới khuỷu bên kia
+};
+const FIDGET_KEYS = Object.keys(FIDGETS), STAND = ['side', 'side', 'hip', 'side', 'cross', 'side', 'side'], frac = (x) => x - Math.floor(x);
+function fidget(r, type, w) {
+  const F = FIDGETS[type]; if (!F || w < 0.01) return;
+  if (F[0] === 'both') {      // đang vào/ra dáng: cẳng tay đưa ra trước rồi mới khép ngang (trộn thẳng từ tay buông sang tay khoanh thì cổ tay quét xuyên qua bụng)
+    const u = 1 - w, f2 = [F[2][0] * (1 - u * 0.9), F[2][1] - u * 0.5, F[2][2] + u * 0.9]; armTo(r, 'Left', F[1], f2, w); armTo(r, 'Right', F[1], [f2[0], f2[1] + 0.2, f2[2] + 0.06], w); palmTo(r, 'Left', 1, [0, 0, -1], w); palmTo(r, 'Right', -1, [0, 0, -1], w); }      // tay phải gác trên tay trái, lòng bàn tay áp vào người
+  else if (type === 'scratch' && r.bones.Head) armIK(r, 'Right', around(r.bones.Head.getWorldPosition(_ht), -0.105, 0.075, -0.035, _hs), w, [0.75, 0.1, 0.35]);      // bàn tay chạm đúng đầu (sau tai phải) chứ không giơ lơ lửng
+  else armTo(r, F[0], F[1], F[2], w);
+  if (F[3]) bend(r.bones.Head, 1, 0, 0, F[3] * w);
+}
+/**
+ * Đứng nghỉ thả lỏng (không phải đứng nghiêm): trọng tâm dồn một chân 7–11 giây rồi đổi (hông lệch ngang, xương chậu nghiêng, cột sống cong ngược lại, chân kia
+ * chùng gối và xoay bàn chân ra ngoài), hai chân rộng bằng hông, tay buông ra trước đường hông với khuỷu gập ~25°, hai bên lệch nhau, đầu nghiêng và nhìn quanh nhẹ.
+ * Thỉnh thoảng một cử chỉ nhỏ (FIDGETS); NPC (r.npc) mỗi người một dáng cơ sở theo seed. k = trọng số idle nên bước đi là mọi thứ tan ngay.
+ */
+function relaxPose(r, k, root, fine) {
+  const B = r.bones, f = r.female ? 1 : 0, t = r.t, sd = r.seed, br = Math.sin(t * 1.5 + sd) * 0.009 + Math.sin(t * 0.37 + sd * 1.7) * 0.012;      // thở + đung đưa chậm
+  const side = THREE.MathUtils.clamp(Math.sin((t / (7 + frac(sd) * 4) + sd) * Math.PI) * 3.2, -1, 1);      // +1: trụ chân trái, −1: trụ chân phải
   // hông, lưng, cổ, bàn tay, bàn chân về tư thế nghỉ (clip đứng gốc ưỡn hông, xoè tay, chân chữ bát)
   for (const kq in r.restQ) B[kq].quaternion.slerp(r.restQ[kq], (kq === 'Head' || kq === 'Neck' ? 0.55 : 0.8) * k);
-  if (B.Hips) { B.Hips.position.x += side * 0.015 * k; B.Hips.updateMatrixWorld(true); }
+  // Mọi bước xoay trong hàm này để 'lazy' (không dựng lại ma trận cả nhánh xương sau từng bước — trước đây ~7 lần dựng lại cả bộ xương mỗi khung, chiếm phần lớn thời gian
+  // của dáng đứng): các phép đọc ở đây đều qua getWorld*, tự dựng lại chuỗi cha; groundFeet ở cuối dựng lại cả bộ xương MỘT lần cho các bước sau.
+  if (B.Hips) B.Hips.position.x += side * 0.026 * k;
   root.getWorldQuaternion(_wq);
-  straighten(r, 0.85 * k, 0.012);                     // lưng thẳng, cổ không rướn ra trước
+  straighten(r, 0.85 * k, 0.012, true);                     // lưng thẳng, cổ không rướn ra trước
+  bend(B.Hips, 0, 0, 1, side * 0.035 * k, true); bend(B.Spine, 0, 0, 1, -side * 0.055 * k, true); bend(B.Spine, 1, 0, 0, (0.015 + Math.sin(t * 1.5 + sd) * 0.008) * k, true);
+  if (fine) { bend(B.Head, 0, 0, 1, (side * 0.03 + Math.sin(sd * 7) * 0.035) * k, true); bend(B.Head, 0, 1, 0, Math.sin(t * 0.31 + sd * 3) * 0.13 * k, true); }      // người ngoài tầm chỉnh kỹ: bỏ nghiêng/quay đầu, xoay bàn tay, ngón cái, cử chỉ nhỏ
   const arms = ARMS[r.stance] || ARMS.side;
   for (const [S, s] of [['Left', 1], ['Right', -1]]) {
     const up = B[S + 'UpLeg'], leg = B[S + 'Leg'], foot = B[S + 'Foot'], arm = B[S + 'Arm'], fore = B[S + 'ForeArm'], hand = B[S + 'Hand'];
-    const free = Math.max(0, -side * s);                 // chân không chịu lực: gối chùng ra trước, bàn chân hơi lùi
-    if (up && leg && foot) { aim(up, leg, dirW(s * (0.035 - f * 0.015) - side * 0.02, -1, 0.012 + free * 0.10), k); aim(leg, foot, dirW(s * 0.004 - side * 0.02, -1, -0.02 - free * 0.13), k); }
+    const free = Math.max(0, -side * s);                 // chân không chịu lực: gối chùng ra trước, bàn chân hơi lùi và xoay ra ngoài
+    if (up && leg && foot) { aim(up, leg, dirW(s * (0.07 - f * 0.025) - side * 0.03, -1, 0.012 + free * 0.11), k, true); aim(leg, foot, dirW(s * 0.01 - side * 0.02, -1, -0.02 - free * 0.14), k, true); bend(up, 0, 1, 0, s * (0.07 + free * 0.2) * k, true); }
     if (arm && fore && hand) {
-      const a0 = arms[0], a1 = arms[1], w = r.stance === 'side' ? f * 0.02 : 0;
-      const as = r.stance === 'side' ? Math.sin(r.seed * 3.1 + s) * 0.02 : 0;        // hai tay không buông giống hệt nhau
-      aim(arm, fore, dirW(s * (a0[0] - w), a0[1], a0[2] + br + as), k); aim(fore, hand, dirW(s * a1[0], a1[1], a1[2] + br + as * 1.5), k);
-      if (r.stance === 'side') palmTo(r, S, s, PALM, k);       // chắp tay trước/sau: giữ độ xoắn của tư thế, không ép
+      const a0 = arms[0], a1 = arms[1], w = r.stance === 'side' ? -f * 0.05 : 0;
+      const as = r.stance === 'side' ? Math.sin(sd * 3.1 + s) * 0.05 : 0, ax = r.stance === 'side' ? Math.sin(sd * 5.3 + s * 2) * 0.025 : 0;        // hai tay không buông giống hệt nhau
+      aim(arm, fore, dirW(s * (a0[0] - w + ax), a0[1], a0[2] + br * 0.6 + as), k, true); aim(fore, hand, dirW(s * (a1[0] + ax), a1[1], a1[2] + br + as * 1.5), k, true);
+      if (r.stance === 'side' && fine) { palmTo(r, S, s, PALM, k, true); thumbIn(r, S, 0.9 * k); }       // chắp tay trước/sau: giữ độ xoắn của tư thế, không ép
     }
   }
+  if (r.stance === 'side' && (fine || r.npc)) {      // dáng cơ sở của NPC (chống hông, khoanh tay) giữ cả khi ở xa, kẻo lại gần 12 m thì tay đổi dáng đột ngột
+    const T = 16 + frac(sd * 2.1) * 12, c = t % T, e = THREE.MathUtils.smoothstep(c, T - 4.6, T - 3.9) * (1 - THREE.MathUtils.smoothstep(c, T - 0.8, T - 0.1));
+    const base = r.npc ? STAND[Math.floor(frac(sd * 1.37) * STAND.length)] : 'side';
+    if (base !== 'side') fidget(r, base, k);
+    if (fine && e > 0.01) fidget(r, FIDGET_KEYS[(Math.floor(t / T) + Math.floor(sd * 3)) % FIDGET_KEYS.length], e * k);
+  }
   groundFeet(r, k, root);
-  r.curlAmt += FINGER_IDLE * k;      // bàn tay khép hờ nhẹ lúc đứng nghỉ (dáng chụp ảnh, clip khác: k giảm theo trọng số của chúng); đặt một lần ở applyCurl
+  r.openAmt = (r.openAmt || 0) + FINGER_OPEN * k; r.curlAmt += FINGER_IDLE * k;      // bàn tay khép hờ nhẹ lúc đứng nghỉ (dáng chụp ảnh, clip khác: k giảm theo trọng số của chúng); đặt một lần ở applyCurl
 }
 /** dịch hông theo phương đứng để bàn chân thấp hơn chạm đúng mặt đất (sau khi đã đổi hướng chân) */
 function groundFeet(r, k, root, maxStep) {
@@ -435,11 +471,11 @@ function tuck(bone, child, s, minX, kx, kz, k) {
  * Dựng thẳng cột sống: đoạn hông→cổ về gần thẳng đứng (lean = độ ngả ra trước cho phép), cổ thẳng trên vai,
  * đầu về đúng hướng nghỉ so với thân người (mắt nhìn ngang). Gọi sau khi _wq đã là hướng nhân vật.
  */
-function straighten(r, k, lean) {
+function straighten(r, k, lean, lazy) {
   const B = r.bones; if (!B.Spine || !B.Neck || !B.Head) return;
-  aim(B.Spine, B.Neck, dirW(0, 1, lean), k);
-  const nd = r.neckDir; aim(B.Neck, B.Head, dirW(0, nd ? nd.y : 1, (nd ? nd.z * 0.8 : 0.06) + lean * 0.5), k);
-  if (r.headRel) { _fq.copy(_wq).multiply(r.headRel); B.Head.parent.getWorldQuaternion(_fp); B.Head.quaternion.slerp(_fp.invert().multiply(_fq), k); B.Head.updateMatrixWorld(true); }
+  aim(B.Spine, B.Neck, dirW(0, 1, lean), k, lazy);
+  const nd = r.neckDir; aim(B.Neck, B.Head, dirW(0, nd ? nd.y : 1, (nd ? nd.z * 0.8 : 0.06) + lean * 0.5), k, lazy);
+  if (r.headRel) { _fq.copy(_wq).multiply(r.headRel); B.Head.parent.getWorldQuaternion(_fp); B.Head.quaternion.slerp(_fp.invert().multiply(_fq), k); if (!lazy) B.Head.updateMatrixWorld(true); }
 }
 // Đọc vị trí / hướng thế giới thẳng từ matrixWorld: CHỈ dùng khi ma trận của xương đó chắc chắn đã mới (vừa getWorldPosition chính nó, hoặc tổ tiên của nó
 // vừa updateMatrixWorld(true)). getWorldPosition/getWorldQuaternion của three dựng lại ma trận của cả chuỗi xương cha ở mỗi lần gọi (~10 cấp với bàn chân).
@@ -452,18 +488,18 @@ function aimNow(bone, child, dir, k) {
   bone.quaternion.slerp(_pq.invert().multiply(quatNow(bone, _aq).premultiply(_q)), k); bone.updateMatrixWorld(true);
 }
 const _aq = new THREE.Quaternion();
-const FINGER_CURL = [0.42, 0.5, 0.33], FINGER_RUN = 1.6, FINGER_IDLE = 0.6;      // góc gập (rad) của ba đốt ngón khi đi; khi chạy nhân thêm chừng này (nắm hờ)
+const FINGER_CURL = [0.42, 0.5, 0.33], FINGER_RUN = 1.6, FINGER_IDLE = 0.3, FINGER_OPEN = 0.85;      // FINGER_OPEN: lúc đứng nghỉ, ngón tay của clip (co ~90° ở gốc ngón, nhìn như vuốt) được duỗi về tư thế gốc chừng này rồi mới khép hờ FINGER_IDLE      // góc gập (rad) của ba đốt ngón khi đi; khi chạy nhân thêm chừng này (nắm hờ)
 /**
  * Đặt độ khép ngón của khung này (r.curlAmt, gom từ relaxPose và refineGait) lên từng đốt, tính từ tư thế GỐC của đốt chứ không nhân tiếp lên kết quả khung trước:
  * bộ trộn của three chỉ ghi lại một xương khi giá trị trộn ra đổi so với lần ghi trước, nên đốt ngón nào có kênh đứng yên thì không được đặt lại mỗi khung — nhân dồn
  * sẽ cuộn ngón mãi. c.out = giá trị mình ghi lần trước; xương còn đúng giá trị đó nghĩa là bộ trộn chưa ghi gì mới, gốc vẫn là c.base.
  */
 function applyCurl(r) {
-  const amt = r.curlAmt; r.curlAmt = 0;
+  const amt = r.curlAmt, open = Math.min(1, r.openAmt || 0); r.curlAmt = 0; r.openAmt = 0;
   for (const c of r.curl) {
     const q = c.bn.quaternion;
     if (!c.base) { c.base = q.clone(); c.out = q.clone(); } else if (q.x !== c.out.x || q.y !== c.out.y || q.z !== c.out.z || q.w !== c.out.w) c.base.copy(q);
-    if (amt > 0.005) q.copy(c.base).multiply(_aq.identity().slerp(c.q, amt)); else q.copy(c.base);
+    q.copy(c.base); if (open > 0.005) q.slerp(c.rest, open); if (amt > 0.005) q.multiply(_aq.identity().slerp(c.q, amt));
     c.out.copy(q);
   }
 }
@@ -585,7 +621,8 @@ function liftHips(r, lift, root, plant = 0) {
     let shift = 0, dToe = 0;
     if (plant > 0 && r.groundAt) {
       const toe = B[S + 'ToeBase'], gA = r.groundAt(foot.getWorldPosition(_g1)), gT = toe ? r.groundAt(toe.getWorldPosition(_g2)) : null;
-      if (gA !== null && Math.abs(gA - y0) < STEP_REACH) shift = (gA - y0) * plant; if (gT !== null && Math.abs(gT - y0) < STEP_REACH) dToe = (gT - y0) * plant - shift;
+      const reach = r.stepReach || STEP_REACH;      // r.stepReach: người đi theo chỉ bám bậc/vỉa hè thấp (≤ 0,2 m) — chân họ có lúc lọt vào mép ghế đá, bồn cây (đường đi không tránh hết) thì không được "trèo" lên đó
+      if (gA !== null && Math.abs(gA - y0) < reach) shift = (gA - y0) * plant; if (gT !== null && Math.abs(gT - y0) < reach) dToe = (gT - y0) * plant - shift;
       if (Math.abs(shift) < 0.004) shift = 0; if (Math.abs(dToe) < 0.004) dToe = 0; if (shift < low) low = shift;
     }
     const raise = plant > 0 ? plantFoot(r, S, foot, B[S + 'ToeBase'], y0, plant, dToe) : 0;      // có thể xoay bàn chân → lấy vị trí/hướng bàn chân sau dòng này
@@ -603,7 +640,7 @@ function liftHips(r, lift, root, plant = 0) {
  * soft: đích càng gần chỗ cổ chân đang đứng thì càng giữ nguyên vị trí gối sẵn có (đích trùng chỗ cũ = không đổi gì) — dùng cho neo chân lúc đứng/tạo dáng, nơi
  * việc gập gối nhẹ ra trước của lời giải đầy đủ sẽ làm lệch dáng đứng thẳng và làm gối bật khi bật/tắt IK.
  */
-function legIK(r, up, leg, foot, T, fq, root, lazy, soft) {
+function legIK(r, up, leg, foot, T, fq, root, lazy, soft, kneeFwd = 0) {      // kneeFwd (m): kéo thêm hướng gối ra trước mặt — dùng khi khuỵu gối từ thế chân gần thẳng (hướng gập cũ chỉ là nhiễu → gối bè ra hai bên)
   const L = { up, leg, foot, T, fq };
   {
     L.up.getWorldPosition(_H); L.leg.getWorldPosition(_K); _T.copy(L.T);
@@ -617,7 +654,7 @@ function legIK(r, up, leg, foot, T, fq, root, lazy, soft) {
     // gối không bao giờ gập ra sau: khi cổ chân bị dời ra trước/lên cao (bậc thang), vị trí gối cũ có thể nằm sau trục mới → thay phần chĩa ra sau bằng đúng chừng ấy chĩa ra
     // trước (chỉ bỏ đi thì còn lại phần lệch ngang, gối bẻ sang bên)
     { const back = _pole.dot(_f); if (back < 0) _pole.addScaledVector(_f, -2 * back); }
-    _pole.addScaledVector(_f, KNEE_FWD * (r.g.scale.y || 1) * Math.max(soft ? 0.35 : 0, THREE.MathUtils.smoothstep(reach, KNEE_REACH[0], KNEE_REACH[1]))); if (_pole.lengthSq() < 1e-8) _pole.copy(_f); _pole.normalize();
+    _pole.addScaledVector(_f, kneeFwd + KNEE_FWD * (r.g.scale.y || 1) * Math.max(soft ? 0.35 : 0, THREE.MathUtils.smoothstep(reach, KNEE_REACH[0], KNEE_REACH[1]))); if (_pole.lengthSq() < 1e-8) _pole.copy(_f); _pole.normalize();
     _K.copy(_H).addScaledVector(_ax, a).addScaledVector(_pole, h);
     if (soft) _K.lerp(posNow(L.leg, _g1), 1 - THREE.MathUtils.smoothstep(_b.distanceTo(L.T), 0.003, 0.09));      // _b = cổ chân hiện tại
     aimNow(L.up, L.leg, _g2.subVectors(_K, _H).normalize(), 1);      // ma trận chân đang mới: vừa getWorldPosition ở trên, aimNow tự cập nhật phần dưới nó
@@ -627,6 +664,14 @@ function legIK(r, up, leg, foot, T, fq, root, lazy, soft) {
   }
 }
 
+const UNEVEN_MAX = 0.22;      // m: lệch quá mức này (mặt ghế băng, bồn cây ngay cạnh chân) thì không phải bậc/vỉa hè để đặt chân lên
+const UNEVEN = 0.012;      // m: nền dưới cổ chân lệch nền dưới gốc quá mức này mới coi là đứng trên chỗ không phẳng
+/** có bàn chân nào đang đứng trên nền cao/thấp hơn nền dưới gốc không (r.groundAt: dò nền thật) */
+function unevenFeet(r, root) {
+  const B = r.bones, y0 = root.getWorldPosition(_g2).y;
+  for (const S of ['Left', 'Right']) { const foot = B[S + 'Foot']; if (!foot) continue; const g = r.groundAt(foot.getWorldPosition(_g1)); if (g !== null && Math.abs(g - y0) > UNEVEN && Math.abs(g - y0) < UNEVEN_MAX) return true; }
+  return false;
+}
 const SETTLE = [0.04, 0.08];      // bàn chân hở nền dưới 4 cm thì hạ hẳn xuống, trên 8 cm coi là nhấc chân có chủ ý, để nguyên
 const _sf = new THREE.Vector3();
 /**
@@ -748,15 +793,206 @@ function gesture(r, g, root) {
     for (const [S, s] of [['Left', 1], ['Right', -1]]) { const arm = B[S + 'Arm'], fore = B[S + 'ForeArm'], hand = B[S + 'Hand']; if (!arm || !fore || !hand) continue; aim(arm, fore, up ? dirW(s * 0.45, 0.85, 0.15) : dirW(s * 0.55, 0.5, 0.35), env); aim(fore, hand, up ? dirW(s * 0.2, 1, 0.1) : dirW(-s * 0.6, 0.62, -0.2), env); }
     return;
   }
-  if (g.type === 'drib') { const c = Math.abs(Math.cos(g.ph || 0)); aim(B.RightArm, B.RightForeArm, dirW(-0.28, -0.8, 0.45), 1); aim(B.RightForeArm, B.RightHand, dirW(-0.05, -0.75 + c * 0.45, 0.8), 1); return; }      // nhồi bóng: bàn tay phải theo quả bóng lên xuống
+  if (g.type === 'drib') { const c = Math.abs(Math.cos(g.ph || 0)); crouch(r, root, 0.045, ['Left', 'Right']); bend(B.Spine, 1, 0, 0, 0.2); armTo(r, 'Left', [0.45, -0.8, 0.2], [0.2, -0.7, 0.6], 0.8);
+    if (g.at) {      // có vị trí bóng thật: bàn tay phải úp trên đỉnh bóng, theo bóng xuống tới ngang hông rồi chờ bóng nảy lên
+      const R = g.r || 0.12, yMin = root.getWorldPosition(_hs).y + 0.72 * (r.g.scale.y || 1); _ht.copy(g.at); _ht.y = Math.max(g.at.y + R + 0.06, yMin);
+      armIK(r, 'Right', around(_ht, 0, 0, -0.08, _sh), 1, [0.7, -0.25, -0.6]); palmTo(r, 'Right', -1, [0, -1, 0.15], 1);
+      if (B.RightHand && r.restQ.RightHand) { B.RightHand.quaternion.slerp(r.restQ.RightHand, 0.8); B.RightHand.updateMatrixWorld(true); bend(B.RightHand, 1, 0, 0, 0.45 * (1 - c)); } return;
+    }
+    aim(B.RightArm, B.RightForeArm, dirW(-0.28, -0.8, 0.45), 1); aim(B.RightForeArm, B.RightHand, dirW(-0.05, -0.75 + c * 0.45, 0.8), 1); return; }      // nhồi bóng: bàn tay phải theo quả bóng lên xuống
   if (g.type === 'shake') {
     const push = Math.sin(g.t * 20) * 0.1;
     for (const [S, s] of [['Left', 1], ['Right', -1]]) { const arm = B[S + 'Arm'], fore = B[S + 'ForeArm'], hand = B[S + 'Hand']; if (!arm || !fore || !hand) continue; aim(arm, fore, dirW(s * 0.22, 0.12 + push, 1), env); aim(fore, hand, dirW(-s * 0.1, 0.3 - push, 1), env); }
     return;
   }
+  if (g.type === 'shoot') {      // thả bóng: từ thế lấy lực (tay trước trán, gối khuỵu) duỗi gối + duỗi tay ném lên trước, cổ tay gập theo bóng, giữ ~0,3 giây rồi hạ
+    const S = THREE.MathUtils.smoothstep, x = Math.min(1, u / 0.11), e = 1 - (1 - x) * (1 - x), out = 1 - S(u, 0.4, 0.85);      // e: tay đẩy nhanh ngay từ khung đầu (đi cùng quả bóng) rồi chậm dần
+    crouch(r, root, 0.08 * (1 - S(u, 0, 0.18)), ['Left', 'Right']);
+    if (r.shotSet && B.RightArm) {      // bắt đầu từ đúng thế đang đỡ bóng (actAim ghi lại): điểm "tâm bóng" đi từ chỗ thả lên trước–trên vai phải, cổ tay từ ngửa sang gập theo bóng
+      root.localToWorld(_ht.copy(r.shotFrom)); B.RightArm.getWorldPosition(_hs).add(_it.set(-0.04, 0.58, 0.46).multiplyScalar(r.g.scale.y || 1).applyQuaternion(_wq)); _ht.lerp(_hs, e);
+      shotHands(r, _ht, r.shotR, out, out * (1 - S(u, 0.1, 0.4)), -1.0 + 1.9 * S(u, 0.03, 0.22)); bend(B.Spine, 1, 0, 0, 0.07 * (1 - e)); return;      // thân còn hơi chúi trước như lúc lấy lực rồi dựng thẳng (không ngả ra sau)
+    }
+    armTo(r, 'Right', lerp3([0.3, 0.12, 0.92], [0.1, 0.88, 0.48], e), lerp3([-0.22, 0.95, 0.12], [0.03, 0.85, 0.52], e), out); armTo(r, 'Left', lerp3([0.42, 0.05, 0.88], [0.4, -0.2, 0.75], e), lerp3([-0.5, 0.82, 0.22], [0.1, -0.5, 0.8], e), out * (1 - S(u, 0.12, 0.45)));
+    bend(B.RightHand, 1, 0, 0, 1.0 * e * out); bend(B.Spine, 1, 0, 0, -0.05 * e * out); return;
+  }
+  if (g.type === 'plane') {      // phi máy bay giấy: kéo tay ra sau tai (vai phải xoay ra sau) → đẩy thẳng ra trước ngang tầm mắt, thân xoay theo; máy bay rời tay ở PLANE_RELEASE
+    const S = THREE.MathUtils.smoothstep, back = S(u, 0, 0.36), go = S(u, 0.42, 0.6), out = 1 - S(u, 0.78, 1);
+    bend(B.Spine, 0, 1, 0, (-0.34 * back + 0.6 * go) * out); bend(B.Spine, 1, 0, 0, 0.07 * go * out);
+    armTo(r, 'Right', PLANE_ARM[0], PLANE_ARM[1], 1 - go); armTo(r, 'Right', lerp3(PLANE_BACK[0], PLANE_FWD[0], go), lerp3(PLANE_BACK[1], PLANE_FWD[1], go), Math.max(back, go) * out);
+    armTo(r, 'Left', [0.3, -0.75, 0.45], [-0.05, -0.2, 0.95], back * (1 - go) * 0.7); return;
+  }
   const G0 = GEST[g.type]; if (!G0) return;
+  if (g.type === 'throw') bend(B.Spine, 0, 1, 0, -0.3 + 0.65 * THREE.MathUtils.smoothstep(u, 0.08, 0.5) - 0.35 * THREE.MathUtils.smoothstep(u, 0.7, 1));      // ném: vai phải ra sau rồi xoay thân theo tay
   const k = g.type === 'drum' ? 0.5 - 0.5 * Math.cos(u * 3 * Math.PI * 2 + 0.6) : THREE.MathUtils.smoothstep(u, 0.08, 0.5);      // trống: ba nhịp lên xuống; ném: lấy đà rồi vung
   aim(B.RightArm, B.RightForeArm, dirW(...mix3(G0.a0, G0.a1, k).toArray()), env); aim(B.RightForeArm, B.RightHand, dirW(...mix3(G0.f0, G0.f1, k).toArray()), env);
+}
+
+/* ===== động tác thủ tục đè lên hoạt hoạ: nhảy, đá cầu, ném rổ, cầm vật =====
+ * Hướng viết trong hệ nhân vật theo bộ ba [ra ngoài (phía của chính tay/chân đó), lên, ra trước]. */
+const _bq = new THREE.Quaternion(), _bax = new THREE.Vector3(), _cp = [new THREE.Vector3(), new THREE.Vector3()], _cq2 = [new THREE.Quaternion(), new THREE.Quaternion()];
+const lerp3 = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
+/** xoay thêm một xương quanh trục (hệ nhân vật: x sang trái, y lên, z ra trước; quanh +x góc dương = cúi ra trước) — gọi khi _wq đã là hướng nhân vật */
+function bend(bone, ax, ay, az, ang, lazy) {
+  if (!bone || Math.abs(ang) < 1e-4) return;
+  _bax.set(ax, ay, az).applyQuaternion(_wq); _bq.setFromAxisAngle(_bax, ang); bone.parent.getWorldQuaternion(_pq);
+  const world = bone.getWorldQuaternion(_q).premultiply(_bq); bone.quaternion.copy(_pq.invert().multiply(world)); if (!lazy) bone.updateMatrixWorld(true);
+}
+function armTo(r, S, a, f, k) { const B = r.bones, s = S === 'Left' ? 1 : -1, arm = B[S + 'Arm'], fore = B[S + 'ForeArm'], hand = B[S + 'Hand']; if (!arm || !fore || !hand || k < 0.004) return; aim(arm, fore, dirW(s * a[0], a[1], a[2]), k); aim(fore, hand, dirW(s * f[0], f[1], f[2]), k); }
+function legTo(r, S, t, sh, k) { const B = r.bones, s = S === 'Left' ? 1 : -1, up = B[S + 'UpLeg'], leg = B[S + 'Leg'], foot = B[S + 'Foot']; if (!up || !leg || !foot || k < 0.004) return; aim(up, leg, dirW(s * t[0], t[1], t[2]), k); aim(leg, foot, dirW(s * sh[0], sh[1], sh[2]), k); }
+/** hạ hông drop (m của mô hình) mà các bàn chân nêu trong sides giữ nguyên chỗ (IK) → gối khuỵu: tiếp đất, chân trụ khi đá, lấy lực ném */
+function crouch(r, root, drop, sides) {
+  const B = r.bones; if (!B.Hips || !(drop > 0.002)) return; let n = 0;
+  for (const S of sides) { const foot = B[S + 'Foot']; if (!foot || !B[S + 'UpLeg'] || !B[S + 'Leg']) continue; foot.getWorldPosition(_cp[n]); foot.getWorldQuaternion(_cq2[n]); n++; }
+  B.Hips.position.y -= drop; B.Hips.updateMatrixWorld(true); n = 0;
+  for (const S of sides) { const foot = B[S + 'Foot']; if (!foot || !B[S + 'UpLeg'] || !B[S + 'Leg']) continue; legIK(r, B[S + 'UpLeg'], B[S + 'Leg'], foot, _cp[n], _cq2[n], root, false, false, 0.12); n++; }
+}
+const _ia = new THREE.Vector3(), _ib = new THREE.Vector3(), _ic = new THREE.Vector3(), _ie = new THREE.Vector3(), _it = new THREE.Vector3();
+/**
+ * IK giải tích hai đốt cho tay: đưa CỔ TAY tới điểm T (thế giới), mức k; khuỷu chĩa về phía pole ([ra ngoài, lên, ra trước] của chính tay đó).
+ * Dùng khi bàn tay phải chạm một vật có vị trí thật (quả bóng đang cầm, đang nhồi) — đặt hướng từng đoạn tay bằng số cố định thì tay không bao giờ trúng vật.
+ * Gọi khi _wq đã là hướng nhân vật. T ngoài tầm với thì tay duỗi gần thẳng về phía T.
+ */
+function armIK(r, S, T, k, pole) {
+  const B = r.bones, s = S === 'Left' ? 1 : -1, arm = B[S + 'Arm'], fore = B[S + 'ForeArm'], hand = B[S + 'Hand']; if (!arm || !fore || !hand || k < 0.004) return;
+  arm.getWorldPosition(_ia); fore.getWorldPosition(_ib); hand.getWorldPosition(_ic);
+  const l1 = _ib.distanceTo(_ia), l2 = _ic.distanceTo(_ib); _ie.subVectors(T, _ia);
+  const d = THREE.MathUtils.clamp(_ie.length(), Math.abs(l1 - l2) + 0.02, (l1 + l2) * 0.995); _ie.normalize();
+  const a = (l1 * l1 - l2 * l2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+  _ic.set(s * pole[0], pole[1], pole[2]).applyQuaternion(_wq); _ic.addScaledVector(_ie, -_ic.dot(_ie)); if (_ic.lengthSq() < 1e-8) return; _ic.normalize();
+  _ib.copy(_ia).addScaledVector(_ie, a).addScaledVector(_ic, h); _it.copy(_ia).addScaledVector(_ie, d);      // _ib: khuỷu, _it: cổ tay (đã kẹp trong tầm với)
+  aim(arm, fore, _ic.subVectors(_ib, _ia).normalize(), k);
+  fore.getWorldPosition(_ib); aim(fore, hand, _ic.subVectors(_it, _ib).normalize(), k);
+}
+/** điểm (hệ nhân vật: x sang trái, y lên, z ra trước; mét) quanh một điểm thế giới → toạ độ thế giới, ghi vào out */
+const around = (at, x, y, z, out) => out.set(x, y, z).applyQuaternion(_wq).add(at);
+const _ht = new THREE.Vector3(), _hs = new THREE.Vector3();
+const JUMP_AIR = 0.72, LAND_SECS = 0.34, LAND_DROP = 0.13, JUMP_DIP = [0.09, 0.07];      // JUMP_DIP: [giây, m] hông hạ nhanh rồi trả ngay sau khi bấm nhảy — chỉ phần hiển thị, vật lý không trễ;      // thời gian trên không của cú nhảy thường (43 khung); quãng khuỵu gối tiếp đất và độ hạ hông (m của mô hình)
+const JUMP = {      // [ra ngoài, lên, ra trước] ở mức co chân/vung tay cao nhất
+  standT: [0.09, -0.75, 0.72], standS: [0, -0.55, -0.9],                    // nhảy tại chỗ: hai gối co nhẹ
+  leadT: [0.04, -0.7, 0.85], leadS: [0, -1, -0.15], trailT: [0.04, -1, -0.5], trailS: [0, -0.7, -0.9],      // đang chạy: chân trước – chân sau như một sải bước
+  armLow: [0.42, -0.85, -0.05], foreLow: [0.1, -0.25, 0.95], armUp: [0.32, -0.7, 0.45], foreUp: [-0.08, 0.55, 0.8],      // tay: vung lên trước lúc bật, hạ ra hai bên giữ thăng bằng
+  armBack: [0.2, -0.65, -0.7], foreBack: [0.05, -0.9, 0.1], armFwd: [0.2, -0.75, 0.5], foreFwd: [-0.1, 0.3, 0.9],
+};
+/**
+ * Nhảy: bật (chân duỗi, tay vung lên trước) → trên không (gối co; đang chạy thì chân trước–sau, thân ngả trước) → tiếp đất (gối khuỵu hấp thụ rồi đứng lên).
+ * Chỉ là dáng; vật lý nhảy không đổi. r.jumpKind = 'rope': nhảy dây — nhảy thấp chụm chân, tay để yên cho cử chỉ khác.
+ */
+function actJump(r, dt, air, speed, root) {
+  if (air) { r.airT += dt; r.land = 0; r.airV = Math.max(r.airV, speed); } else { if (r.airT > 0.14) { r.land = 1; r.landK = (r.jumpKind === 'rope' ? 0.35 : 1) * Math.min(1, r.airT / 0.5); } r.airT = 0; r.airV = 0; }
+  r.airK += ((air && r.airT > 0.03 ? 1 : 0) - r.airK) * (1 - Math.exp(-dt * 14));
+  if (r.land > 0) r.land = Math.max(0, r.land - dt / LAND_SECS);
+  const a = r.airK; if (a < 0.01 && r.land <= 0) return;
+  root.getWorldQuaternion(_wq);
+  if (air && r.airT < JUMP_DIP[0] && r.jumpKind !== 'rope' && r.bones.Hips) { r.bones.Hips.position.y -= JUMP_DIP[1] * Math.sin(Math.PI * r.airT / JUMP_DIP[0]); r.bones.Hips.updateMatrixWorld(true); }
+  if (a >= 0.01) {
+    const rope = r.jumpKind === 'rope', mv = rope ? 0 : THREE.MathUtils.smoothstep(r.airV, 0.8, 2.6), u = Math.min(1, r.airT / JUMP_AIR), J = JUMP;
+    const tuck = Math.pow(Math.sin(Math.PI * u), 0.8) * (rope ? 0.3 : 1) * (r.airT > JUMP_AIR ? 0 : 1) + (r.airT > JUMP_AIR ? 0.25 : 0);      // rơi lâu hơn một cú nhảy (bước hụt bậc): chân duỗi chờ đất, gối hơi co
+    const up = THREE.MathUtils.smoothstep(u, 0, 0.2) * (1 - THREE.MathUtils.smoothstep(u, 0.4, 0.85));
+    const down = [0.05, -1, 0.02], lead = r.jumpLead || 'Left', trail = lead === 'Left' ? 'Right' : 'Left';
+    legTo(r, lead, lerp3(down, lerp3(J.standT, J.leadT, mv), tuck), lerp3([0, -1, -0.03], lerp3(J.standS, J.leadS, mv), tuck), a);
+    legTo(r, trail, lerp3(down, lerp3(J.standT, J.trailT, mv), tuck), lerp3([0, -1, -0.03], lerp3(J.standS, J.trailS, mv), tuck), a);
+    if (!rope) {
+      const sa = lerp3(J.armLow, J.armUp, up), sf = lerp3(J.foreLow, J.foreUp, up), k = a * 0.9;
+      armTo(r, lead, lerp3(sa, J.armBack, mv), lerp3(sf, J.foreBack, mv), k); armTo(r, trail, lerp3(sa, J.armFwd, mv), lerp3(sf, J.foreFwd, mv), k);
+      bend(r.bones.Spine, 1, 0, 0, a * (0.05 + 0.17 * mv - up * 0.07 * (1 - mv)));
+    }
+  }
+  if (r.land > 0) {      // tiếp đất: hông hạ nhanh rồi lên chậm, thân hơi gập
+    const x = 1 - r.land, c = Math.sin(Math.PI * Math.pow(x, 0.55)) * r.landK;
+    crouch(r, root, LAND_DROP * c, ['Left', 'Right']); bend(r.bones.Spine, 1, 0, 0, 0.13 * c);
+  }
+}
+const KICK_HIT = 0.15, KICK_WIND = 0.22, KICK_OUT = 0.42;      // giây: vung chân từ thế lấy đà tới lúc chạm · quãng lấy đà trước đó (chỉ có khi trò chơi báo trước) · thu chân sau chạm
+export const KICK_LEAD = KICK_HIT + KICK_WIND;      // trò chơi bắt đầu cú đá sớm nhất chừng này giây trước lúc chân chạm (h.kickLead)
+const KICKS = {      // chân phải; wT/wS: đùi/cẳng lúc lấy đà, hT/hS: lúc vung hết (sau chạm); pitch: thân ngả (âm = ra sau), roll: thân nghiêng (âm = về phía chân trụ); inside: chạm bằng má trong
+  pass: { wT: [0.2, -1, -0.2], wS: [0.1, -0.8, -0.55], hT: [0.8, -0.5, 0.6], hS: [-0.9, -0.12, 0.42], pitch: -0.04, roll: -0.11, sink: 0.04, inside: true },      // má trong: gối mở ra ngoài, bàn chân nâng ngang trước–trong
+  lob: { wT: [0.05, -1, -0.15], wS: [0, -0.75, -0.65], hT: [0.1, -0.6, 0.8], hS: [0, -0.22, 0.97], pitch: -0.07, roll: -0.04, sink: 0.03 },          // mu bàn chân tâng: đùi nâng, cẳng chân vung lên trước
+  flick: { wT: [0.05, -1, -0.5], wS: [0, -0.45, -0.9], hT: [0.06, -0.12, 1], hS: [0, 0.4, 0.92], pitch: -0.17, roll: -0.05, sink: 0.02 },            // búng giật / đá cao: vung mạnh, thân ngả sau
+  drive: { wT: [0.05, -1, -0.5], wS: [0, -0.5, -0.85], hT: [0.05, -0.65, 0.76], hS: [0, -0.35, 0.94], pitch: -0.08, roll: -0.05, sink: 0.035 },      // sút bóng (mặc định)
+};
+/** bàn chân (cổ chân hoặc mũi chân) đang thấp hơn mức nghỉ trên nền của gốc thì nâng cổ chân lên đúng chừng đó (IK), giữ hướng bàn chân — chặn cuối cho dáng chờ cầu và lúc lấy đà (chân vung ra sau chúc mũi xuống nền) */
+function liftSunk(r, root, S) {
+  const B = r.bones, foot = B[S + 'Foot'], toe = B[S + 'ToeBase']; if (!foot || !B[S + 'UpLeg'] || !B[S + 'Leg'] || r.footY === undefined) return;
+  const sc = r.g.scale.y || 1, y0 = root.getWorldPosition(_hs).y; foot.getWorldPosition(_ht); let e = (_ht.y - y0) / sc - r.footY;
+  if (toe && r.toeY !== undefined) e = Math.min(e, (toe.getWorldPosition(_hs).y - y0) / sc - r.toeY);
+  if (e > -0.002) return; _ht.y -= e * sc; legIK(r, B[S + 'UpLeg'], B[S + 'Leg'], foot, _ht, foot.getWorldQuaternion(_fqa), root, false, false);
+}
+const READY_DROP = 0.085, READY_WIDE = 0.055, STEP_HZ = 1.7, STEP_UP = 0.032;      // dáng chờ cầu: hông hạ (m của mô hình); nhịp nhún đổi chân (lần/giây mỗi chân) và độ nhấc bàn chân (m)
+/**
+ * Đá: r.kick vọt lên (≥ +0,3 so với khung trước) là bắt đầu một cú; kiểu lấy ở r.kickKind ('pass' | 'lob' | 'flick' | 'drive', mặc định 'drive').
+ * Trục thời gian tính theo lúc CHẠM: r.kickLead = số giây từ lúc bắt đầu tới lúc chân chạm (mặc định KICK_HIT; trò chơi biết trước cầu rơi thì báo tới KICK_LEAD để có
+ * quãng lấy đà nhìn thấy được). Lấy đà → vung (tăng tốc tới chạm) → vung tiếp theo đà → thu chân, tự chạy hết, không phụ thuộc tốc độ hạ r.kick của trò chơi.
+ * r.kickAt (Vector3 thế giới, tuỳ chọn) = chỗ quả cầu/bóng ở lúc chạm: quanh lúc chạm bàn chân được IK đưa tới đúng điểm đó (trong tầm chân).
+ * r.kickWind > 0 (trò chơi: cầu đang bay tới mình) = dáng chờ: gối chùng, thân hơi cúi, tay mở, nhún đổi chân tại chỗ.
+ */
+function actKick(r, dt, root) {
+  const lv = r.kick || 0, S = THREE.MathUtils.smoothstep, B = r.bones;
+  if (lv > r.kickPrev + 0.3) { r.kickT = 0; r.kickStyle = KICKS[r.kickKind] ? r.kickKind : 'drive'; r.kickC = THREE.MathUtils.clamp(r.kickLead ?? KICK_HIT, 0.04, KICK_LEAD); r.kickHas = !!r.kickAt; if (r.kickAt) r.kickP.copy(r.kickAt); } r.kickPrev = lv;
+  r.windK += ((r.kickWind || 0) - r.windK) * (1 - Math.exp(-dt * 10));
+  const active = r.kickT >= 0; if (!active && r.windK < 0.02) return;
+  root.getWorldQuaternion(_wq);
+  if (r.windK >= 0.02) {      // dáng chờ cầu (còn giữ trong lúc đá, tan dần sau khi trò chơi thôi báo)
+    const rdy = Math.min(1, r.windK * 3), ph = r.t * STEP_HZ * Math.PI * 2, sc = r.g.scale.y || 1;
+    if (!active && B.Hips) { B.Hips.position.x += Math.sin(ph) * 0.012 * rdy; B.Hips.updateMatrixWorld(true); }
+    crouch(r, root, READY_DROP * rdy * (1 + 0.2 * Math.sin(ph * 2)), ['Left', 'Right']); bend(B.Spine, 1, 0, 0, 0.2 * rdy);
+    const A = r.anchor, stepK = A.Left.lift > 0.004 || A.Right.lift > 0.004 ? 0 : S(r.w.idle, 0.8, 1);      // đang bước thật (neo chân nhấc một bàn) hoặc còn đang đi tới: không nhún thêm, kẻo có lúc cả hai bàn chân cùng rời đất
+    if (!active) for (const [Sd, s, o] of [['Left', 1, 0], ['Right', -1, Math.PI]]) {      // hai chân mở rộng hơn vai một chút; nhún đổi chân: bàn chân không chịu lực nhấc lên vài cm rồi đặt lại
+      const up = Math.max(0, Math.sin(ph + o)), lift = up * up * STEP_UP * rdy * sc * stepK, foot = B[Sd + 'Foot']; if (!foot || !B[Sd + 'UpLeg'] || !B[Sd + 'Leg']) continue;
+      around(foot.getWorldPosition(_ht), s * READY_WIDE * rdy * sc, lift, 0, _hs); legIK(r, B[Sd + 'UpLeg'], B[Sd + 'Leg'], foot, _hs, foot.getWorldQuaternion(_fqa), root, false, false);
+    }
+    armTo(r, 'Left', [0.5, -0.82, 0.1], [0.42, -0.62, 0.62], rdy * 0.85); armTo(r, 'Right', [0.5, -0.82, 0.05], [0.42, -0.66, 0.58], rdy * 0.85);
+  }
+  if (!active) { liftSunk(r, root, 'Left'); liftSunk(r, root, 'Right'); return; }
+  r.kickT += dt; const tau = r.kickT - r.kickC; if (tau >= KICK_OUT) { r.kickT = -1; return; }
+  const K = KICKS[r.kickStyle], x = THREE.MathUtils.clamp((tau + KICK_HIT) / KICK_HIT, 0, 1), sw = x * x;      // sw: 0 ở thế lấy đà → 1 lúc chạm, tăng tốc dần (chân tới cầu lúc đang nhanh nhất)
+  const env = Math.min(1, r.kickT / 0.09) * (1 - S(tau, 0.14, KICK_OUT)), go = tau < 0 ? 0.72 * sw : 0.72 + 0.28 * S(tau, 0, 0.1), hit = sw * (1 - S(tau, 0.12, KICK_OUT));
+  crouch(r, root, K.sink * env, ['Left', 'Right']);      // cả chân đá cũng giữ chỗ khi hông hạ (lúc mới lấy đà/đang thu chân nó còn gần thẳng, hạ hông không giữ thì đế xuyên nền 3–4 cm); ngay sau đó legTo đưa nó đi
+  legTo(r, 'Right', lerp3(K.wT, K.hT, go), lerp3(K.wS, K.hS, go), env);
+  bend(B.Spine, 1, 0, 0, K.pitch * hit); bend(B.Spine, 0, 0, 1, K.roll * env);
+  if (r.kickHas && r.kickAt && tau < 0.02) r.kickP.copy(r.kickAt);      // trò chơi dự đoán lại điểm chạm mỗi khung
+  const xk = THREE.MathUtils.clamp((tau + KICK_HIT) / (KICK_HIT - 0.03), 0, 1), wk = r.kickHas ? (tau < 0 ? xk * xk : 1 - S(tau, 0.02, 0.11)) * env : 0, foot = B.RightFoot, toe = B.RightToeBase;      // IK đủ mức từ 2 khung trước tới 1 khung sau lúc chạm
+  if (wk > 0.01 && foot && toe && B.RightUpLeg && B.RightLeg) {      // quanh lúc chạm: đưa điểm chạm của bàn chân (mu bàn chân, hoặc má trong) tới đúng quả cầu
+    foot.getWorldPosition(_ht); toe.getWorldPosition(_hs); _hs.lerp(_ht, 0.45); _hs.y += 0.045 * (r.g.scale.y || 1);      // _hs: điểm chạm trên mu bàn chân (trục xương nằm trong giày ~4 cm)
+    if (K.inside) _hs.add(_it.set(0.035, 0.02, 0).applyQuaternion(_wq));      // chân phải: má trong ở bên trái của bàn chân
+    _hs.sub(_ht).negate().add(r.kickP).sub(_ht).multiplyScalar(wk).add(_ht);      // cổ chân mới = cổ chân + wk · (đích − điểm chạm)
+    legIK(r, B.RightUpLeg, B.RightLeg, foot, _hs, foot.getWorldQuaternion(_fqa), root, false, false);
+  }
+  liftSunk(r, root, 'Right'); liftSunk(r, root, 'Left');
+  const flick = r.kickStyle === 'flick' || r.kickStyle === 'drive';      // vung mạnh: tay trái đánh ra trước, tay phải ra sau; còn lại: hai tay dang giữ thăng bằng
+  armTo(r, 'Left', flick ? lerp3([0.5, -0.7, -0.2], [0.45, -0.35, 0.7], go) : [0.55, -0.75, 0.2], flick ? [0.3, -0.6, 0.55] : [0.45, -0.8, 0.35], env * 0.85);
+  armTo(r, 'Right', flick ? lerp3([0.4, -0.75, 0.3], [0.55, -0.6, -0.5], go) : [0.5, -0.8, -0.15], flick ? [0.35, -0.85, 0.05] : [0.4, -0.88, 0.15], env * 0.85);
+}
+const _sh = new THREE.Vector3();
+/** hai bàn tay ôm hai bên một vật tròn/hộp bán kính R có tâm ở at (thế giới): cổ tay lùi sau tâm 7 cm, lòng bàn tay quay vào nhau */
+function handsOn(r, at, R, k) {
+  const side = Math.min(0.3, R + 0.035);
+  for (const [S, s] of [['Left', 1], ['Right', -1]]) {
+    armIK(r, S, around(at, s * side, -0.03, -0.07, _sh), k, [0.55, -0.8, -0.3]); palmTo(r, S, s, [-1, 0.1, 0], k);
+    const hand = r.bones[S + 'Hand']; if (hand && r.restQ[S + 'Hand']) hand.quaternion.slerp(r.restQ[S + 'Hand'], 0.7 * k);
+  }
+}
+/** thế cầm bóng ném rổ: tay phải đỡ DƯỚI–SAU bóng (cổ tay ngửa), tay trái áp bên trái bóng; at = tâm bóng (thế giới), kR/kL = mức áp từng tay, wrist = góc gập cổ tay phải (rad, âm = ngửa ra sau) */
+function shotHands(r, at, R, kR, kL, wrist) {
+  const B = r.bones;
+  if (kR > 0.004) { armIK(r, 'Right', around(at, -0.03, -(R + 0.02), 0.0, _sh), kR, [0.3, -0.6, 0.75]); palmTo(r, 'Right', -1, [0, 0.25, 1], kR); if (B.RightHand && r.restQ.RightHand) { B.RightHand.quaternion.slerp(r.restQ.RightHand, 0.8 * kR); B.RightHand.updateMatrixWorld(true); bend(B.RightHand, 1, 0, 0, wrist * kR); } }
+  if (kL > 0.004) { armIK(r, 'Left', around(at, R + 0.03, -0.07, -0.02, _sh), kL, [0.55, -0.55, 0.6]); palmTo(r, 'Left', 1, [-1, 0, 0.1], kL); if (B.LeftHand && r.restQ.LeftHand) B.LeftHand.quaternion.slerp(r.restQ.LeftHand, 0.7 * kL); }
+}
+/** lấy lực ném rổ: r.aim = 0..1 (mức lực) — hai tay đưa bóng lên trước trán (tay phải dưới bóng, tay trái đỡ bên), gối khuỵu dần theo lực. Có r.holdAt (tâm bóng thật) thì tay bám đúng quả bóng */
+function actAim(r, root, k) {
+  root.getWorldQuaternion(_wq); crouch(r, root, 0.03 + 0.075 * k, ['Left', 'Right']);
+  bend(r.bones.Spine, 1, 0, 0, 0.04 + 0.05 * k);
+  if (r.holdAt) { shotHands(r, r.holdAt, r.holdR || 0.12, 1, 1, -1.0); root.worldToLocal(r.shotFrom.copy(r.holdAt)); r.shotR = r.holdR || 0.12; r.shotSet = true; return; }      // shotFrom: tâm bóng trong hệ của gốc nhân vật — cử chỉ 'shoot' bắt đầu từ đúng thế này
+  armTo(r, 'Right', [0.3, 0.12, 0.92], [-0.22, 0.95, 0.12], 1); armTo(r, 'Left', [0.42, 0.05, 0.88], [-0.5, 0.82, 0.22], 1);
+}
+export const PLANE_RELEASE = 0.52;      // phần của cử chỉ 'plane' mà máy bay rời tay (campus_play.js thả máy bay đúng lúc này, từ vị trí bàn tay)
+const PLANE_BACK = [[0.55, 0.05, -0.35], [-0.2, 0.8, -0.35]], PLANE_FWD = [[0.12, 0.12, 1], [0.0, 0.18, 1]];      // tay phải: kéo ra sau tai / duỗi thẳng ra trước
+const PLANE_ARM = [[0.22, -0.8, 0.42], [0.02, 0.5, 0.86]];      // cầm máy bay giấy: khuỷu sát sườn, cẳng tay chếch lên trước, bàn tay ngang ngực, lệch ra ngoài vai
+/** cầm vật: 'plane' = cầm máy bay giấy trước ngực (khuỷu gập ~90°), 'carry' = hai tay ôm vật trước bụng (có r.holdAt/r.holdR thì bàn tay áp đúng hai bên vật) */
+function actHold(r, root, kind) {
+  root.getWorldQuaternion(_wq);
+  if (kind === 'plane') { armTo(r, 'Right', PLANE_ARM[0], PLANE_ARM[1], 1); return; }
+  if (r.holdAt) { handsOn(r, r.holdAt, r.holdR || 0.12, 1); return; }
+  armTo(r, 'Right', [0.3, -0.88, 0.3], [-0.42, -0.1, 0.9], 1); armTo(r, 'Left', [0.3, -0.88, 0.3], [-0.42, -0.1, 0.9], 1);
 }
 
 // FOCUS_COS: nón nhìn nửa góc ~72° (rộng hơn nửa đường chéo khung hình ở FOV rộng nhất); FOCUS_HYST: vùng trễ (m, và 0,1 theo cos) để người ở mép tầm không nhấp nháy giữa hai đường
@@ -810,10 +1046,13 @@ export function animateRigged(r, speed, dt, air, holding, root) {
   // chân (neo thì chân "bước đuổi" theo tới 4–5 m/s). Trôi nhanh hơn tốc độ đi được báo vào (speed) quá ANCHOR_SLIDE là bị dời.
   let carried = false; if (root) { root.getWorldPosition(_rp); const mv = r.rootSeen ? _rp.distanceTo(r.rootP) : 0; let dy = root.rotation.y - r.rootYaw; dy = Math.abs(Math.atan2(Math.sin(dy), Math.cos(dy))); r.rootYaw = root.rotation.y;      // root = nhóm gốc của nhân vật, xoay quanh trục đứng
     carried = !!r.carry || mv / dt - speed > ANCHOR_SLIDE || (r.rootSeen && dy / dt > ANCHOR_SPIN); if (mv > ANCHOR_JUMP && mv / dt - speed > ANCHOR_SLIDE) dropAnchors(r); r.rootP.copy(_rp); r.rootSeen = true; }
-  if (root && r.w.idle * free > 0.02) { relaxPose(r, Math.min(1, r.w.idle * free), root); }
+  if (root && r.w.idle * free > 0.02) { relaxPose(r, Math.min(1, r.w.idle * free), root, fine); }
   const gait = (r.w.walk + r.w.run * 0.6) * free;
   if (root && gait > 0.02) { refineGait(r, Math.min(1, gait), root, fine); if (!fine && r.bones.Hips) r.bones.Hips.position.y += COARSE_UP * Math.min(1, (r.w.walk + r.w.run) * free);      // đường rẻ: không ép từng bàn chân, chỉ nâng cả người một chút cho đế bớt chìm
     if (!air) liftHips(r, 0.012 * r.w.run * free * (r.g.scale.y || 1), root, fine ? Math.min(1, (r.w.walk + r.w.run) * free) : 0); }
+  // đứng yên vắt qua mép bậc/vỉa hè (nền dưới một bàn chân lệch nền dưới gốc): đặt từng bàn chân lên nền của nó như lúc đi. Nền phẳng thì không đụng gì tới dáng đứng
+  if (root && fine && !air && r.groundAt && gait <= 0.02 && pw < 0.02 && r.w.idle > 0.5 && unevenFeet(r, root))      // pw < 0,02: đang ngồi xuống/đứng dậy/tạo dáng thì không đụng (mặt ghế, mép bồn cây cạnh chân không phải bậc để đặt chân lên)
+    liftHips(r, 0, root, Math.min(1, r.w.idle * free));
   if (root && r.poseLegs > 0.02) poseLegs(r, Math.min(1, r.poseLegs), root);
   applyCurl(r);
   if (root && pw - r.poseLegs > 0.02) { groundFeet(r, 1, root, 1.6 * dt); if (fine) settleFeet(r, root, Math.min(1, pw - r.poseLegs)); } else r.gfc = 0;
@@ -823,6 +1062,7 @@ export function animateRigged(r, speed, dt, air, holding, root) {
     // bị mang đi chậm hơn một cú nhảy: thả neo êm (phần lệch tan dần theo bàn chân), không neo mới
     const aw = root && !air && !starting && !carried && fine ? 1 - THREE.MathUtils.smoothstep((r.w.walk + r.w.run) * free, ANCHOR_GAIT[0], ANCHOR_GAIT[1]) : 0;
     if (root && !air && (aw > 0.01 || r.anchor.busy || (carried && (r.anchor.Left.on || r.anchor.Right.on)))) anchorFeet(r, dt, root, aw); else { r.anchor.Left.on = r.anchor.Right.on = false; r.anchor.Left.rel = r.anchor.Right.rel = false; r.anchor.busy = false; r.anchor.step = null; } }
+  if (root) actJump(r, dt, !!air, speed, root);
   if (r.flaps.length && root) { driveFlaps(r, dt, speed, root); }
   // nhìn về một điểm (máy ảnh, người đối diện)
   if (r.lookAt) r.lookPos.copy(r.lookAt); r.lk += ((r.lookAt ? 1 : 0) - r.lk) * (1 - Math.exp(-dt * 5));
@@ -847,14 +1087,11 @@ export function animateRigged(r, speed, dt, air, holding, root) {
     const elbow = r.bones.RightForeArm.getWorldPosition(new THREE.Vector3()), mouth = r.bones.Head.getWorldPosition(new THREE.Vector3()); root.getWorldDirection(_f); mouth.addScaledVector(_f, 0.1).y += 0.05;
     aim(r.bones.RightForeArm, r.bones.RightHand, mouth.sub(elbow).normalize(), r.eat);
   }
-  // tâng cầu: đưa chân phải ra trước, r.kick = mức (0..1)
-  if (r.kick > 0.01 && r.bones.RightUpLeg && r.bones.RightLeg && r.bones.RightFoot && root) {
-    root.getWorldDirection(_f);
-    aim(r.bones.RightUpLeg, r.bones.RightLeg, _d.copy(_f).multiplyScalar(0.8).add(_a.set(0, -0.6, 0)).normalize().clone(), r.kick);
-    aim(r.bones.RightLeg, r.bones.RightFoot, _d.copy(_f).multiplyScalar(0.95).add(_a.set(0, -0.3, 0)).normalize().clone(), r.kick);
-  }
+  if (root) actKick(r, dt, root);      // đá cầu / sút bóng: r.kick + r.kickKind
+  if (root && r.aim != null) actAim(r, root, THREE.MathUtils.clamp(r.aim, 0, 1));
   if (r.gest && root && r.gest.t < r.gest.dur && r.bones.RightArm && r.bones.RightForeArm && r.bones.RightHand) gesture(r, r.gest, root);
-  else if (holding && r.bones.RightArm && r.bones.RightForeArm && r.bones.RightHand && root) {
+  else if (root && r.hold && r.aim == null) actHold(r, root, r.hold);
+  else if (holding && r.aim == null && r.bones.RightArm && r.bones.RightForeArm && r.bones.RightHand && root) {
     root.getWorldDirection(_f);
     aim(r.bones.RightArm, r.bones.RightForeArm, _d.copy(_f).multiplyScalar(0.75).add(_a.set(0, -0.62, 0)).normalize().clone(), 1);
     aim(r.bones.RightForeArm, r.bones.RightHand, _d.copy(_f).multiplyScalar(0.95).add(_a.set(0, 0.25, 0)).normalize().clone(), 1);

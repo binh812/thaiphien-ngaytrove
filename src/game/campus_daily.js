@@ -52,7 +52,7 @@ export function initDaily(K) {
     if (document.hidden) replies.length = 0;      // thẻ bị ẩn: bỏ các cái vẫy đang hẹn
     if (waveClip > 0) { waveClip -= dt; if (waveClip <= 0 || st.speed > 0.4 || st.clip !== 'pose_wave') { if (st.clip === 'pose_wave') st.clip = null; waveClip = 0; } }
     for (let i = replies.length - 1; i >= 0; i--) if (now >= replies[i].at) { replies[i].h.gest = { type: 'wave', t: 0, dur: 1.5 }; replies.splice(i, 1); }
-    if (!hinted && now > WAVE_HINT_AT && K.idle() && !K.quiet()) { hinted = true; if (ctx.ui) ctx.ui.toast(WAVE.hint, 3); }
+    if (!hinted && now > WAVE_HINT_AT && K.free() && !K.quiet() && !st.held) { hinted = true; if (ctx.ui) ctx.ui.toast(WAVE.hint, 3); }
   }
 
   /* ===== đánh trống, rung cây: quay người về phía đó rồi làm động tác ===== */

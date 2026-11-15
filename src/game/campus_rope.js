@@ -10,14 +10,14 @@ const TRIP_PAUSE = 1.3, LEAVE_R = 2.3, ACTIVE_R = 45, KEY_REST = 0.3;
 import { typing } from './reunion_ui.js';
 
 export function initRope(K) {
-  const { ctx, ui, D, state, save, actors } = K, { player, scene } = ctx, st = player.st, R = D.ROPE, [cx, cz] = R.at, rec = state.rope, tmp = new THREE.Vector3();
+  const { ctx, ui, D, state, save, actors } = K, { player, scene } = ctx, st = player.st, R0 = D.ROPE, R = document.body.classList.contains('touch') || matchMedia('(pointer: coarse)').matches ? { ...R0, ...R0.touch } : R0, [cx, cz] = R.at, rec = state.rope, tmp = new THREE.Vector3();
   // hai bạn quay dây đứng hai đầu theo trục x, quay mặt vào nhau
   const turners = [-1, 1].map((s, k) => actors.add({ x: cx + s * SPAN / 2, y: 0.02, z: cz, f: -s * Math.PI / 2 }, R.looks[k], { face: -s * Math.PI / 2, show: 60, smile: 0.5 }));
   for (const a of turners) a.gestTurn = { type: 'turn', t: 0, dur: Infinity, ph: 0 };
   const rope = new THREE.InstancedMesh(new THREE.CylinderGeometry(THICK, THICK, 1, 5), new THREE.MeshStandardMaterial({ color: 0xd9c9a0, roughness: 0.9 }), SEGS);
   rope.frustumCulled = false; rope.castShadow = true; rope.userData.noBake = true; scene.add(rope);
   const A = new THREE.Vector3(), B = new THREE.Vector3(), p0 = new THREE.Vector3(), p1 = new THREE.Vector3(), mid = new THREE.Vector3(), dir = new THREE.Vector3(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), m4 = new THREE.Matrix4(), UP = new THREE.Vector3(0, 1, 0);
-  let joined = false, joinedAt = 0, count = 0, ang = Math.PI, pause = 0, ground = 0.02, barN = -1, barM = -1, barText = '', air = false, bragged = false, tall = false;      // ang = góc dây: 0 là sát đất, π là trên đầu
+  let joined = false, joinedAt = 0, count = 0, ang = Math.PI, pause = 0, ground = 0.02, barN = -1, barM = -1, barText = '', air = false, trips = 0, bragged = false, tall = false;      // ang = góc dây: 0 là sát đất, π là trên đầu
 
   const period = () => (joined ? Math.max(T_FAST, T_SLOW - count * T_STEP) : IDLE_T);
   /** điểm thứ s (0..1) của dây ở góc ang: cung parabol võng SAG quay quanh trục nối hai tay */
@@ -34,7 +34,7 @@ export function initRope(K) {
     joined = true; joinedAt = performance.now(); st.game = 'rope'; count = 0; barN = -1; ang = Math.PI * 0.6; pause = 0.8;      // dây dừng trên cao một nhịp cho người chơi vào chỗ
     // màn dọc (điện thoại): góc nhìn ngang hẹp, đứng thẳng góc với dây thì một bạn quay bị khuất mép → quay chéo và lùi tầm nhìn (xin giàn máy quay mỗi khung ở update, không ghi đè st.dist của người chơi)
     tall = innerHeight > innerWidth * 1.2;
-    player.teleport(cx, player.holder.position.y, cz, tall ? TALL_YAW : 0); player.holder.rotation.y = st.yaw; if (ctx.ui) ctx.ui.toast(R.join, 7);
+    player.teleport(cx, player.holder.position.y, cz, tall ? TALL_YAW : 0); player.holder.rotation.y = st.yaw; if (ctx.ui && !K.guide) ctx.ui.toast(R.join, 7);
   }
   function leave() { if (!joined) return; joined = false; if (st.game === 'rope') st.game = null; ui.progress('', null); if (ctx.ui) ctx.ui.toast(R.leave, 2); }
   function jump() { if (joined && st.grounded && !st.locked && !st.photo && !st.pinned) { st.vy = JUMP_V; st.grounded = false; air = true; } }
@@ -47,7 +47,7 @@ export function initRope(K) {
       if (count > rec.best) { if (!bragged && rec.best >= 3) { bragged = true; K.fx.sound('best'); K.fx.cheer(); if (ctx.ui) ctx.ui.toast(R.best, 1.6); } rec.best = count; save(); K.drawHud(); }
       if (count % 5 === 0) say(R.cheer); return;
     }
-    if (ctx.ui) ctx.ui.toast(count ? K.fill(R.trip, { n: count }) : R.tripFirst, 2.2); say(R.oops); K.fx.sound('bad'); K.fx.oops(); K.fx.ring(player.pos.x, ground + 0.04, player.pos.z, 0xff6a5a, 0.7); count = 0; bragged = false; pause = TRIP_PAUSE; ang = Math.PI * 0.6;      // dây về lại trên cao rồi quay tiếp từ nhịp chậm
+    if (ctx.ui) ctx.ui.toast(count ? K.fill(R.trip, { n: count }) : R.tripFirst, 2.2); say(R.oops); if (++trips >= 2 && K.guide) K.guide.nudge(); K.fx.sound('bad'); K.fx.oops(); K.fx.ring(player.pos.x, ground + 0.04, player.pos.z, 0xff6a5a, 0.7); count = 0; bragged = false; pause = TRIP_PAUSE; ang = Math.PI * 0.6;      // dây về lại trên cao rồi quay tiếp từ nhịp chậm
   }
   const it = { x: cx, y: 0.9, z: cz, r: 2.4, label: R.label, fn: join }; ctx.interact.push(it);
   K.addHud(() => (rec.best ? `🪢 ${rec.best}` : ''));

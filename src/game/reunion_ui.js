@@ -82,10 +82,10 @@ function makeUI(ctx) {
   function finish(i) { const p = pending; if (!p) return; pending = null; dropFocus(); p.done(i); }
   function show(name, text, opts, o) {
     if (pending) finish(null);      // còn cuộc thoại đang chờ: kết thúc gọn (bên gọi nhận null) rồi mới hiện cái mới, không đè lên
-    dName.textContent = name || ''; dName.classList.toggle('hidden', !name); dText.textContent = text; dOpts.textContent = '';
+    text = api.wording(text); dName.textContent = name || ''; dName.classList.toggle('hidden', !name); dText.textContent = text; dOpts.textContent = '';
     (opts || []).forEach((o, i) => { const b = el('button', null, `${i + 1}. ${o}`); b.addEventListener('click', () => { b.blur(); finish(i); }); dOpts.appendChild(b); });
     if (o && o.input) addInput(o.input);
-    dHint.textContent = opts && opts.length ? 'Phím 1' + (opts.length > 1 ? '–' + opts.length : '') + ' hoặc bấm vào câu trả lời' : 'Enter / Space / bấm vào đây để tiếp';
+    dHint.textContent = api.wording(opts && opts.length ? 'Phím 1' + (opts.length > 1 ? '–' + opts.length : '') + ' hoặc bấm vào câu trả lời' : 'Enter / Space / bấm vào đây để tiếp');
     dlg.classList.remove('hidden'); shownAt = performance.now();
     if (opts && opts.length && document.pointerLockElement) document.exitPointerLock();      // có lựa chọn thì thả chuột ra để bấm được
     return new Promise((res) => { pending = { n: opts ? opts.length : 0, done: res }; });
@@ -138,14 +138,14 @@ function makeUI(ctx) {
 
   /* ----- thanh tiến độ + chú thích ảnh ----- */
   const prog = el('div', 'rvProg hidden'), pLabel = el('span'), pBar = el('i'); { const bar = el('div', 'bar'); bar.appendChild(pBar); prog.append(pLabel, bar); } root.appendChild(prog);
-  function progress(label, k) { prog.classList.toggle('hidden', k == null); if (k == null) return; if (pLabel.textContent !== label) pLabel.textContent = label; pBar.style.width = Math.round(Math.min(1, k) * 100) + '%'; }
+  function progress(label, k) { prog.classList.toggle('hidden', k == null); if (k == null) return; label = api.wording(label); if (pLabel.textContent !== label) pLabel.textContent = label; pBar.style.width = Math.round(Math.min(1, k) * 100) + '%'; }
   const cap = el('div', 'rvCap hidden'); root.appendChild(cap);
   function caption(text) { cap.classList.toggle('hidden', !text); cap.textContent = text || ''; }
 
   /* ----- chữ nổi trên đầu nhân vật ----- */
   const bubbles = [], v = new THREE.Vector3();
   /** at: Vector3 hoặc hàm trả về Vector3 (đỉnh đầu người nói); secs giây */
-  function bubble(at, text, secs = 2.5, cls = '') { const e = el('div', 'rvBub ' + cls, text); root.appendChild(e); bubbles.push({ e, at, t: secs }); }
+  function bubble(at, text, secs = 2.5, cls = '') { const e = el('div', 'rvBub ' + cls, api.wording(text)); root.appendChild(e); bubbles.push({ e, at, t: secs }); }
   const placed = [];      // các chữ nổi đã đặt trong khung hình này: [x, y] (px)
   function update(dt) {
     const cam = ctx.camera, W = innerWidth, H = innerHeight; placed.length = 0;
@@ -161,5 +161,7 @@ function makeUI(ctx) {
     }
   }
 
-  return { board: boardApi, dialog, card: showCard, cardClose: () => cardDone && cardDone(), fade, progress, caption, bubble, update, sfx: makeSfx(() => !!(ctx.player && ctx.player.st.started)), root, el, stopEv };
+  /** wording(s): đổi lời trước khi hiện (campus_guide.js đặt hàm đổi tên phím thành tên nút trên máy cảm ứng); mặc định giữ nguyên */
+  const api = { wording: (s) => s, board: boardApi, dialog, card: showCard, cardClose: () => cardDone && cardDone(), fade, progress, caption, bubble, update, sfx: makeSfx(() => !!(ctx.player && ctx.player.st.started)), root, el, stopEv };
+  return api;
 }

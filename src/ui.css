@@ -63,7 +63,7 @@ body.photo #poses{display:flex}
 .rvBoard.mini h3,.rvBoard.mini .rvSub,.rvBoard.mini .rvNote,.rvBoard.mini .rvFoot,.rvBoard.mini li:not(.cur){display:none}
 .rvBoard.mini:not(:has(li.cur)) h3{display:block}
 .rvBoard.mini li.cur{padding-top:1px;padding-bottom:1px}
-@media (max-width:520px){#toast{top:88px;z-index:40}}
+@media (max-width:520px){.rvBoard{top:58px}#toast{top:98px;z-index:40}}
 .rvBoard h3{margin:0;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#f2c94c}
 .rvSub{font-size:11.5px;opacity:.65;margin:2px 0 6px}
 .rvBoard ol{list-style:none;margin:0;padding:0}
@@ -101,6 +101,9 @@ body.photo .rvBoard,body.photo .rvProg,body.photo .rvDlg{display:none}
 .rvCard .primary,.rvModal .primary{margin-top:14px;padding:9px 22px;font-size:14px}
 .rvProg{position:fixed;left:50%;bottom:calc(18% + 88px);transform:translateX(-50%);z-index:20;background:rgba(10,14,20,.7);border-radius:10px;padding:7px 14px;font-size:13px;text-align:center;min-width:240px}
 .rvProg .bar{margin-top:6px}
+/* đá cầu: thanh trạng thái lên phía trên để không che chân người chơi lúc đá */
+body.gCau .rvProg{bottom:auto;top:100px}
+@media (max-width:520px){body.gCau .rvProg{top:148px}}
 .rvProg .bar i{transition:none}
 .rvCap{position:fixed;left:50%;top:100px;transform:translateX(-50%);z-index:20;font:italic 700 21px "Times New Roman",Cambria,serif;color:#fff6d0;text-shadow:0 2px 8px #000,0 0 2px #000;pointer-events:none;white-space:nowrap}
 .rvBub{position:fixed;left:0;top:0;z-index:15;background:rgba(255,255,255,.94);color:#1c1c1c;border-radius:12px;padding:4px 10px;font-size:13px;font-weight:600;max-width:260px;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.35);text-align:center;will-change:transform}
@@ -136,6 +139,27 @@ body.photo .clHint{display:none}
 .clBook .row input{flex:1;background:#fffaf0;border:1px solid #b9a36a;color:#2a2114;border-radius:7px;padding:7px 9px;font:inherit;font-size:15px;user-select:text;-webkit-user-select:text}
 .clBook .row .primary{margin:0;padding:7px 14px;font-size:14px}
 .clBook .box>button{margin-top:8px;background:none;border:1px solid #b9a36a;border-radius:8px;padding:6px 14px;cursor:pointer;font:inherit;color:#2a2114}
+.clGuide{position:fixed;right:12px;top:116px;z-index:14;width:250px;box-sizing:border-box;background:rgba(10,14,20,.74);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:8px 11px 9px;font-size:12.5px;line-height:1.35;display:none;transition:opacity .6s}
+.clGuide.on{display:block}.clGuide.hide{display:none}.clGuide.dim{opacity:.38}.clGuide.dim:hover{opacity:1}
+.clGuide h4,.clHelp h4{margin:0 0 5px;font-size:13px;color:#f2c94c;font-weight:700}
+.clGuide .line{margin-bottom:5px;opacity:.92}
+.clGuide .r,.clHelp .r{display:flex;gap:7px;align-items:baseline;padding:2px 0}
+.clGuide .r kbd,.clHelp .r kbd{flex:none;font:600 11.5px inherit;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:5px;padding:1px 6px;white-space:nowrap}
+.clGuide .step{background:rgba(242,201,76,.16);border:1px solid rgba(242,201,76,.5);border-radius:8px;padding:5px 7px;margin:0 0 6px;display:flex;flex-wrap:wrap;gap:3px 8px;align-items:baseline}
+.clGuide .step b{color:#f2c94c;font-size:11.5px}.clGuide .step span{flex:1 1 150px;font-weight:600}
+.clGuide .step button{background:none;border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:6px;font:inherit;font-size:11px;padding:1px 7px;cursor:pointer}
+.clAim{position:fixed;left:50%;top:calc(50% + 20px);transform:translateX(-50%);z-index:12;font-size:12.5px;background:rgba(10,14,20,.55);border-radius:14px;padding:3px 11px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s}
+.clAim.on{opacity:1}body.photo .clAim,body.rvCine .clAim,body.photo .clGuide,body.rvCine .clGuide,body.photo .clMarks,body.rvCine .clMarks{display:none}
+.clMarks{position:fixed;left:0;top:0;z-index:11;pointer-events:none}
+.clMark{position:fixed;left:0;top:0;font-size:12px;font-weight:600;background:rgba(10,14,20,.6);border:1px solid rgba(242,201,76,.55);border-radius:12px;padding:2px 9px;white-space:nowrap;will-change:transform}
+.clHelpBtn{position:fixed;left:8px;bottom:50px;z-index:14;width:30px;height:30px;border-radius:50%;background:rgba(10,14,20,.6);border:1px solid rgba(255,255,255,.3);color:#fff;font:700 15px inherit;cursor:pointer;display:none}
+.clHelpBtn.on{display:block}body.touch .clHelpBtn{left:auto;bottom:auto;right:10px;top:58px;width:36px;height:36px}
+.rvModal.clHelp .box{width:min(880px,calc(100vw - 24px));max-width:none;max-height:calc(100vh - 40px);overflow:auto;box-sizing:border-box}
+body.touch #prompt::before{content:"Nút "}
+body.clNoPrompt #prompt,body.clNoPrompt .clHint,body.touch .clHint{display:none}
+.clGuide .step.one{margin:0;font-size:12px}.clGuide:has(.step.one){padding:5px;width:min(300px,calc(100vw - 20px))}
+.clHelp .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px 22px;margin:8px 0 14px;font-size:13px;text-align:left}
+@media (max-width:520px){.clGuide{right:auto;left:10px;top:206px;width:min(236px,62vw);font-size:11.5px;padding:6px 9px}.clAim{font-size:11.5px;top:calc(50% + 64px)}}
 .clTouch{display:none;position:fixed;right:72px;bottom:34px;z-index:13;flex-direction:column-reverse;gap:10px;align-items:flex-end}
 body.touch .clTouch{display:flex}
 .clTouch button{min-width:92px;height:42px;border-radius:11px;background:rgba(10,14,20,.6);border:1px solid rgba(242,201,76,.6);color:#fff;font-size:14px;font-weight:700;font-family:inherit;padding:0 12px}

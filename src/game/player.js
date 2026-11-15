@@ -82,9 +82,17 @@ export function init(ctx) {
   }
 
   /* ----- giữ vật đang cầm ----- */
+  const HOLD_CARRY = [1.1, 0.2], HOLD_AIM = [1.7, 0.27], AIM_RIGHT = 0.07, heldAt = new THREE.Vector3();      // [cao so với bàn chân ở người 1,68 m, ra trước mặt] (m): ôm trước bụng / đưa lên trước trán (lệch về vai phải AIM_RIGHT) lúc lấy lực
+  /** nửa bề ngang của vật đang cầm (m, tối đa 0,3): vật càng to thì giữ càng xa thân và hai tay càng mở rộng */
+  const heldSize = (b) => { const sh = b.collider(0).shape; return Math.min(0.3, sh.radius ?? (sh.halfExtents ? Math.max(sh.halfExtents.x, sh.halfExtents.z) : 0.12)); };
   phys.onStep(() => {
     if (!st.held) return; const b = st.held.body, t = b.translation(), d = viewDir(tmp), o = st.fp ? eye(tmp2) : tmp2.set(pos.x, pos.y + 0.45, pos.z), k = st.fp ? 1.25 : 1.05;
-    const tx = o.x + d.x * k, ty = o.y + d.y * k - (st.fp ? 0.12 : 0), tz = o.z + d.z * k; let vx = (tx - t.x) * 16, vy = (ty - t.y) * 16, vz = (tz - t.z) * 16; const l = Math.hypot(vx, vy, vz);
+    let tx = o.x + d.x * k, ty = o.y + d.y * k - (st.fp ? 0.12 : 0), tz = o.z + d.z * k;
+    if (!st.fp && body.rig) {      // góc ba: vật nằm trong hai bàn tay (trước bụng; đang lấy lực ném rổ thì trên trán) chứ không lơ lửng cách người 1 m
+      const hy = holder.rotation.y, fx = Math.sin(hy), fz = Math.cos(hy), hs = (body.look.height || 1.68) / 1.68, size = heldSize(b), aimR = st.aim != null ? AIM_RIGHT : 0;
+      const up = st.aim != null ? HOLD_AIM : HOLD_CARRY, fw = up[1] + (st.aim != null ? 0 : size); tx = holder.position.x + fx * fw - fz * aimR; ty = holder.position.y + up[0] * hs; tz = holder.position.z + fz * fw + fx * aimR;
+    }
+    let vx = (tx - t.x) * 16, vy = (ty - t.y) * 16, vz = (tz - t.z) * 16; const l = Math.hypot(vx, vy, vz);
     if (l > 14) { vx *= 14 / l; vy *= 14 / l; vz *= 14 / l; } if (Math.hypot(tx - t.x, ty - t.y, tz - t.z) > 2.6) { drop(); return; }
     b.setGravityScale(0, true); b.setLinvel({ x: vx, y: vy, z: vz }, true); const av = b.angvel(); b.setAngvel({ x: av.x * 0.85, y: av.y * 0.85, z: av.z * 0.85 }, true);
   });
@@ -154,11 +162,14 @@ export function init(ctx) {
       if (visCut || !st.grounded || Math.abs(jump + visE) > 0.3) visE = 0; else { if (Math.abs(jump) > moved * 1.2 + 0.004) visE -= jump; visE *= Math.exp(-dt * GROUND_EASE); }
       visWant = want; visY = want + visE; visCut = false; }
     holder.position.set(pos.x, visY, pos.z); holder.visible = !st.fp || st.photo;
-    if (st.speed > 0.3) { const a = Math.atan2(mv.x, mv.z); let d = a - holder.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); holder.rotation.y += d * Math.min(1, dt * 10); } else if ((st.fp || st.held) && !st.pose) holder.rotation.y = st.yaw;
+    if (st.speed > 0.3) { const a = Math.atan2(mv.x, mv.z); let d = a - holder.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); holder.rotation.y += d * Math.min(1, dt * 10); } else if ((st.fp || st.held || (ctx.campus && ctx.campus.play && ctx.campus.play.holding)) && !st.pose) holder.rotation.y = st.yaw;      // đang cầm vật / máy bay giấy: thân quay theo hướng nhìn (hướng sẽ ném)
     // tạo dáng chụp ảnh: quay người về phía máy ảnh, nhìn vào ống kính, cười; bước đi thì thôi dáng
     if (st.pose && !st.photo && il > 0.1) st.pose = null;
     if (st.pose) { const a = Math.atan2(camera.position.x - pos.x, camera.position.z - pos.z); let d = a - holder.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); holder.rotation.y += d * Math.min(1, dt * 6); }
-    body.pose = st.pose || null; body.clip = st.clip || null; body.kick = st.kick || 0; body.armsDown = !!st.armsDown; body.eat = st.eat || 0; body.gest = st.gest || null; body.lookAt = st.pose || st.photo ? camera.position : null; body.smile = st.pose ? 0.75 : null;
+    body.pose = st.pose || null; body.clip = st.clip || null; body.kick = st.kick || 0; body.kickKind = st.kickKind || null; body.kickWind = st.kickWind || 0; body.kickLead = st.kickLead ?? null; body.kickAt = st.kickAt || null; body.jumpKind = st.game === 'rope' ? 'rope' : null; body.aim = st.aim ?? null; body.hold = st.held ? 'carry' : ctx.campus && ctx.campus.play && ctx.campus.play.holding ? 'plane' : null;
+    if (st.held) { const t = st.held.body.translation(); body.holdAt = heldAt.set(t.x, t.y, t.z); body.holdR = heldSize(st.held.body); } else body.holdAt = null;      // rigged.js: bàn tay bám đúng vật đang cầm
+    body.armsDown = !!st.armsDown; body.eat = st.eat || 0; body.gest = st.gest || null; body.lookAt = st.pose || st.photo ? camera.position : st.lookAt || null;      // st.lookAt: điểm trò chơi muốn đầu nhìn theo (quả cầu)
+    body.smile = st.pose ? 0.75 : null;
     if (body.rig) body.rig.groundAt = st.pinned ? null : footGround;
     body.fine = !!(st.photo || st.builder);      // chụp ảnh / màn tạo nhân vật: máy ảnh có thể bay xa nhưng nhân vật của mình vẫn phải được chỉnh dáng kỹ
     animateHuman(body, st.speed, dt, !st.grounded, !!st.held, performance.now() / 1000);
@@ -185,7 +196,7 @@ export function init(ctx) {
       const hh = Math.tan(camera.fov * Math.PI / 360) * camera.near, hw = hh * camera.aspect, ease = 1 - Math.exp(-8 * dt), pv = out.pivot.set(pos.x, pos.y + 0.62, pos.z);
       // (1) điểm tựa lệch vai phải: dò từ tâm đầu sang phải, vướng tường thì rút độ lệch cho mặt cắt gần còn nằm ngoài tường
       // (chừa thêm 0,1 m: khung cửa, gờ tường nhô 5 cm không được nằm đúng trên tia góc, kẻo tia lúc chạm lúc không)
-      let side = CAM_SIDE; const hs = phys.cast(pv, right, CAM_SIDE + hw + 0.1, CAM_MASK, undefined, notNpc); if (hs) side = Math.max(0, hs.toi - hw - 0.1);
+      let side = Math.max(CAM_SIDE, out.minSide || 0); const hs = phys.cast(pv, right, side + hw + 0.1, CAM_MASK, undefined, notNpc); if (hs) side = Math.max(0, hs.toi - hw - 0.1);      // out.minSide: trò chơi xin lệch vai thêm (ngắm rổ)
       camSide = out.cut || side < camSide ? side : camSide + (side - camSide) * ease; pv.addScaledVector(right, camSide);
       // (2) lùi ra sau: tia tâm + bốn tia qua bốn góc mặt cắt gần
       const back = tmp2.copy(d).multiplyScalar(-1), far = Math.max(st.dist, out.minDist), reach = Math.max(far, out.cut ? 0 : camDist) + 0.3; camUp.crossVectors(right, d);      // out.minDist: trò chơi nhỏ xin lùi thêm (nhảy dây trên màn dọc); reach: dò tới cả chỗ máy quay đang đứng khi nó còn trượt về gần

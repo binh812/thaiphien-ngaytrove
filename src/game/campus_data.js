@@ -82,9 +82,10 @@ export const FIRE = {
 };
 
 export const CAU = {
-  at: [-31.5, -5.5], label: 'Vào đá cầu cùng', join: 'Chạy tới dưới cầu (vòng vàng là chỗ cầu rơi) rồi đá: F chuyền cho bạn · Space tâng lên đầu mình · giữ F rồi thả là búng xa. E hoặc Esc để thôi.', leave: 'Nghỉ đá cầu.',
-  streak: 'Chạm liên tiếp: {n} · kỷ lục {m}', miss: 'Hụt!', wait: 'Chờ phát cầu…', best: 'Kỷ lục mới của vòng cầu!', late: 'Cầu rơi mất rồi!', down: 'Cầu rơi — cả vòng được {n} chạm.', tPass: 'Đá', tFlick: 'Búng',
-  cheer: ['Đẹp!', 'Chuẩn!', 'Nữa đi!', 'Dẻo chân thế!'], oops: ['Ôi…', 'Hụt rồi!', 'Làm lại, làm lại!'],
+  at: [-31.5, -5.5], label: 'Vào đá cầu cùng', join: 'Cầu bay tới bạn (vòng xanh là chỗ rơi) thì bấm F để đá chuyền. Space: tâng tại chỗ · giữ F: đá bổng · E: thôi.', leave: 'Nghỉ đá cầu.',
+  streak: 'Chạm liên tiếp: {n} · kỷ lục {m}', miss: 'Hụt!', wait: 'Chờ phát cầu…', best: 'Kỷ lục mới của vòng cầu!', late: 'Cầu rơi mất rồi!', down: 'Cầu rơi — cả vòng được {n} chạm.', tPass: 'Đá chuyền', tFar: 'Đá bổng', yours: 'Cầu đang tới bạn — bấm F!', notYet: 'Chưa tới lượt!', tip: 'Mẹo: thấy vòng xanh và dòng “Cầu đang tới bạn” thì bấm F — bấm sớm cũng được, chân tự ra khi cầu xuống.',
+  cheer: ['Đẹp!', 'Chuẩn!', 'Nữa đi!', 'Dẻo chân thế!'], passIt: ['Chuyền đi chứ ạ!', 'Cho bọn em đá với!'],
+  touch: { join: 'Cầu bay tới bạn (vòng xanh là chỗ rơi) thì bấm nút “Đá chuyền”. “Tâng”: giữ cầu tại chỗ · “Đá bổng”: cho bạn đứng xa.', yours: 'Cầu đang tới bạn — bấm “Đá chuyền”!', tip: 'Mẹo: thấy vòng xanh và dòng “Cầu đang tới bạn” thì bấm “Đá chuyền” — bấm sớm cũng được, chân tự ra khi cầu xuống.' }, oops: ['Ôi…', 'Hụt rồi!', 'Làm lại, làm lại!'],
   looks: [
     { gender: 'm', outfit: 'pe', age: 'teen', hair: 'crew', skin: 2, face: 3, height: 1.71, build: 0 },
     { gender: 'f', outfit: 'pe', age: 'teen', hair: 'pony', skin: 0, face: 5, height: 1.57, build: 0 },
@@ -105,12 +106,14 @@ export const GOAL = {
   power: 'Lực sút — thả F để sút', lost: 'Bóng lăn khỏi chân rồi — lại gần lấy lực lại.', goal: '⚽ Vào!!! Bàn thứ {n}.', cheer: ['Vào rồi!', 'Đẹp quá ạ!', 'Sút căng thế!'], save: ['Bắt được rồi nhé!', 'Còn lâu mới qua!', 'Sút nhẹ thế ạ?'],
   penLabel: 'Đá phạt đền 5 quả', penStart: 'Phạt đền 5 quả: giữ F lấy lực, thả ra để sút. Thủ môn sẽ đổ người theo bóng — sút vào góc. E hoặc Esc để thôi.',
   penBar: 'Phạt đền: quả {k}/5 · vào {n}', penIn: 'Vào! {n}/{k}', saved: 'Thủ môn bắt được. {n}/{k}', penOut: 'Ra ngoài mất rồi. {n}/{k}',
+  touch: { hint: 'Sân cỏ: lại gần quả bóng, giữ nút E để lấy lực, thả ra để sút · nút E ở chấm trắng: đá phạt đền 5 quả', power: 'Lực sút — thả nút E để sút', penStart: 'Phạt đền 5 quả: giữ nút E lấy lực, thả ra để sút. Vuốt màn hình chọn góc — sút xa thủ môn.' },
   penEnd: 'Hết loạt: vào {n}/5 (kỷ lục {m}/5).', penBest: 'Hết loạt: vào {n}/5 — kỷ lục mới!', penQuit: 'Thôi đá phạt đền.', tQuit: 'Thôi phạt đền',
 };
 
 export const ROPE = {
   at: [-26, 48.3], label: 'Vào nhảy dây', join: 'Nhảy dây: bấm Space đúng lúc dây sắp quét qua chân (nghe tiếng dây chạm đất làm nhịp). Dây quay nhanh dần. E hoặc Esc để thôi.',
   bar: 'Nhảy dây: {n} · kỷ lục {m}', trip: 'Vướng dây rồi — được {n} cái.', tripFirst: 'Vướng dây! Nhảy sớm hơn một chút.', best: 'Kỷ lục nhảy dây mới!', leave: 'Nghỉ nhảy dây.',
+  touch: { join: 'Nhảy dây: bấm nút “Nhảy” ngay trước khi dây quét qua chân (nghe tiếng dây chạm đất làm nhịp). Dây quay nhanh dần.' },
   tJump: 'Nhảy', tQuit: 'Thôi nhảy', cheer: ['Giỏi thế!', 'Nhanh nữa này!', 'Đừng vướng nhé!'], oops: ['Ối, vướng rồi!', 'Làm lại nào!', 'Tại dây đấy, không phải tại chân đâu.'],
   looks: [
     { gender: 'f', outfit: 'pe', age: 'teen', hair: 'pony', skin: 1, face: 2, height: 1.58, build: 0 },

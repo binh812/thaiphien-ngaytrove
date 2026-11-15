@@ -14,7 +14,7 @@ const KEEPER_LOOK = { gender: 'm', outfit: 'pe', age: 'teen', hair: 'short', ski
 import { typing } from './reunion_ui.js';
 
 export function initGoal(K) {
-  const { ctx, ui, D, state, save, actors } = K, { player, phys, scene } = ctx, st = player.st, T = D.GOAL, rec = state.goal, tmp = new THREE.Vector3();
+  const { ctx, ui, D, state, save, actors } = K, { player, phys, scene } = ctx, st = player.st, T0 = D.GOAL, T = document.body.classList.contains('touch') || matchMedia('(pointer: coarse)').matches ? { ...T0, ...T0.touch } : T0, rec = state.goal, tmp = new THREE.Vector3();
   const balls = (ctx.balls || []).filter(b => b.ball === 'soccer');
   let charge = null, pen = null, now = 0, hinted = false, penAt = 0, barK = -1, barN = -1, barText = '';      // pen = { left, made, wait, phase: 'aim' | 'fly' | 'reset', ball }
   const inField = (x, z, pad = 0) => x > FIELD[0] - pad && x < FIELD[1] + pad && z > FIELD[2] - pad && z < FIELD[3] + pad;
@@ -97,7 +97,7 @@ export function initGoal(K) {
     if (pen || !balls.length || !K.free()) return; const hoop = K.hoop; if (hoop) { hoop.cancel(); if (hoop.dribbling) hoop.toggleDribble(); }
     pen = { left: SHOTS, made: 0, wait: 0, phase: 'aim', ball: balls[0] }; st.game = 'pen'; penAt = now;
     balls.forEach((b, i) => { if (b === pen.ball) return; const t = b.body.translation(); if (Math.hypot(t.x - SPOT[0], t.z - SPOT[1]) < CLEAR_R) { b.body.setTranslation({ x: PARK[0] + i * 0.6, y: 0.02 + b.r + 0.01, z: PARK[1] }, true); b.body.setLinvel({ x: 0, y: 0, z: 0 }, true); b.px = PARK[0] + i * 0.6; } });      // quả bóng khác nằm quanh chấm: dời ra giữa sân kẻo vướng chân
-    player.teleport(SPOT[0] + 1.3, player.holder.position.y, SPOT[1], -Math.PI / 2); player.holder.rotation.y = st.yaw; place(pen.ball); if (ctx.ui) ctx.ui.toast(T.penStart, 6);
+    player.teleport(SPOT[0] + 1.3, player.holder.position.y, SPOT[1], -Math.PI / 2); player.holder.rotation.y = st.yaw; place(pen.ball); if (ctx.ui && !K.guide) ctx.ui.toast(T.penStart, 6);
   }
   function endShot(made, msg) {
     if (!pen || pen.phase !== 'fly') return; pen.left--; if (made) pen.made++; else { K.fx.sound('bad'); K.fx.oops(); } pen.phase = 'reset'; pen.wait = RESET_WAIT;
@@ -123,12 +123,12 @@ export function initGoal(K) {
   function update(dt) {
     now += dt; spot.r = pen ? 0 : 2.2;
     const near = inField(player.pos.x, player.pos.z, 25); keeper.off = !near; if (!near) { if (pen) stopPen(false); cancel(); return; }
-    if (!hinted && inField(player.pos.x, player.pos.z) && K.idle() && !st.game) { hinted = true; if (ctx.ui) ctx.ui.toast(T.hint, 6); }
+    if (!hinted && !K.guide && inField(player.pos.x, player.pos.z) && K.idle() && !st.game) { hinted = true; if (ctx.ui) ctx.ui.toast(T.hint, 6); }
     if (charge) { if (!K.free('pen')) cancel(); else if (ballFar(charge.ball)) cancel(true); else {      // đã lấy lực thì quay người/quay máy thoải mái; chỉ huỷ khi bóng rời xa
       charge.t += dt; ui.progress(T.power, power()); } }
     let live = null; for (const b of balls) if (now - (b.shotAt ?? -9) < 4) live = b;
     tickKeeper(dt, live); tickBalls(); tickPen(dt);
     for (const g of GOALS) if (g.wob > 0) { g.wob = Math.max(0, g.wob - dt); const k = K.fx.reduced ? 0 : Math.sin(g.wob * 28) * g.wob * 0.18; g.net.scale.set(1 + k, 1 - k * 0.3, 1); }      // lưới rung khi bóng vào
   }
-  return { update, begin, shoot, cancel, startPen, stopPen, keeper, balls, rec, goals: GOALS, get charging() { return !!charge; }, get pen() { return pen; } };
+  return { update, begin, shoot, cancel, startPen, stopPen, keeper, balls, rec, goals: GOALS, spot: SPOT, near: () => !pen && !charge && inField(player.pos.x, player.pos.z, 3) && !!ballNear(), get charging() { return !!charge; }, get pen() { return pen; } };
 }

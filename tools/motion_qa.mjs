@@ -15,6 +15,7 @@
 import puppeteer from 'puppeteer-core';
 import fs from 'node:fs';
 import path from 'node:path';
+import { runCast } from './motion_cast.mjs';
 import { analyze, tableHeader, tableRow, LEVEL, LIMITS } from './motion_metrics.mjs';
 
 const EDGE = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
@@ -51,7 +52,7 @@ function parseArgs(argv) {
   const gender = opt.gender ? ({ nam: 'm', m: 'm', 'nữ': 'f', nu: 'f', f: 'f' })[opt.gender.toLowerCase()] : null;
   if (opt.gender && !gender) { console.error('--gender phải là m hoặc f'); process.exit(2); }
   const shots = (opt.shot || '').split(',').filter(Boolean).map((s) => { const [clip, t] = s.split('@'); if (!clip || !Number.isFinite(+t)) { console.error('--shot phải có dạng <clip>@<giây>, ví dụ walk@0.45'); process.exit(2); } return { clip: normClip(clip), t: +t }; });
-  return { outDir: rest[0], q: opt.q || 'low', gender, lookId: opt.look || null, only: opt.only ? opt.only.split(',').map(normClip) : null, shots, raw: !!opt.raw, idleSeconds: Number(opt['idle-seconds'] || 28), url: opt.url || 'http://127.0.0.1:8137' };
+  return { cast: !!opt.cast, t: opt.t || null, outDir: rest[0], q: opt.q || 'low', gender, lookId: opt.look || null, only: opt.only ? opt.only.split(',').map(normClip) : null, shots, raw: !!opt.raw, idleSeconds: Number(opt['idle-seconds'] || 28), url: opt.url || 'http://127.0.0.1:8137' };
 }
 /** tên phép đo chuẩn: 'peace' → 'pose_peace', 'transition' → 'chuyển' */
 function normClip(s) { const k = s.trim(); return k === 'transition' || k === 'chuyen' ? 'chuyển' : k; }
@@ -293,7 +294,7 @@ async function openPage(browser, opt) {
   const page = await browser.newPage(), errors = [];
   page.on('pageerror', (e) => { errors.push(String(e).slice(0, 400)); });
   page.on('console', (msg) => { if (msg.type() === 'error' && /người|hoạt hoạ/.test(msg.text())) console.log('  trang báo lỗi: ' + msg.text().slice(0, 300)); });
-  await page.goto(`${opt.url}/?ui=0&q=${opt.q}&t=10.5&w=cloudy&reunion=0`, { waitUntil: 'load', timeout: 60000 });
+  await page.goto(`${opt.url}/?${opt.query || `ui=0&q=${opt.q}&t=10.5&w=cloudy&reunion=0`}`, { waitUntil: 'load', timeout: 60000 });
   await page.waitForFunction('window.__ready === true || /Lỗi/.test(document.getElementById("loadMsg").textContent)', { timeout: 180000 });
   const msg = await page.evaluate('document.getElementById("loadMsg").textContent');
   if (/Lỗi/.test(msg)) { await page.close(); throw new Error('Trang báo: ' + msg + (errors.length ? ' · ' + errors[0] : '')); }
@@ -358,6 +359,11 @@ async function main() {
   const browser = await puppeteer.launch({ executablePath: EDGE, headless: 'new', protocolTimeout: 300000,
     args: ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist', '--disable-extensions', '--window-size=960,720'], defaultViewport: { width: 960, height: 720 } });
   const results = [], t0 = Date.now(); let runway = null;
+  if (opt.cast) {      // --cast: quét chân mọi nhân vật không phải người chơi (tools/motion_cast.mjs)
+    try { const rows = await runCast(browser, opt, openWithRetry); fs.writeFileSync(path.join(opt.outDir, `motion_cast_${opt.q}.json`), JSON.stringify(rows, null, 1)); process.exitCode = rows.some(r => r.level === 2) ? 1 : 0; }
+    finally { await browser.close(); }
+    return;
+  }
   try {
     const page = await openWithRetry(browser, opt);
     await page.evaluate(installProbe, DT);

@@ -2,9 +2,9 @@
 // Dép và máy bay giấy tự mô phỏng bằng vài phép tính (không qua Rapier): chỉ cần quỹ đạo nhìn vui mắt, không cần va chạm với vật khác.
 import * as THREE from 'three';
 import { floorY } from './people.js';
-import { setAnimFocus } from './rigged.js';
+import { setAnimFocus, PLANE_RELEASE } from './rigged.js';
 
-const TREE_R = 7, CANOPY_Y = 4.0, SANDALS = 2, PICK_R = 1.1, THROW_SECS = 0.6, P_HIT = 0.55, P_STUCK = 0.15;      // ném dép: tầm đứng, cao độ tán, số dép, tầm nhặt, thời gian bay, xác suất
+const SANDAL_WIND = 0.2, TREE_R = 7, CANOPY_Y = 4.0, SANDALS = 2, PICK_R = 1.1, THROW_SECS = 0.6, P_HIT = 0.55, P_STUCK = 0.15;      // ném dép: tầm đứng, cao độ tán, số dép, tầm nhặt, thời gian bay, xác suất
 const SEAT_R = 1.3, BENCH_H = 0.46, ROW_GAP = 1.15, BENCH_U = 0.92, BENCH_W = [[-6.3, -3.3], [-11.65, -8.65]];     // ngồi: tầm với ghế, cao mặt ghế đá, bố trí ghế băng trong lớp (xem furnishClass)
 const SIT_IN = 1.3, SIT_OUT = 1.03, SIT_MOVE = 0.45;      // giây: động tác ngồi xuống / đứng dậy khi chưa đọc được độ dài clip sit_down, stand_up (bình thường lấy độ dài clip thật, xem clipSecs), thời gian trượt người giữa chỗ đứng và mặt ghế
 const SEAT_MOVE = 0.3, SEAT_STALE = 400;
@@ -34,7 +34,7 @@ export function initPlay(K) {
   }
   function throwSandal() {
     const s = sandals.find(x => x.mode === 'hand'); if (!s) { if (ctx.ui) ctx.ui.toast(D.SANDAL.none, 2.5); return; }
-    have--; K.drawHud(); st.gest = { type: 'throw', t: 0, dur: 0.5 }; s.mode = 'fly'; s.t = 0; s.m.visible = true; s.a.set(player.pos.x, player.pos.y + 0.5, player.pos.z);
+    have--; K.drawHud(); st.gest = { type: 'throw', t: 0, dur: 0.5 }; s.mode = 'fly'; s.t = -SANDAL_WIND / THROW_SECS; s.m.visible = true; s.a.set(player.pos.x, player.pos.y + 0.5, player.pos.z);      // s.t < 0: dép còn trong tay đang vung (tickSandals)
     const r = Math.random(); s.out = r < P_HIT ? 'hit' : r < P_HIT + P_STUCK ? 'stuck' : 'miss';
     const ang = Math.random() * 6.283, rad = s.out === 'miss' ? 2.4 + Math.random() : Math.random() * 1.5;      // trượt thì bay vọt ra ngoài tán
     s.b.set(mango.x + Math.cos(ang) * rad, CANOPY_Y + (Math.random() - 0.5) * 0.8, mango.z + Math.sin(ang) * rad); if (ctx.audio) ctx.audio.whoosh();
@@ -44,7 +44,9 @@ export function initPlay(K) {
     for (const s of sandals) {
       const p = s.m.position;
       if (s.mode === 'fly') {
-        s.t += dt / THROW_SECS; const k = Math.min(1, s.t); p.lerpVectors(s.a, s.b, k); p.y += Math.sin(k * Math.PI) * 0.9; s.m.rotation.x += dt * 14; s.m.rotation.z += dt * 5;
+        s.t += dt / THROW_SECS;
+        if (s.t < 0) { const hb = player.body.rig && player.body.rig.bones.RightHand; if (hb) { hb.getWorldPosition(p); p.y += 0.04; s.a.copy(p); } else p.copy(s.a); continue; }      // đang vung tay: dép nằm trong bàn tay phải, rời tay từ đúng chỗ đó
+        const k = Math.min(1, s.t); p.lerpVectors(s.a, s.b, k); p.y += Math.sin(k * Math.PI) * 0.9; s.m.rotation.x += dt * 14; s.m.rotation.z += dt * 5;
         if (k < 1) continue;
         K.fx.puff(p.x, p.y, p.z, 'leaf', s.out === 'miss' ? 0 : 8); if (s.out !== 'hit') K.fx.sound(s.out === 'stuck' ? 'rim' : 'bad', 0.9);      // dép chạm tán: lá rụng; mắc cành / trượt: tiếng riêng
         if (s.out === 'hit') { const n = mango.drop(1 + Math.floor(Math.random() * 3), true); if (n) { comment(D.SANDAL.hit); if (ctx.audio) ctx.audio.rustle(); } else if (ctx.ui) ctx.ui.toast(D.SANDAL.bare, 2.5); }
@@ -137,13 +139,16 @@ export function initPlay(K) {
   const planeGeo = new THREE.BufferGeometry();
   planeGeo.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0.22, -0.13, 0.025, -0.16, 0, 0, -0.16, 0, 0, 0.22, 0, 0, -0.16, 0.13, 0.025, -0.16, 0, 0, 0.22, 0, 0, -0.16, 0, -0.055, -0.16], 3)); planeGeo.computeVertexNormals();
   const planeMat = new THREE.MeshStandardMaterial({ color: 0xfbfaf4, roughness: 0.8, side: THREE.DoubleSide, emissive: 0x333330 });
-  const hand = new THREE.Mesh(planeGeo, planeMat); hand.position.set(0.3, 1.12, 0.28); hand.visible = false; player.holder.add(hand);
-  const planes = []; let fold = 0, holding = false;
+  planeGeo.scale(0.8, 0.8, 0.8);      // dài ~30 cm, sải ~21 cm (tờ A4 gấp; trước đây 38 cm, to như cái ê-ke)
+  const hand = new THREE.Mesh(planeGeo, planeMat); hand.position.set(0.3, 1.12, 0.28); hand.rotation.x = -0.3; hand.visible = false; player.holder.add(hand);
+  const planes = [], PLANE_TOSS = 0.7; let fold = 0, holding = false, toss = 0;      // toss: giây đã trôi của động tác phi (0 = không phi)
   for (const r of K.rooms) { const q = r.P(r.rw - 3.4, -7.5), it = { x: q.x, y: r.y0 + 0.8, z: q.z, r: 2, label: D.PLANE.label, fn: () => { if (!K.idle() || holding || fold) return; if (st.held) { if (ctx.ui) ctx.ui.toast(D.PLANE.busy, 3); return; } if (K.lock('plane')) fold = 0.001; } }; ctx.interact.push(it); r.paperIt = it; }
-  function launch() {
-    if (!holding || !K.idle()) return; holding = false; hand.visible = false; st.handUse = null; st.gest = { type: 'throw', t: 0, dur: 0.5 };
+  /** bấm phi: tay kéo máy bay ra sau tai rồi đẩy tới (cử chỉ 'plane' của rigged.js); máy bay còn trong tay tới PLANE_RELEASE rồi mới bay ra (letFly) */
+  function launch() { if (!holding || toss || !K.idle()) return; toss = 0.001; st.handUse = null; st.gest = { type: 'plane', t: 0, dur: PLANE_TOSS }; }
+  function letFly() {
+    toss = 0; holding = false; hand.visible = false;
     let pl = planes.find(x => !x.m.visible); if (!pl) { if (planes.length >= PLANE_MAX) pl = planes.reduce((a, b) => (a.t > b.t ? a : b)); else { pl = { m: new THREE.Mesh(planeGeo, planeMat), v: new THREE.Vector3(), from: new THREE.Vector3() }; pl.m.castShadow = true; scene.add(pl.m); planes.push(pl); } }
-    const d = player.viewDir(tmp); pl.m.visible = true; pl.m.position.set(player.pos.x + d.x * 0.5, player.pos.y + 0.7, player.pos.z + d.z * 0.5); pl.from.copy(pl.m.position);
+    const d = player.viewDir(tmp); pl.m.visible = true; if (st.fp) pl.m.position.set(player.pos.x + d.x * 0.5, player.pos.y + 0.7, player.pos.z + d.z * 0.5); else hand.getWorldPosition(pl.m.position).addScaledVector(d, 0.12); pl.from.copy(pl.m.position);      // bay ra từ đúng bàn tay (góc nhìn thứ nhất không thấy tay: ra từ trước mặt)
     pl.v.set(d.x, Math.max(-0.2, d.y) + 0.12, d.z).normalize().multiplyScalar(PLANE_V); pl.t = 0; pl.landed = 0; pl.drop = false; pl.seed = Math.random() * 6; if (ctx.audio) ctx.audio.whoosh();
   }
   function tickPlanes(dt) {
@@ -151,7 +156,9 @@ export function initPlay(K) {
       fold += dt; ui.progress(D.PLANE.folding, fold / FOLD_SECS);
       if (fold >= FOLD_SECS) { fold = 0; ui.progress('', null); K.unlock('plane'); holding = true; hand.visible = true; st.handUse = launch; K.drawHud(); if (ctx.ui) ctx.ui.toast(D.PLANE.ready, 4); }
     }
+    if (toss) { toss += dt; if (!holding || !K.idle()) toss = 0; else if (toss >= PLANE_TOSS * PLANE_RELEASE) letFly(); if (!toss && holding) st.handUse = launch; }      // bị kịch bản khác chen vào giữa chừng: thôi phi, vẫn cầm
     hand.visible = holding && !st.fp;
+    { const rg = player.body.rig, hb = rg && rg.bones.RightHand; if (hand.visible && hb) { hb.getWorldPosition(hand.position); player.holder.worldToLocal(hand.position); hand.position.y += 0.035; hand.position.z += 0.07; hand.rotation.x = toss ? -0.12 : -0.3; } }      // máy bay nằm trong bàn tay phải (dáng cầm: rigged.js actHold 'plane')
     for (const r of K.rooms) r.paperIt.r = holding || fold ? 0 : 2;
     for (const pl of planes) {
       if (!pl.m.visible) continue; const p = pl.m.position, v = pl.v;
