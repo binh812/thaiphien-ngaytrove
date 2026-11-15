@@ -17,7 +17,7 @@ import * as THREE from 'three';
 
 /** khoảng cách nét (điểm ảnh), dùng chung cho mọi shader; lượt trang giấy cập nhật mỗi khung theo cạnh ngắn của bộ đệm (mảng 1 phần tử: three chép uniform của ShaderLib theo tham chiếu với mảng kiểu, nên mọi vật liệu thấy cùng một giá trị) */
 export const PX = new Float32Array([5]);
-export const pxFor = (w, h) => Math.max(4.2, 5 * Math.min(w, h) / 1080);
+export const pxFor = (w, h) => Math.max(3.4, 5 * Math.min(w, h) / 1080);
 
 export const PENCIL_GLSL = /* glsl */ `
 float pcHash( float n ) { return fract( sin( n * 127.1 ) * 43758.5453 ); }
@@ -30,7 +30,10 @@ float pcNoise( vec3 p ) {
 // thớ giấy tại chỗ vật chạm giấy: 0 là chỗ trũng sáp bỏ qua, 1 là chỗ gồ sáp bám (ở xa, hạt nhỏ hơn điểm ảnh thì san đều)
 float pcTooth( vec3 at ) {
   float fine = length( fwidth( at ) );
-  return mix( 0.5, pcNoise( at * 19.0 ), clamp( 1.0 - fine * 14.0, 0.0, 1.0 ) ) * 0.6 + mix( 0.5, pcNoise( at * 47.0 + 5.0 ), clamp( 1.0 - fine * 35.0, 0.0, 1.0 ) ) * 0.4;
+  float k1 = clamp( 1.0 - fine * 14.0, 0.0, 1.0 ), k2 = clamp( 1.0 - fine * 35.0, 0.0, 1.0 ), n1 = 0.5, n2 = 0.5;
+  if ( k1 > 0.0 ) n1 = mix( 0.5, pcNoise( at * 19.0 ), k1 );      // (ở xa bỏ hẳn phép tính nhiễu: nhẹ hơn bản gốc, kết quả y hệt)
+  if ( k2 > 0.0 ) n2 = mix( 0.5, pcNoise( at * 47.0 + 5.0 ), k2 );
+  return n1 * 0.6 + n2 * 0.4;
 }
 // một nét mềm rộng W điểm ảnh, cách tim nét d điểm ảnh
 float pcStroke( float W, float d ) { return smoothstep( W * 0.5 + 1.0, W * 0.5 - 1.0, d ) * min( 1.0, W * 0.6 ); }
@@ -56,9 +59,9 @@ vec3 pcDraw( vec3 local, float D, vec2 h, vec3 at ) {
   // nắng trước: vàng ấm, rất nhẹ, ở mọi chỗ ánh sáng rọi tới
   left *= mix( vec3( 1.0 ), vec3( 1.0, 0.9, 0.56 ), clamp( ( 1.0 - smoothstep( 0.0, 0.4, D ) ) * PC_YELLOW * ( 0.45 + 0.9 * tooth ), 0.0, 1.0 ) );
   // màu của vật phủ nhẹ khắp, nhạt hơn ở chỗ sáng nhất
-  left *= mix( vec3( 1.0 ), local, clamp( ( ( 0.42 + 0.45 * smoothstep( 0.0, 0.7, D ) ) * PC_BASE * ( 1.0 - 0.6 * pcGround ) + 0.5 * ink + 0.55 * pcFeat ) * ( 0.5 + 0.85 * tooth ), 0.0, 1.0 ) );
+  left *= mix( vec3( 1.0 ), local, clamp( ( ( 0.36 + 0.45 * smoothstep( 0.0, 0.7, D ) ) * PC_BASE * ( 1.0 - 0.3 * pcGround ) + 0.5 * ink + 0.55 * pcFeat ) * ( 0.5 + 0.85 * tooth ), 0.0, 1.0 ) );
   // rồi các nét cùng màu, ấn mạnh dần về phía tối
-  left *= mix( vec3( 1.0 ), local, clamp( pcStrokes( h.x + wob.x, ( 0.45 + 0.4 * D ) * PC_COVER * ( 1.0 - 0.4 * pcGround ) ) * ( 1.0 - 0.35 * pcGround ) * ( 0.72 + 0.5 * D + 0.3 * ink ) * PC_STROKE * ( 1.0 - 0.75 * pcFeat ) * ( 0.55 + 0.8 * tooth ), 0.0, 1.0 ) );
+  left *= mix( vec3( 1.0 ), local, clamp( pcStrokes( h.x + wob.x, ( 0.45 + 0.4 * D ) * PC_COVER * ( 1.0 - 0.15 * pcGround ) ) * ( 0.62 + 0.5 * D + 0.3 * ink ) * PC_STROKE * ( 1.0 - 0.75 * pcFeat ) * ( 0.55 + 0.8 * tooth ), 0.0, 1.0 ) );
   // và bắt chéo qua, nơi ánh sáng không tới, là chì bóng
   left *= mix( vec3( 1.0 ), shade, clamp( pcStrokes( h.y + wob.y, clamp( ( D - 0.24 ) * 1.35, 0.0, 0.82 ) ) * ( 0.5 + 0.75 * tooth ) * PC_SHADEK * ( 1.0 - 0.75 * pcFeat ), 0.0, 1.0 ) );
   return left;
@@ -71,6 +74,9 @@ const PARS_VERT = /* glsl */ `
 varying vec2 vPcH; varying vec3 vPcAt;
 #ifdef PC_WORLD
   varying float vPcUp;      // 1 = mặt nằm ngang ngửa lên (sân, đường, nền)
+#endif
+#ifdef PC_BALL
+  attribute vec4 aCen;      // tâm + bán kính khối tán
 #endif
 #ifdef PC_LEAF
   attribute vec4 aCen; varying vec3 vPcNb;      // tâm + bán kính cụm lá (trees.js); pháp tuyến theo mặt cầu của cụm (không gian nhìn)
@@ -100,6 +106,13 @@ const VERT = /* glsl */ `
     else if ( normal.y > 0.25 ) { vec3 pcR = normalize( vec3( normal.z, 0.0, -normal.x ) ); pcA = pcR; pcB = normalize( pcR * 0.8 + vec3( 0.0, 0.6, 0.0 ) ); }   // mái: nét xuôi theo dốc
   #endif
   vPcH = vec2( dot( pcP, pcA ), dot( pcP, pcB ) ); vPcAt = pcP;
+  #ifdef PC_BALL
+  { // khối tán: nét đồng tâm ôm khối — đường đồng mức của khoảng cách tới một trục nghiêng qua tâm khối (mỗi khối một trục riêng)
+    vec3 pcW = position - aCen.xyz; float pcS = fract( dot( aCen.xyz, vec3( 0.37, 0.71, 0.53 ) ) ) * 6.2832;
+    vec3 pcX1 = normalize( vec3( cos( pcS ) * 0.6, 0.75, sin( pcS ) * 0.6 ) ), pcX2 = normalize( vec3( -sin( pcS ) * 0.8, 0.45, cos( pcS ) * 0.8 ) );
+    vPcH = vec2( length( cross( pcW, pcX1 ) ), length( cross( pcW, pcX2 ) ) ); vPcAt = position;
+  }
+  #endif
   #ifdef PC_LEAF
     // tán lá là những thẻ quay lung tung: trường phẳng trong không gian vật cắt mỗi thẻ ra một hướng nét khác nhau → mớ nét rối.
     // Ở đây trường tính theo độ lệch tới tâm cụm, chiếu lên mặt phẳng nhìn: mọi thẻ của một cụm chung một họ nét cong ôm khối tròn.
@@ -113,10 +126,10 @@ const VERT = /* glsl */ `
 const DEFAULTS = /* glsl */ `
 // mặc định (vật liệu chưa phân loại: người, đồ vật, biển hiệu) — vật liệu theo loại ghi đè bằng material.defines
 #ifndef PC_INK
-  #define PC_INK 1.0
+  #define PC_INK 0.5
 #endif
 #ifndef PC_SAT
-  #define PC_SAT 1.25
+  #define PC_SAT 1.0
 #endif
 #ifndef PC_LIFT
   #define PC_LIFT 0.85
@@ -140,7 +153,13 @@ const DEFAULTS = /* glsl */ `
   #define PC_SHADEK 0.95
 #endif
 #ifndef PC_YELLOW
-  #define PC_YELLOW 0.2
+  #define PC_YELLOW 0.3
+#endif
+#ifndef PC_PASTEL
+  #define PC_PASTEL 0.0
+#endif
+#ifndef PC_DADD
+  #define PC_DADD 0.0
 #endif
 #ifndef PC_SHADECOL
   #define PC_SHADECOL( c ) mix( c * 0.5, vec3( 0.24, 0.2, 0.62 ), 0.55 )
@@ -185,17 +204,24 @@ const FRAG_OUT = /* glsl */ `
   #ifdef PC_NORM
     pcLocal = pcLocal / max( max( pcLocal.r, max( pcLocal.g, pcLocal.b ) ), 0.02 ) * PC_NORM;      // chỉ giữ sắc, bỏ độ tối của màu gốc
   #endif
+  #ifdef PC_BALL
+    gl_FragColor.a = 0.5;      // viền chì than giữa các mặt phẳng nhỏ của khối cầu vẽ nhạt; viền khối vẫn thấy
+  #endif
   #ifdef PC_LEAF
     // lá: màu lấy theo cụm (màu đỉnh đã chuẩn hoá, bỏ ảnh lá và phần tối theo từng thẻ); sáng–tối theo mặt cầu của cụm
     #ifdef USE_COLOR
-      pcLocal = vColor.rgb / max( max( vColor.r, max( vColor.g, vColor.b ) ), 0.02 ) * 0.62;
+      pcLocal = vColor.rgb / max( max( vColor.r, max( vColor.g, vColor.b ) ), 0.02 ) * 0.55;
     #endif
     #if NUM_DIR_LIGHTS > 0
       pcD = mix( pcD, 1.0 - smoothstep( -0.5, 0.6, dot( normalize( vPcNb ), directionalLights[ 0 ].direction ) ), 0.88 );
     #endif
     gl_FragColor.a = 0.3;      // báo cho lượt trang giấy: trong tán lá, viền chì than giữa các thẻ lá vẽ rất nhạt
   #endif
-  pcD *= PC_DMUL;
+  #ifdef PC_WORLD
+    pcD = min( pcD * PC_DMUL + PC_DADD * ( 1.0 - vPcUp ), 1.0 );      // (sân, đường phơi nắng không cộng: giữ giấy sáng)
+  #else
+    pcD = min( pcD * PC_DMUL + PC_DADD, 1.0 );
+  #endif      // PC_DADD: bản gốc dùng Lambert nên mặt nắng xiên vẫn có D ~0,1–0,3 (nét thấy rõ); đèn HDR của game ép D về 0
   // ban đêm (đèn chính là trăng, ngả xanh): pcGlow = vật này đang được đèn/lửa rọi tới mức nào; nét giữ mật độ vừa phải để lượt trang giấy còn thấy hình khối
   float pcGlow = 0.0;
   #if !defined( PC_UNLIT ) && NUM_DIR_LIGHTS > 0
@@ -210,9 +236,10 @@ const FRAG_OUT = /* glsl */ `
   #endif
   // chì màu không có sắc thật tối: nâng sáng và tăng độ tươi của màu vật
   pcLocal = pow( clamp( mix( vec3( dot( pcLocal, vec3( 0.3333 ) ) ), pcLocal, PC_SAT ), 0.0, 1.0 ), vec3( PC_LIFT ) );
+  pcLocal = mix( pcLocal, vec3( 1.0 ), PC_PASTEL );      // bảng màu bản gốc là màu phấn; vật liệu quét của game sẫm và gắt hơn nhiều
   #if defined( PC_WORLD ) && !defined( PC_NOGROUND )
     // sân, đường phơi nắng: gần như để trắng giấy, nét thưa và nhạt; chỉ trong bóng đổ mới tô dày
-    pcGround = vPcUp * ( 1.0 - smoothstep( 0.1, 0.45, pcD ) );
+    pcGround = vPcUp * ( 1.0 - smoothstep( 0.2, 0.55, pcD ) );
   #endif
   gl_FragColor.rgb = pcDraw( pcLocal, pcD, vPcH, vPcAt );
   // ban đêm: báo "chỗ này đang sáng" cho lượt trang giấy qua alpha (1 → 2) để nó vẽ chì sáng trên giấy tối.
@@ -228,7 +255,7 @@ const FRAG_OUT = /* glsl */ `
   { // mạch gạch lát: nét chì mảnh theo ô (toạ độ thế giới), mờ dần khi ô nhỏ hơn vài điểm ảnh
     vec2 pcG = vPcAt.xz / PC_GRID, pcW = fwidth( pcG ), pcF = abs( fract( pcG ) - 0.5 );
     float pcJ = max( 1.0 - smoothstep( 0.0, 1.6, ( 0.5 - pcF.x ) / pcW.x ), 1.0 - smoothstep( 0.0, 1.6, ( 0.5 - pcF.y ) / pcW.y ) );
-    pcJ *= vPcUp * ( 1.0 - smoothstep( 0.08, 0.3, max( pcW.x, pcW.y ) ) ) * ( 0.35 + 0.65 * pcNoise( vPcAt * 3.1 ) );
+    pcJ *= vPcUp * ( 1.0 - smoothstep( 0.08, 0.3, max( pcW.x, pcW.y ) ) ) * ( 0.65 + 0.35 * sin( vPcAt.x * 2.3 + vPcAt.z * 3.7 ) );
     gl_FragColor.rgb *= mix( vec3( 1.0 ), vec3( 0.42, 0.38, 0.36 ), pcJ * 0.45 );
   }
   #endif
@@ -282,17 +309,18 @@ const GRID = { pavers: 0.6, floorTile: 0.5, brickPave: 0.4 };      // cỡ ô m�
 export function pencilKind(m, kind) {
   m.normalMap = m.roughnessMap = m.aoMap = m.metalnessMap = null; m.metalness = 0; m.roughness = 1;
   m.onBeforeCompile = THREE.Material.prototype.onBeforeCompile; m.customProgramCacheKey = THREE.Material.prototype.customProgramCacheKey;
-  const d = { PC_WORLD: 1, PC_INK: '0.3', PC_DMUL: '0.9', PC_LIFT: '0.75', PC_SAT: '1.8' };
+  const d = { PC_WORLD: 1, PC_INK: '0.0', PC_DMUL: '0.9', PC_DADD: '0.14', PC_LIFT: '0.8', PC_SAT: '1.4', PC_PASTEL: '0.08', PC_STROKE: '1.45' };
   if (KEEP[kind]) d.PC_KEEP = KEEP[kind].toFixed(2); else d.PC_FLAT = 1;
-  if (kind === 'grass') { d.PC_NOGROUND = 1; d.PC_SAT = '2.0'; d.PC_LIFT = '0.65'; }      // thảm cỏ: giữ xanh, không để trắng như sân lát
-  if (kind === 'court') { d.PC_NOGROUND = 1; d.PC_KEEP = '0.6'; d.PC_SAT = '1.9'; d.PC_LIFT = '0.6'; d.PC_DMUL = '0.6'; }      // sân bóng rổ: giữ màu sân và vạch
+  if (kind === 'grass') { d.PC_NOGROUND = 1; d.PC_SAT = '1.4'; d.PC_LIFT = '0.65'; }      // thảm cỏ: giữ xanh, không để trắng như sân lát
+  if (kind === 'court') { d.PC_NOGROUND = 1; d.PC_KEEP = '0.6'; d.PC_SAT = '1.4'; d.PC_LIFT = '0.6'; d.PC_DMUL = '0.6'; }      // sân bóng rổ: giữ màu sân và vạch
+  if (kind === 'roofTile' || kind === 'brick' || kind === 'brickPave') { d.PC_SAT = '2.0'; d.PC_PASTEL = '0.0'; d.PC_LIFT = '0.95'; d.PC_TINT = vec3(1.18, 0.9, 0.84); d.PC_STROKE = '1.3'; }      // ngói, gạch: giữ đỏ gạch
   if (GRID[kind]) d.PC_GRID = GRID[kind].toFixed(2);
-  if (kind === 'asphalt') { d.PC_LIFT = '0.5'; d.PC_TINT = vec3(0.86, 0.94, 1.1); d.PC_SAT = '1.0'; }      // đường nhựa: xám xanh nhạt, không xám đen
-  if (kind === 'foliage') { d.PC_LIFT = '0.45'; d.PC_SAT = '1.5'; }      // lõi bụi cây, tùng: màu gốc rất sẫm → nâng lên xanh tươi
+  if (kind === 'asphalt') { d.PC_LIFT = '0.62'; d.PC_TINT = vec3(0.86, 0.94, 1.1); d.PC_SAT = '1.0'; }      // đường nhựa: xám xanh nhạt, không xám đen
+  if (kind === 'foliage') { d.PC_LIFT = '0.45'; d.PC_SAT = '1.1'; }      // lõi bụi cây, tùng: màu gốc rất sẫm → nâng lên xanh tươi
   if (kind === 'bark') { d.PC_A = 'normalize( vec3( 1.0, 0.08, 0.35 ) )'; d.PC_B = 'normalize( vec3( -0.4, 0.12, 1.0 ) )'; delete d.PC_WORLD; }      // thân cây: nét dọc thân
   define(m, d);
 }
-const SKIN = { PC_SKIN: 1, PC_TINT: 'vec3( 1.04, 0.965, 0.96 )', PC_DMUL: '0.4', PC_LIFT: '0.6', PC_SAT: '1.15', PC_BASE: '0.72', PC_STROKE: '0.34', PC_COVER: '0.6', PC_SHADEK: '0.5', PC_YELLOW: '0.1', PC_INK: '1.4', 'PC_SHADECOL( c )': 'mix( c * 0.62, vec3( 0.62, 0.30, 0.32 ), 0.35 )' };
+const SKIN = { PC_SKIN: 1, PC_TINT: 'vec3( 1.04, 0.965, 0.96 )', PC_DMUL: '0.33', PC_LIFT: '0.6', PC_SAT: '1.05', PC_PASTEL: '0.12', PC_BASE: '0.72', PC_STROKE: '0.34', PC_COVER: '0.6', PC_SHADEK: '0.5', PC_YELLOW: '0.1', PC_INK: '1.4', 'PC_SHADECOL( c )': 'mix( c * 0.62, vec3( 0.62, 0.30, 0.32 ), 0.35 )' };
 const HAIR = { PC_A: 'normalize( vec3( 1.0, 0.1, 0.3 ) )', PC_B: 'normalize( vec3( -0.3, 0.15, 1.0 ) )', PC_BASE: '0.45', PC_STROKE: '1.5', PC_COVER: '1.15', PC_DMUL: '0.8', PC_INK: '0.9', PC_LIFT: '0.7' };
 const SOLID = { PC_STROKE: '0.3', PC_BASE: '1.6', PC_DMUL: '0.2', PC_INK: '1.6' };
 /** Vật liệu của một nhân vật có xương (rigged.js gọi ngay sau khi nhân bản vật liệu): da sáng sạch, tóc là khối sẫm có nét dọc, mắt mày vẽ đặc tay. */
@@ -310,7 +338,34 @@ export function pencilGlass(m) {
 }
 
 const LEAF = { PC_KEEP: '0.35', PC_DMUL: '0.55', PC_LIFT: '0.7', PC_INK: '0.0' };
-const CANOPY = { PC_LEAF: 1, PC_DMUL: '1.15', PC_LIFT: '0.9', PC_SAT: '1.35', PC_INK: '0.0', PC_YELLOW: '0.32', PC_BASE: '0.9', PC_COVER: '1.1', 'PC_SHADECOL( c )': 'mix( c * 0.5, vec3( 0.16, 0.24, 0.5 ), 0.3 )' };
+const CANOPY = { PC_LEAF: 1, PC_DMUL: '1.15', PC_LIFT: '1.0', PC_SAT: '0.8', PC_PASTEL: '0.12', PC_INK: '0.0', PC_YELLOW: '0.3', PC_BASE: '1.0', PC_COVER: '1.0', 'PC_SHADECOL( c )': 'mix( c * 0.5, vec3( 0.16, 0.24, 0.5 ), 0.3 )' };
+const BALL = { PC_BALL: 1, PC_NORM: '0.5', PC_SAT: '0.7', PC_LIFT: '1.0', PC_PASTEL: '0.1', PC_INK: '0.0', PC_DMUL: '1.25', PC_DADD: '0.08', PC_STROKE: '1.3', 'PC_SHADECOL( c )': 'mix( c * 0.5, vec3( 0.16, 0.24, 0.5 ), 0.3 )' };
+/**
+ * Tán cây kiểu chì màu: mỗi cụm tán là một khối cầu hơi méo (80–180 tam giác) thay cho hàng trăm thẻ lá — như cây trong bản gốc.
+ * @param balls     [[x, y, z, r, [r, g, b]], …] tâm, bán kính, màu của từng cụm (trees.js gom)
+ * @param material  vật liệu có vá gió của trees.js (cần thuộc tính aFlex)
+ * @returns THREE.Mesh một lệnh vẽ cho mọi khối tán
+ */
+export function pencilCanopy(balls, material) {
+  const units = [new THREE.IcosahedronGeometry(1, 1), new THREE.IcosahedronGeometry(1, 2)], pick = (r) => units[r < 1.5 ? 0 : 1].attributes.position;      // cụm nhỏ 80 tam giác, cụm lớn 180
+  const total = balls.reduce((a, b) => a + pick(b[3]).count, 0);
+  const pos = new Float32Array(total * 3), nrm = new Float32Array(total * 3), col = new Float32Array(total * 3), cen = new Float32Array(total * 4), flex = new Float32Array(total);
+  let o = 0;
+  for (const [x, y, z, r, c] of balls) {
+    const up = pick(r);
+    for (let i = 0; i < up.count; i++, o++) {
+      const ux = up.getX(i), uy = up.getY(i), uz = up.getZ(i);
+      const k = r * (0.92 + 0.13 * Math.sin(ux * 4.1 + x * 1.7) * Math.sin(uz * 3.7 + z * 1.3) + 0.06 * Math.sin(uy * 5.3 + y));      // hơi méo, mỗi khối một kiểu
+      pos.set([x + ux * k, y + uy * k * 0.82, z + uz * k], o * 3); nrm.set([ux, uy, uz], o * 3); col.set(c, o * 3); cen.set([x, y, z, r], o * 4); flex[o] = 0.35 + 0.35 * (uy * 0.5 + 0.5);
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('normal', new THREE.BufferAttribute(nrm, 3)); g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  g.setAttribute('aCen', new THREE.BufferAttribute(cen, 4)); g.setAttribute('aFlex', new THREE.BufferAttribute(flex, 1));
+  units.forEach(u => u.dispose()); define(material, BALL); material.userData.pc = true;
+  const mesh = new THREE.Mesh(g, material); mesh.name = 'canopy'; mesh.castShadow = mesh.receiveShadow = true; mesh.frustumCulled = false; mesh.matrixAutoUpdate = false;
+  return mesh;
+}
 /** Duyệt cảnh sau khi dựng xong: chỉnh những vật liệu không đi qua kindMat (lá, cỏ, lửa…). Vật liệu chưa gặp vẫn ra nét chì với thiết lập mặc định. */
 export function pencilScene(scene) {
   const seen = new Set();
@@ -326,7 +381,7 @@ export function pencilScene(scene) {
       if (m.userData.pc) continue; m.userData.pc = true;
       if (m.blending === THREE.AdditiveBlending && o.geometry.type === 'ConeGeometry') { m.blending = THREE.NormalBlending; m.transparent = false; m.depthWrite = true; m.needsUpdate = true; m.userData.pcFlame = true; }      // ngọn lửa trại: vẽ đặc để lượt trang giấy coi là nguồn sáng (alpha 2) và toả quầng
       else if (m.blending === THREE.AdditiveBlending) { m.blending = THREE.NormalBlending; m.opacity *= 0.7; m.needsUpdate = true; }      // lửa, quầng sáng: cộng màu lên giấy trắng thì mất hình → tô phủ
-      if (o.isInstancedMesh && o.name === 'grass') define(m, { PC_INSTWORLD: 1, PC_NORM: '0.6', PC_LIFT: '0.9', PC_SAT: '1.5', PC_INK: '0.0', PC_DMUL: '0.5' });
+      if (o.isInstancedMesh && o.name === 'grass') define(m, { PC_INSTWORLD: 1, PC_NORM: '0.6', PC_LIFT: '0.9', PC_SAT: '1.1', PC_INK: '0.0', PC_DMUL: '0.5' });
       else if (m.alphaTest > 0 && o.geometry.attributes.aCen) { m.alphaToCoverage = false; o.receiveShadow = false; define(m, CANOPY); }      // tán lá dạng thẻ (trees.js): khối tròn có nét cong; bỏ bóng tự đổ giữa các thẻ cho khối sáng–tối sạch
       else if (m.alphaTest > 0 && m.map && !o.isSkinnedMesh) define(m, o.isInstancedMesh ? { PC_INSTWORLD: 1, ...LEAF } : LEAF);      // lá: giữ cắt alpha, màu gần phẳng
     }
@@ -343,7 +398,7 @@ const SKY_VS = 'varying vec3 vDir; void main() { vDir = position; vec4 p = model
 const SKY_FS = /* glsl */ `
 varying vec3 vDir; uniform vec3 uSun; uniform float uCover; uniform float uNight;
 uniform float uPcPx[ 1 ];
-#define PC_PX ( uPcPx[ 0 ] * 1.5 )
+#define PC_PX uPcPx[ 0 ]
 #define PC_INK 0.0
 ${DEFAULTS}
 ${PENCIL_GLSL}
@@ -352,14 +407,14 @@ void main() {
   vec3 d = normalize( vDir );
   float up = clamp( d.y, 0.0, 1.0 );
   // mây = khoảng giấy để trắng; chân trời nhạt dần; mặt trời là một khoảng giấy trắng
-  float cloud = smoothstep( 0.56 - 0.25 * uCover, 0.74 - 0.2 * uCover, pcFbm( vec3( d.x, d.y * 2.2, d.z ) * 2.6 / ( 0.35 + up ) ) );
+  float cloud = smoothstep( 0.5 - 0.25 * uCover, 0.68 - 0.2 * uCover, pcFbm( vec3( d.x, d.y * 2.2, d.z ) * 2.6 / ( 0.35 + up ) ) );
   float sun = smoothstep( 0.90, 0.995, dot( d, uSun ) );
-  float cover = mix( ( 0.34 + 0.3 * up ) * ( 1.0 - cloud ) * ( 1.0 - sun ), 0.62 - 0.25 * cloud, uNight ) * smoothstep( -0.05, 0.06, d.y );
+  float cover = mix( ( 0.3 + 0.2 * up ) * ( 1.0 - cloud ) * ( 1.0 - sun ), 0.62 - 0.25 * cloud, uNight ) * smoothstep( -0.05, 0.06, d.y );
   vec3 blue = mix( mix( vec3( 0.50, 0.68, 0.93 ), vec3( 0.36, 0.52, 0.90 ), up ), vec3( 0.22, 0.24, 0.52 ), uNight );
   float tooth = pcTooth( d * 26.0 );
   float h = dot( d, normalize( vec3( 0.62, 1.0, 0.34 ) ) ) * 9.0 + 0.05 * sin( d.x * 9.0 + d.z * 7.0 );
   vec3 left = mix( vec3( 1.0 ), blue, clamp( cover * 0.5 * ( 0.5 + 0.85 * tooth ), 0.0, 1.0 ) );
-  left *= mix( vec3( 1.0 ), blue, clamp( pcStrokes( h, cover ) * 0.8 * ( 0.55 + 0.8 * tooth ), 0.0, 1.0 ) );
+  left *= mix( vec3( 1.0 ), blue, clamp( pcStrokes( h, cover ) * mix( 0.3, 0.8, uNight ) * ( 0.55 + 0.8 * tooth ), 0.0, 1.0 ) );
   // sao: vài chấm chì trắng (alpha > 1 = nguồn sáng, xem lượt trang giấy)
   vec3 sc = floor( d * 90.0 ); float star = step( 0.985, pcHash3( sc ) ) * smoothstep( 0.45, 0.1, length( fract( d * 90.0 ) - 0.5 ) ) * step( 0.05, d.y ) * ( 1.0 - cloud * 0.8 );
   gl_FragColor = vec4( left, 1.0 + star * uNight );

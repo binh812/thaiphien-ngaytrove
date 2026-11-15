@@ -6,6 +6,7 @@ import { setAnimFocus, PLANE_RELEASE } from './rigged.js';
 
 const SANDAL_WIND = 0.2, TREE_R = 7, CANOPY_Y = 4.0, SANDALS = 2, PICK_R = 1.1, THROW_SECS = 0.6, P_HIT = 0.55, P_STUCK = 0.15;      // ném dép: tầm đứng, cao độ tán, số dép, tầm nhặt, thời gian bay, xác suất
 const SEAT_R = 1.3, BENCH_H = 0.46, ROW_GAP = 1.15, BENCH_U = 0.92, BENCH_W = [[-6.3, -3.3], [-11.65, -8.65]];     // ngồi: tầm với ghế, cao mặt ghế đá, bố trí ghế băng trong lớp (xem furnishClass)
+const PRE_TURN = 2.3, PRE_SPEED = 0.7, PRE_MIN = 0.3, PRE_REST = 0.15, POST_MIN = 0.2, POST_SPEED = 0.55;      // PRE_REST: đứng yên chừng này sau khi xoay xong rồi mới ngồi (bàn chân bước cho xong); POST_SPEED: tốc độ bước về chỗ cũ sau khi đứng dậy;      // trước khi ngồi: tốc độ xoay người (rad/s) và bước tới ghế (m/s) tối đa, quãng ngắn nhất (giây); sau khi đứng dậy: quãng bước về chỗ cũ ngắn nhất
 const SIT_IN = 1.3, SIT_OUT = 1.03, SIT_MOVE = 0.45;      // giây: động tác ngồi xuống / đứng dậy khi chưa đọc được độ dài clip sit_down, stand_up (bình thường lấy độ dài clip thật, xem clipSecs), thời gian trượt người giữa chỗ đứng và mặt ghế
 const SEAT_MOVE = 0.3, SEAT_STALE = 400;
 const FOLD_SECS = 1.5, PLANE_V = 8, PLANE_LIFE = 14, PLANE_REST = 25, PLANE_MAX = 8, PLANE_MIN = 2, BOOK_KEEP = 14, BOOK_LEN = 90;
@@ -90,29 +91,54 @@ export function initPlay(K) {
   function sit(s) {
     // ghế cao (ghế đá, ghế băng) có động tác ngồi xuống rồi mới vào dáng ngồi; ghế thấp ngồi xổm (s.clip riêng) thì chuyển mềm thẳng sang dáng
     const soft = !s.clip;
-    sitting = { ...s, clip: s.clip || 'sit_idle', back: player.pos.clone(), f0: player.holder.rotation.y, tr: soft ? 'down' : null, t: 0, dur: clipSecs('sit_down', SIT_IN) }; st.pinned = true; st.pinBy = 'seat'; st.clip = soft ? 'sit_down' : sitting.clip; st.pose = null;
+    sitting = { ...s, clip: s.clip || 'sit_idle', back: player.pos.clone(), f0: player.holder.rotation.y, tr: soft ? 'turn' : null, t: 0, dur: clipSecs('sit_down', SIT_IN) }; st.pinned = true; st.pinBy = 'seat'; st.clip = soft ? null : sitting.clip; st.pose = null;
     if (s.stool) phys.pcol.setEnabled(false); if (s.it) s.it.occupied = true; st.armsDown = !!s.stool;      // ghế đang có người ngồi: không nhấc, không đá được (player.js); ngồi ghế thấp thì hạ tay      // ghế nhựa là vật thể động: tắt va chạm của người chơi kẻo ghế bị hất văng
-    const f = sitting.f = s.f ?? player.holder.rotation.y; player.turnTo(f); if (soft) return;      // có động tác: tickSit trượt người dần vào ghế
+    const f = sitting.f = s.f ?? player.holder.rotation.y;
+    if (soft) {      // có động tác: trước hết xoay người + bước tới sát ghế (tr = 'turn', bàn chân bước thật nhờ neo chân của rigged.js), xong mới phát clip ngồi xuống
+      const a = seatAnchor(sitting, 'sit_down', 0); let d = f - sitting.f0; d = Math.atan2(Math.sin(d), Math.cos(d));
+      sitting.pre = PRE_REST + Math.max(PRE_MIN, Math.abs(d) / PRE_TURN, Math.hypot(a.x - player.pos.x, a.z - player.pos.z) / PRE_SPEED); player.turnTo(f, Math.max(0.8, sitting.pre)); return;
+    }
+    player.turnTo(f);
     player.pos.set(s.x, s.y + phys.HH + phys.R, s.z); player.holder.rotation.y = f;
   }
   /** đứng dậy có động tác (phím C, phím đi); đang dở động tác ngồi xuống hoặc ghế thấp thì đứng ngay */
   function standUp() {
-    if (!sitting || sitting.tr === 'up') return; if (sitting.tr || sitting.clip !== 'sit_idle' || st.pinBy !== 'seat') { stand(); return; }
+    if (!sitting || sitting.tr === 'up' || sitting.tr === 'back') return;
+    // bấm đứng dậy khi còn đang dở: đang xoay người tới ghế thì bước ngược về chỗ cũ; đang ngồi xuống thì ngồi cho xong rồi đứng dậy ngay — không giật người về chỗ cũ giữa chừng
+    if (sitting.tr === 'turn') { const S = sitting, b = S.back; S.tr = 'back'; S.t = 0; S.ax = player.pos.x; S.az = player.pos.z; S.f = player.holder.rotation.y; S.post = Math.max(POST_MIN, Math.hypot(b.x - S.ax, b.z - S.az) / POST_SPEED); return; }
+    if (sitting.tr === 'down') { sitting.wantUp = true; return; }
+    if (sitting.clip !== 'sit_idle' || st.pinBy !== 'seat') { stand(); return; }
     sitting.tr = 'up'; sitting.t = 0; sitting.dur = clipSecs('stand_up', SIT_OUT); st.clip = 'stand_up';
   }
   const ease = (k) => k * k * (3 - 2 * k);
+  /** chỗ đặt gốc nhân vật ở giây t của clip ngồi xuống/đứng dậy: clip có phần lùi ra sau/nhích ra trước của hông tách riêng (rigged.js: splitRootZ) — dời gốc theo để bàn chân
+   *  đứng yên, mông hạ đúng mặt ghế. Ghế băng trong lớp (S.tight) thì không dời: đứng trước ghế 25 cm là đứng lọt vào mặt bàn → ngồi xuống tại chỗ */
+  function seatAnchor(S, clip, t) { const rig = player.body && player.body.rig, rs = rig && rig.rootShift && !S.tight ? rig.rootShift(clip, t) : 0; anchorP.x = S.x + Math.sin(S.f) * rs; anchorP.z = S.z + Math.cos(S.f) * rs; return anchorP; }
+  const anchorP = { x: 0, z: 0 };
+  /**
+   * Ngồi xuống / đứng dậy theo bốn chặng (S.tr): 'turn' xoay người về hướng ghế + bước tới chỗ sẽ ngồi (tối đa PRE_TURN rad/s, PRE_SPEED m/s: đủ chậm để rigged.js cho bàn chân
+   * bước theo thay vì lết) → 'down' clip ngồi xuống → (ngồi) → 'up' clip đứng dậy → 'back' bước về chỗ đứng cũ (vẫn quay lưng về ghế). Trước đây người bị trượt 0,65 m và
+   * xoay 180° trong 0,45 giây đầu của clip ngồi xuống: bàn chân quét trên nền tới 2–2,7 m/s.
+   */
   function tickMove(dt) {
-    const S = sitting, sy = S.y + phys.HH + phys.R, b = S.back; S.t += dt;
+    const S = sitting, sy = S.y + phys.HH + phys.R, b = S.back; S.t += dt; S.sliding = false;
     // giữa động tác mà bị dịch chuyển đi nơi khác (bản đồ M, kịch bản): bỏ dở, nhả ghim tại chỗ mới chứ không kéo người về ghế
     if (S.last && Math.hypot(player.pos.x - S.last.x, player.pos.z - S.last.z) > 0.05) { release(); st.pinned = false; st.pinBy = null; st.clip = null; return; }
-    const k = ease(Math.max(0, Math.min(1, S.tr === 'down' ? 1 - S.t / SIT_MOVE : (S.t - (S.dur - SIT_MOVE)) / SIT_MOVE)));      // k = 1: ở chỗ đứng, 0: trên ghế
-    // clip ngồi xuống/đứng dậy có phần lùi ra sau/nhích ra trước của hông tách riêng (rigged.js: splitRootZ): dời gốc theo để bàn chân đứng yên, mông hạ đúng mặt ghế.
-    // Ghế băng trong lớp (S.tight) thì không dời: đứng trước ghế 25 cm là đứng lọt vào mặt bàn → ngồi xuống tại chỗ, bàn chân trượt ra trước dưới gầm bàn
-    const rig = player.body && player.body.rig, rs = rig && rig.rootShift && !S.tight ? rig.rootShift(S.tr === 'down' ? 'sit_down' : 'stand_up', S.t) : 0, ax = S.x + Math.sin(S.f) * rs, az = S.z + Math.cos(S.f) * rs;
-    player.pos.set(ax + (b.x - ax) * k, sy + (b.y - sy) * k, az + (b.z - az) * k); S.sliding = k > 0.002 && k < 0.998;      // đang trượt người giữa chỗ đứng và ghế
+    let d = S.f - S.f0; d = Math.atan2(Math.sin(d), Math.cos(d));
+    if (S.tr === 'turn') {
+      const u = Math.max(0, 1 - S.t / (S.pre - PRE_REST)), k = 0.5 * (u + ease(u)), a = seatAnchor(S, 'sit_down', 0);      // nửa đều nửa êm: tốc độ xoay đỉnh chỉ gấp 1,25 lần trung bình (xoay quá 3 rad/s thì rigged.js coi là bị mang đi, thôi neo chân)      // k = 1: ở chỗ đứng, 0: sát ghế, đã quay lưng về ghế
+      player.pos.set(a.x + (b.x - a.x) * k, sy + (b.y - sy) * k, a.z + (b.z - a.z) * k); player.holder.rotation.y = S.f - d * k;
+      if (S.t >= S.pre) { S.tr = 'down'; S.t = 0; st.clip = 'sit_down'; }
+    } else if (S.tr === 'back') {
+      const k = ease(Math.min(1, S.t / S.post));
+      player.pos.set(S.ax + (b.x - S.ax) * k, sy + (b.y - sy) * k, S.az + (b.z - S.az) * k); player.holder.rotation.y = S.f;
+      if (S.t >= S.post) { stand(); K.fx.sound('tick', 0.7); return; }
+    } else {
+      const a = seatAnchor(S, S.tr === 'down' ? 'sit_down' : 'stand_up', S.t); player.pos.set(a.x, sy, a.z); player.holder.rotation.y = S.f;
+      if (S.tr === 'down' && S.t >= S.dur) { S.tr = null; st.clip = S.clip; K.fx.sound('sit'); if (S.wantUp) { S.wantUp = false; standUp(); } }
+      else if (S.tr === 'up' && S.t >= S.dur) { S.tr = 'back'; S.t = 0; S.ax = a.x; S.az = a.z; S.post = Math.max(POST_MIN, Math.hypot(b.x - a.x, b.z - a.z) / POST_SPEED); st.clip = null; }
+    }
     (S.last || (S.last = { x: 0, z: 0 })).x = player.pos.x; S.last.z = player.pos.z;
-    let d = S.f - S.f0; d = Math.atan2(Math.sin(d), Math.cos(d)); player.holder.rotation.y = S.f - d * k;
-    if (S.tr === 'down' && S.t >= S.dur) { S.tr = null; st.clip = S.clip; K.fx.sound('sit'); } else if (S.tr === 'up' && S.t >= S.dur) { stand(); K.fx.sound('tick', 0.7); }
   }
   function release() { if (sitting && sitting.it) sitting.it.occupied = false; sitting = null; st.armsDown = false; phys.pcol.setEnabled(true); }
   function toggleSit() { if (!st.started || st.locked) return; if (sitting) standUp(); else if (!st.photo && !st.pinned && !st.game) { const s = seatNear(); if (s) sit(s); else if (K.fx.once('noSeat', 4) && ctx.ui) ctx.ui.toast(D.SIT.none, 2.5); } }      // chưa ngồi được: nói rõ vì sao

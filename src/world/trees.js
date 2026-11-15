@@ -5,6 +5,7 @@ import { U, kindMat } from '../engine/materials.js';
 import { canvasTex } from '../engine/textures.js';
 import { roundPlanter } from './kit.js';
 import { PENCIL_ON } from '../engine/pencil/style.js';
+import { pencilCanopy } from '../engine/pencil/pencil.js';
 
 /* ---------- texture ---------- */
 function leafShape(g, len, wid) { g.beginPath(); g.moveTo(0, 0); g.bezierCurveTo(wid, -len * 0.25, wid * 0.9, -len * 0.8, 0, -len); g.bezierCurveTo(-wid * 0.9, -len * 0.8, -wid, -len * 0.25, 0, 0); }
@@ -68,6 +69,7 @@ const PAL = { green: [0x5d8a36, 0x4a7a2c, 0x6a9a3c, 0x3f6d28], red: [0xc2401c, 0
 function rndDir(rnd) { const y = rnd() * 2 - 1, a = rnd() * 6.283, r = Math.sqrt(1 - y * y); return [Math.cos(a) * r, y, Math.sin(a) * r]; }
 
 function blobCards(cards, rnd, cx, cy, cz, r, n, pal, canopy, size) {
+  if (PENCIL_ON) { (cards.balls || (cards.balls = [])).push([cx, cy, cz, r * 1.05, lin(pal[Math.floor(rnd() * pal.length)])]); return; }      // kiểu chì màu: cụm tán là một khối cầu (pencilCanopy), không dựng thẻ lá
   cards.cur = [cx, cy, cz, r];
   for (let i = 0; i < n; i++) {
     const d = rndDir(rnd), rr = r * (0.55 + 0.45 * Math.pow(rnd(), 0.5)), p = [cx + d[0] * rr, cy + d[1] * rr * 0.8, cz + d[2] * rr];
@@ -199,6 +201,7 @@ export async function init(ctx) {
       cards.quad(p, [t1[0] * s, t1[1] * s * (lowF ? 0.3 : 1), t1[2] * s], [-t1[2] * s, s * 0.6, t1[0] * s], nrm, col, 0.1);
     }
   }
+  if (cards.balls) ctx.scene.add(pencilCanopy(cards.balls, windPatch(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0 }), 'canopy')));
   const leafMesh = cards.mesh(leaf.m, leaf.d); leafMesh.name = 'leaves'; leafMesh.frustumCulled = false; ctx.scene.add(leafMesh);
   if (fronds.n) { const fm = fronds.mesh(palmM.m, palmM.d); fm.name = 'fronds'; fm.frustumCulled = false; ctx.scene.add(fm); }
   // lá rụng trên sân + trên đường nội bộ

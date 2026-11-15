@@ -5,11 +5,11 @@ import { clone as cloneSkinned } from 'three/addons/utils/SkeletonUtils.js';
 import { Q, param } from '../engine/util.js';
 import { PENCIL_ON } from '../engine/pencil/style.js';
 import { pencilPerson } from '../engine/pencil/pencil.js';
+import { gaitMix, airMix, animPrepare } from './gait.js';
 
 const DIR = 'assets/people/';
 const CLIP_HIPS = 0.9311;                // độ cao hông của nhân vật mà clip được chuyển sang (m_white)
 const STRIDE = 1;                             // thu biên độ đùi khi đi (1 = giữ nguyên; clip ghi hình người thật đã có sải tự nhiên)
-const WALK_SPEED = 1.36 * STRIDE, RUN_SPEED = 3.0; // tốc độ (m/s) ứng với clip ở nhịp gốc (CMU 07_01 và 35_17, đo ở cỡ m_white)
 const GRAY = 0.88;                       // độ sáng nền của kết cấu quần áo đã khử màu
 const OUTFIT_COLORS = {
   white:   { top: 0xf4f3ee, bottom: 0x131a30, shoes: null },      // quần xanh than rất đậm, gần đen (theo ảnh đồng phục thật)
@@ -62,19 +62,26 @@ function getPoses(man) {
   if (!posesP) posesP = man.poses ? load('poses.glb').then((g) => g.animations, (e) => { console.warn('[người] không nạp được poses.glb, chế độ chụp ảnh sẽ không có dáng tạo sẵn:', e && e.message ? e.message : e); return []; }) : Promise.resolve([]);
   return posesP;
 }
+let ualP = null;
+/** clip bổ sung từ Universal Animation Library (tệp anims_ual.glb, không bắt buộc): thiếu tệp thì trò chơi vẫn chạy với bộ clip cũ — có báo một lần ở console */
+function getUal(man) {
+  if (!ualP) ualP = man.animations_ual ? load(man.animations_ual.file).then((g) => g.animations, (e) => { console.warn('[người] không nạp được ' + man.animations_ual.file + ', dùng bộ chuyển động cũ:', e && e.message ? e.message : e); return []; }) : Promise.resolve([]);
+  return ualP;
+}
 async function clipsFor(key, hips, man) {
   if (clipCache.has(key)) return clipCache.get(key);
   if (!animsP) animsP = load('anims.glb');
-  const out = {}, add = (src, base) => {
+  const out = {}, add = (src, base, meta) => {
     const k = hips / base;
     for (const c of src) {
-      const cl = c.clone();
+      const cl = c.clone(); if (meta && meta[c.name]) cl.meta = meta[c.name];      // meta: số liệu của clip trong manifest (rootSpeed, leadPhase…) — gait.js dùng
       for (const t of cl.tracks) if (t.name.endsWith('.position')) { t.values = t.values.map(v => v * k); }
       if (ONE_SHOT.test(cl.name)) splitRootZ(cl);
       out[c.name] = cl;
     }
   };
   add((await animsP).animations, CLIP_HIPS); add(await getPoses(man), (man.poses && man.poses.hipsRestHeight) || CLIP_HIPS);
+  { const U = man.animations_ual; add(await getUal(man), (U && U.hipsRestHeight) || CLIP_HIPS, U && U.clips); }
   clipCache.set(key, out); return out;
 }
 /** kiểu tóc có trong mô hình, theo giới: { m: [...mã], f: [...mã] } — null nếu manifest chưa khai (dùng bảng cũ) */
@@ -208,13 +215,15 @@ export const fileFor = (look) => `${look.gender === 'f' ? 'f' : 'm'}_${CLASS_FIL
 export async function buildRigged(look) {
   if (disabled) return null;
   const man = await getManifest(), W = pickWardrobe(man, look);
-  if (W) return buildFrom(look, man, 'wardrobe_' + (look.gender === 'f' ? 'f' : 'm'), W.w, W);
+  if (W) return prepared(buildFrom(look, man, 'wardrobe_' + (look.gender === 'f' ? 'f' : 'm'), W.w, W));
   const want = fileFor(look), g0 = look.gender === 'f' ? 'f' : 'm';
   const key = man.files[want] ? want : want === 'f_aodai_teacher' ? 'f_aodai' : /_class/.test(want) && man.files[want.replace('_skirt', '')] ? want.replace('_skirt', '') : /_class/.test(want) ? g0 + '_white' : want, info = man.files[key];
   if (key !== want && !missingWarned.has(want)) { missingWarned.add(want); console.warn('[người] chưa có mô hình ' + want + ', tạm dùng ' + key); }   // chưa có mẫu áo dài giáo viên thì dùng áo dài trắng nhuộm màu
   if (!info) throw new Error('Không có mô hình người ' + key);
-  return buildFrom(look, man, key, info, null);
+  return prepared(buildFrom(look, man, key, info, null));
 }
+/** dựng xong thì tạo sẵn các action hoạt hoạ (gait.js) — không để dồn vào khung hình đầu tiên */
+const prepared = (p) => p.then((r) => { animPrepare(r); return r; });
 /** dựng từ một tệp: info = mục của tệp trong manifest; W = lựa chọn tủ đồ (null với tệp mỗi-bộ-một-tệp kiểu cũ) */
 async function buildFrom(look, man, key, info, W) {
   const [gltf, clips] = await Promise.all([load(info.file), clipsFor(key, info.hipsRestHeight, man)]);
@@ -268,6 +277,7 @@ async function buildFrom(look, man, key, info, W) {
     else if (name === 'eyebrows' || name === 'eyelashes') { o.castShadow = false; m.forceSinglePass = true; /* thẻ mỏng dán trên mặt: three vẽ hai lượt (mặt sau rồi mặt trước) và đặt needsUpdate mỗi lượt, tính lại chương trình mỗi khung */ m.color.setRGB(ht[0] * 0.6, ht[1] * 0.6, ht[2] * 0.6); }
   });
   shareSkeletons(model);
+  { const gone = []; model.traverse((o) => { if (o.isMesh && !o.visible) gone.push(o); }); for (const o of gone) o.removeFromParent(); }      // lưới đã ẩn vĩnh viễn (món tủ đồ không mặc, tóc/kính không chọn): bỏ khỏi cây để khỏi tốn duyệt ma trận/cắt tỉa mỗi khung (~960 lưới trong cảnh); geometry dùng chung nên không dispose
   const s = (look.height || info.height) / info.height, b = 0.93 + 0.07 * (look.build ?? 1);
   const g = new THREE.Group(); g.add(model); g.scale.set(s * b, s, s * b);
   const mixer = new THREE.AnimationMixer(model), act = {};
@@ -304,7 +314,7 @@ async function buildFrom(look, man, key, info, W) {
   }
   const heel = {}, footLat = {}, toeUp = {}; for (const S of ['Left', 'Right']) { const ft = bones[S + 'Foot']; if (ft) { const p = ft.getWorldPosition(new THREE.Vector3()); p.y = 0; p.z -= HEEL_BACK * s * b; heel[S] = ft.worldToLocal(p); footLat[S] = new THREE.Vector3(1, 0, 0).applyQuaternion(ft.getWorldQuaternion(new THREE.Quaternion()).invert()); } const tb = bones[S + 'ToeBase']; if (tb) toeUp[S] = new THREE.Vector3(0, 1, 0).applyQuaternion(tb.getWorldQuaternion(new THREE.Quaternion()).invert()); }      // toeUp: phương thẳng đứng lúc nghỉ trong hệ của xương ngón chân
   mixer.update(0);
-  return { g, mixer, act, clips, poses: new Map(), pose: null, pw: 0, lookAt: null, lookPos: new THREE.Vector3(), lk: 0, smileMeshes, smile0: morph.smile, smileV: morph.smile, smileT: null, gfc: 0, flapDead: W && W.bottom && W.bottom.flaps && !(W.top && W.top.flaps) ? 0.16 : 0, twistMax: W && W.top && (W.top.hides || []).includes('skin_forearm') ? 0.3 : undefined, blinkMeshes, blinkIn: 1 + Math.random() * 4, blinkV: 0, bones, flaps, footY, toeY, heel, footLat, toeUp, armFlex, curl, stride: info.hipsRestHeight > 0 ? info.hipsRestHeight / CLIP_HIPS : 1, legOut: { Left: 0, Right: 0 }, curlAmt: 0, airT: 0, airK: 0, airV: 0, land: 0, landK: 1, jumpKind: null, jumpLead: 'Left', kickPrev: 0, windK: 0, kickWind: 0, npc: false, kickT: -1, kickC: 0.15, kickStyle: 'drive', kickKind: null, kickLead: null, kickAt: null, kickHas: false, kickP: new THREE.Vector3(), aim: null, hold: null, holdAt: null, holdR: 0, shotFrom: new THREE.Vector3(), shotR: 0.12, shotSet: false, fine: true, fineAlways: false, rootP: new THREE.Vector3(), rootSeen: false, rootYaw: 0, carry: false, anchor: { Left: { on: false, p: new THREE.Vector3(), t: new THREE.Vector3(), near: 0, d: new THREE.Vector3(), rel: false, ik: false, near: 0, lag: 0, lift: 0, e: 0, v: 0 }, Right: { on: false, p: new THREE.Vector3(), t: new THREE.Vector3(), d: new THREE.Vector3(), rel: false, ik: false, near: 0, lag: 0, lift: 0, e: 0, v: 0 }, busy: false }, restQ, headRel, neckDir, female: look.gender === 'f', stance: look.stance || 'side', t: 0, seed: Math.random() * 6.28, w: { idle: 1, walk: 0, run: 0 }, rootShift: (name, t) => rootZAt(clips[name], t) * g.scale.z, dispose() { mixer.stopAllAction(); mixer.uncacheRoot(model); for (const m of mats) m.dispose(); model.traverse((o) => { if (o.isSkinnedMesh) o.skeleton.dispose(); }); } };
+  return { g, mixer, act, clips, poses: new Map(), pose: null, pw: 0, lookAt: null, lookPos: new THREE.Vector3(), lk: 0, smileMeshes, smile0: morph.smile, smileV: morph.smile, smileT: null, gfc: 0, flapDead: W && W.bottom && W.bottom.flaps && !(W.top && W.top.flaps) ? 0.16 : 0, twistMax: W && W.top && (W.top.hides || []).includes('skin_forearm') ? 0.3 : undefined, blinkMeshes, blinkIn: 1 + Math.random() * 4, blinkV: 0, bones, flaps, footY, toeY, heel, footLat, toeUp, armFlex, curl, stride: info.hipsRestHeight > 0 ? info.hipsRestHeight / CLIP_HIPS : 1, legOut: { Left: 0, Right: 0 }, curlAmt: 0, airT: 0, airK: 0, airV: 0, land: 0, landK: 1, jumpKind: null, jumpLead: 'Left', kickPrev: 0, windK: 0, kickWind: 0, npc: false, kickT: -1, kickC: 0.15, kickStyle: 'drive', kickKind: null, kickLead: null, kickAt: null, kickHas: false, kickP: new THREE.Vector3(), aim: null, hold: null, holdAt: null, holdR: 0, shotFrom: new THREE.Vector3(), shotR: 0.12, shotSet: false, fine: true, fineAlways: false, rootP: new THREE.Vector3(), rootSeen: false, rootYaw: 0, carry: false, anchor: { Left: { on: false, p: new THREE.Vector3(), t: new THREE.Vector3(), near: 0, d: new THREE.Vector3(), rel: false, ik: false, near: 0, lag: 0, lift: 0, e: 0, v: 0 }, Right: { on: false, p: new THREE.Vector3(), t: new THREE.Vector3(), d: new THREE.Vector3(), rel: false, ik: false, near: 0, lag: 0, lift: 0, e: 0, v: 0 }, busy: false }, lean: 0, turn: 0, lockW: 0, startT: 0, runShare: 0, lock: { Left: { on: 0, p: new THREE.Vector3(), d: new THREE.Vector3() }, Right: { on: 0, p: new THREE.Vector3(), d: new THREE.Vector3() } }, restQ, headRel, neckDir, female: look.gender === 'f', stance: look.stance || 'side', t: 0, seed: Math.random() * 6.28, w: { idle: 1, walk: 0, run: 0 }, rootShift: (name, t) => rootZAt(clips[name], t) * g.scale.z, dispose() { mixer.stopAllAction(); mixer.uncacheRoot(model); for (const m of mats) m.dispose(); model.traverse((o) => { if (o.isSkinnedMesh) o.skeleton.dispose(); }); } };
 }
 
 const _q = new THREE.Quaternion(), _pq = new THREE.Quaternion(), _a = new THREE.Vector3(), _b = new THREE.Vector3(), _d = new THREE.Vector3();
@@ -387,13 +397,15 @@ const FIDGETS = {      // cử chỉ nhỏ lúc đứng lâu / dáng nghỉ cơ 
   scratch: ['Right', [0.5, 0.3, 0.45], [-0.55, 0.8, -0.12], 0.1],        // gãi đầu / sửa kính
   cross: ['both', [0.06, -0.86, 0.5], [-1, 0.02, 0.1], 0],               // khoanh tay: khuỷu đưa ra trước sườn, cẳng tay nằm ngang trước bụng trên, bàn tay tới khuỷu bên kia
 };
+const FIDGET_OUT = 0.08;
+const REST_KEEP = /^Hips$|Hand$|Foot$|ToeBase$/, ARM_OUT = 0.05;      // đứng bằng clip thật: chỉ các xương này còn được kéo về hướng nghỉ (xương chậu để theo clip thì nó nghiêng, một bàn chân hở nền 2–3 cm); cánh tay dạng thêm ra ngoài chừng này (≈3°)
 const FIDGET_KEYS = Object.keys(FIDGETS), STAND = ['side', 'side', 'hip', 'side', 'cross', 'side', 'side'], frac = (x) => x - Math.floor(x);
 function fidget(r, type, w) {
   const F = FIDGETS[type]; if (!F || w < 0.01) return;
   if (F[0] === 'both') {      // đang vào/ra dáng: cẳng tay đưa ra trước rồi mới khép ngang (trộn thẳng từ tay buông sang tay khoanh thì cổ tay quét xuyên qua bụng)
-    const u = 1 - w, f2 = [F[2][0] * (1 - u * 0.9), F[2][1] - u * 0.5, F[2][2] + u * 0.9]; armTo(r, 'Left', F[1], f2, w); armTo(r, 'Right', F[1], [f2[0], f2[1] + 0.2, f2[2] + 0.06], w); palmTo(r, 'Left', 1, [0, 0, -1], w); palmTo(r, 'Right', -1, [0, 0, -1], w); }      // tay phải gác trên tay trái, lòng bàn tay áp vào người
+    const u = 1 - w, f2 = [F[2][0] * (1 - u * 0.9), F[2][1] - u * 0.5, F[2][2] + u * 0.9 + (r.idleReal ? FIDGET_OUT : 0)]; armTo(r, 'Left', F[1], f2, w); armTo(r, 'Right', F[1], [f2[0], f2[1] + 0.2, f2[2] + 0.06], w); palmTo(r, 'Left', 1, [0, 0, -1], w); palmTo(r, 'Right', -1, [0, 0, -1], w); }      // tay phải gác trên tay trái, lòng bàn tay áp vào người
   else if (type === 'scratch' && r.bones.Head) armIK(r, 'Right', around(r.bones.Head.getWorldPosition(_ht), -0.105, 0.075, -0.035, _hs), w, [0.75, 0.1, 0.35]);      // bàn tay chạm đúng đầu (sau tai phải) chứ không giơ lơ lửng
-  else armTo(r, F[0], F[1], F[2], w);
+  else armTo(r, F[0], r.idleReal ? [F[1][0] + FIDGET_OUT, F[1][1], F[1][2]] : F[1], F[2], w);      // đứng bằng clip thật: hông đưa ngang nhiều hơn → khuỷu mở thêm chút cho bàn tay chống hông khỏi lún vào hông
   if (F[3]) bend(r.bones.Head, 1, 0, 0, F[3] * w);
 }
 /**
@@ -403,33 +415,38 @@ function fidget(r, type, w) {
  */
 function relaxPose(r, k, root, fine) {
   const B = r.bones, f = r.female ? 1 : 0, t = r.t, sd = r.seed, br = Math.sin(t * 1.5 + sd) * 0.009 + Math.sin(t * 0.37 + sd * 1.7) * 0.012;      // thở + đung đưa chậm
-  const side = THREE.MathUtils.clamp(Math.sin((t / (7 + frac(sd) * 4) + sd) * Math.PI) * 3.2, -1, 1);      // +1: trụ chân trái, −1: trụ chân phải
+  const side = r.idleReal ? 0 : THREE.MathUtils.clamp(Math.sin((t / (7 + frac(sd) * 4) + sd) * Math.PI) * 3.2, -1, 1);      // +1: trụ chân trái, −1: trụ chân phải
   // hông, lưng, cổ, bàn tay, bàn chân về tư thế nghỉ (clip đứng gốc ưỡn hông, xoè tay, chân chữ bát)
-  for (const kq in r.restQ) B[kq].quaternion.slerp(r.restQ[kq], (kq === 'Head' || kq === 'Neck' ? 0.55 : 0.8) * k);
+  // real: đang đứng bằng clip thật (idle_am của anims_ual.glb, xem gait.js) — clip đã có thở, đung đưa hông và thân (nên side = 0: hai chân dựng đều, không dồn trọng tâm thủ tục nữa),
+  // nên chỉ còn chỉnh nhỏ: bàn tay/bàn chân về hướng nghỉ, cánh tay kéo MỘT PHẦN về dáng buông có khoảng hở với thân, lòng bàn tay quay vào đùi, cử chỉ nhỏ. Không có clip
+  // (thiếu tệp) thì dựng cả dáng bằng thủ tục như trước.
+  const real = !!r.idleReal, fold = real && r.idleWant === 'idle_fold';
+  for (const kq in r.restQ) { if (real && !REST_KEEP.test(kq)) continue; B[kq].quaternion.slerp(r.restQ[kq], (kq === 'Head' || kq === 'Neck' ? 0.55 : 0.8) * k); }
   // Mọi bước xoay trong hàm này để 'lazy' (không dựng lại ma trận cả nhánh xương sau từng bước — trước đây ~7 lần dựng lại cả bộ xương mỗi khung, chiếm phần lớn thời gian
   // của dáng đứng): các phép đọc ở đây đều qua getWorld*, tự dựng lại chuỗi cha; groundFeet ở cuối dựng lại cả bộ xương MỘT lần cho các bước sau.
-  if (B.Hips) B.Hips.position.x += side * 0.026 * k;
+  if (B.Hips && !real) B.Hips.position.x += side * 0.026 * k;
   root.getWorldQuaternion(_wq);
-  straighten(r, 0.85 * k, 0.012, true);                     // lưng thẳng, cổ không rướn ra trước
-  bend(B.Hips, 0, 0, 1, side * 0.035 * k, true); bend(B.Spine, 0, 0, 1, -side * 0.055 * k, true); bend(B.Spine, 1, 0, 0, (0.015 + Math.sin(t * 1.5 + sd) * 0.008) * k, true);
-  if (fine) { bend(B.Head, 0, 0, 1, (side * 0.03 + Math.sin(sd * 7) * 0.035) * k, true); bend(B.Head, 0, 1, 0, Math.sin(t * 0.31 + sd * 3) * 0.13 * k, true); }      // người ngoài tầm chỉnh kỹ: bỏ nghiêng/quay đầu, xoay bàn tay, ngón cái, cử chỉ nhỏ
+  if (!real) { straighten(r, 0.85 * k, 0.012, true);                     // lưng thẳng, cổ không rướn ra trước
+    bend(B.Hips, 0, 0, 1, side * 0.035 * k, true); bend(B.Spine, 0, 0, 1, -side * 0.055 * k, true); bend(B.Spine, 1, 0, 0, (0.015 + Math.sin(t * 1.5 + sd) * 0.008) * k, true); }
+  if (fine && !real) { bend(B.Head, 0, 0, 1, (side * 0.03 + Math.sin(sd * 7) * 0.035) * k, true); bend(B.Head, 0, 1, 0, Math.sin(t * 0.31 + sd * 3) * 0.13 * k, true); }      // người ngoài tầm chỉnh kỹ: bỏ nghiêng/quay đầu, xoay bàn tay, ngón cái, cử chỉ nhỏ
   const arms = ARMS[r.stance] || ARMS.side;
   for (const [S, s] of [['Left', 1], ['Right', -1]]) {
     const up = B[S + 'UpLeg'], leg = B[S + 'Leg'], foot = B[S + 'Foot'], arm = B[S + 'Arm'], fore = B[S + 'ForeArm'], hand = B[S + 'Hand'];
     const free = Math.max(0, -side * s);                 // chân không chịu lực: gối chùng ra trước, bàn chân hơi lùi và xoay ra ngoài
-    if (up && leg && foot) { aim(up, leg, dirW(s * (0.07 - f * 0.025) - side * 0.03, -1, 0.012 + free * 0.11), k, true); aim(leg, foot, dirW(s * 0.01 - side * 0.02, -1, -0.02 - free * 0.14), k, true); bend(up, 0, 1, 0, s * (0.07 + free * 0.2) * k, true); }
-    if (arm && fore && hand) {
-      const a0 = arms[0], a1 = arms[1], w = r.stance === 'side' ? -f * 0.05 : 0;
+    if (up && leg && foot) { aim(up, leg, dirW(s * (0.07 - f * 0.025) - side * 0.03, -1, 0.012 + free * 0.11), k, true); aim(leg, foot, dirW(s * 0.01 - side * 0.02, -1, -0.02 - free * 0.14), k, true); bend(up, 0, 1, 0, s * (0.07 + free * 0.2) * k, true); }      // chân luôn dựng bằng thủ tục, cả khi đứng bằng clip thật: clip dồn trọng tâm một chân, bàn chân kia hở nền 1–4 cm — pha với clip đi lúc bước chậm thì chân trụ hở đất (đo ở --cast: 3–6 cm)
+    if (arm && fore && hand && !fold) {
+      const a0 = arms[0], a1 = arms[1], w = r.stance === 'side' ? -f * 0.05 : 0, out = real && r.stance === 'side' ? ARM_OUT : 0, ka = k;      // clip thật: hông đưa ngang nhiều hơn dáng thủ tục cũ (dồn trọng tâm) → cánh tay dạng thêm chút cho cổ tay khỏi lấn vào hông
       const as = r.stance === 'side' ? Math.sin(sd * 3.1 + s) * 0.05 : 0, ax = r.stance === 'side' ? Math.sin(sd * 5.3 + s * 2) * 0.025 : 0;        // hai tay không buông giống hệt nhau
-      aim(arm, fore, dirW(s * (a0[0] - w + ax), a0[1], a0[2] + br * 0.6 + as), k, true); aim(fore, hand, dirW(s * (a1[0] + ax), a1[1], a1[2] + br + as * 1.5), k, true);
+      aim(arm, fore, dirW(s * (a0[0] - w + ax + out), a0[1], a0[2] + br * 0.6 + as), ka, true); aim(fore, hand, dirW(s * (a1[0] + ax + out), a1[1], a1[2] + br + as * 1.5), ka, true);
       if (r.stance === 'side' && fine) { palmTo(r, S, s, PALM, k, true); thumbIn(r, S, 0.9 * k); }       // chắp tay trước/sau: giữ độ xoắn của tư thế, không ép
     }
   }
   if (r.stance === 'side' && (fine || r.npc)) {      // dáng cơ sở của NPC (chống hông, khoanh tay) giữ cả khi ở xa, kẻo lại gần 12 m thì tay đổi dáng đột ngột
     const T = 16 + frac(sd * 2.1) * 12, c = t % T, e = THREE.MathUtils.smoothstep(c, T - 4.6, T - 3.9) * (1 - THREE.MathUtils.smoothstep(c, T - 0.8, T - 0.1));
     const base = r.npc ? STAND[Math.floor(frac(sd * 1.37) * STAND.length)] : 'side';
-    if (base !== 'side') fidget(r, base, k);
-    if (fine && e > 0.01) fidget(r, FIDGET_KEYS[(Math.floor(t / T) + Math.floor(sd * 3)) % FIDGET_KEYS.length], e * k);
+    if (base === 'cross' && r.clips.idle_fold) r.idleWant = 'idle_fold';      // NPC đứng khoanh tay: dùng clip khoanh tay thật (Idle_FoldArms_Loop) làm dáng đứng, từ khung sau
+    else if (base !== 'side') fidget(r, base, k);
+    if (fine && e > 0.01 && !fold) fidget(r, FIDGET_KEYS[(Math.floor(t / T) + Math.floor(sd * 3)) % FIDGET_KEYS.length], e * k);
   }
   groundFeet(r, k, root);
   r.openAmt = (r.openAmt || 0) + FINGER_OPEN * k; r.curlAmt += FINGER_IDLE * k;      // bàn tay khép hờ nhẹ lúc đứng nghỉ (dáng chụp ảnh, clip khác: k giảm theo trọng số của chúng); đặt một lần ở applyCurl
@@ -614,7 +631,31 @@ function plantFoot(r, S, foot, toe, y0, k, dToe = 0) {
  * sao cho bàn chân vẫn ở đúng chỗ cũ → chân trụ duỗi gần thẳng, dáng đi cao và nhẹ hơn.
  * plant > 0: kèm ép bàn chân không chìm dưới nền (plantFoot), mức 0..1.
  */
-function liftHips(r, lift, root, plant = 0) {
+const LOCK_SHIFT = [0.3, 1.2];      // tỉ lệ clip chạy đổi nhanh hơn chừng này (1/s) mới coi là đang đổi đi ↔ chạy
+const LOCK_START = 0.45;      // chỉ khoá chân lúc bắt đầu đi trong chừng này giây đầu, và không khoá khi đang chờ cầu/đang đá (nhún đổi chân tại chỗ + nhích từng bước): người nhích từng bước ngắn liên tục (bạn đang chờ cầu) mà khoá mãi thì chân bị bỏ lại sau, với không tới nền
+const LOCK_E = 0.02, LOCK_TOE = 0.02, LOCK_MAX = 0.16, LOCK_OUT = 10;      // bàn chân thấp hơn mức nghỉ + 2 cm coi là đang đặt trên nền; khoá kéo tối đa 16 cm (m của mô hình) rồi trượt theo; nhịp tan (1/s) của phần lệch sau khi nhấc chân
+/**
+ * Khoá bàn chân trụ khi đi/chạy (học từ placeFeet của "Patch's starter man", CC0): bàn chân đã đặt xuống nền thì đứng yên TRONG THẾ GIỚI tới khi nhấc lên. Trộn hai
+ * clip có pha chạm đất khác nhau (đổi đi ↔ chạy: trọng số đổi trong lúc một bàn chân đang trụ) làm bàn chân đó trôi 1–2 m/s; sai số sải bước khi tua nhanh/chậm clip
+ * cũng thành trượt. T = đích của cổ chân theo hoạt hoạ (thế giới) — được dời về chỗ đã khoá; toeP = vị trí mũi chân (thế giới); e / eToe = độ cao cổ chân / mũi chân so với mức nghỉ (m của mô hình). Trả về true nếu có dời.
+ */
+function lockFoot(r, S, T, e, toeP, eToe, dt, w) {
+  const L = r.lock[S], sc = r.g.scale.y || 1, max = LOCK_MAX * sc;
+  if (w > 0.01 && e < LOCK_E) {
+    if (L.on !== 1) { L.on = 1; L.p.set(T.x + L.d.x, 0, T.z + L.d.z); }      // khoá cổ chân tại chỗ đang đứng (kể cả phần lệch chưa tan hết của lần khoá trước)
+    let dx = L.p.x - T.x, dz = L.p.z - T.z; const len = Math.hypot(dx, dz);
+    if (len > max) { dx *= max / len; dz *= max / len; L.p.set(T.x + dx, 0, T.z + dz); }      // quá tầm chân: điểm khoá trượt theo, không giật
+    L.d.set(dx, 0, dz);
+  } else if (w > 0.01 && toeP && eToe < LOCK_TOE) {      // gót đã nhấc, mũi còn trên nền: khoá MŨI chân (bàn chân lăn qua mũi quanh chỗ đó) — giữ cổ chân thì chân bị kéo duỗi quá tầm
+    if (L.on !== 2) { L.on = 2; L.p.set(toeP.x + L.d.x, 0, toeP.z + L.d.z); }
+    let dx = L.p.x - toeP.x, dz = L.p.z - toeP.z; const len = Math.hypot(dx, dz);
+    if (len > max) { dx *= max / len; dz *= max / len; L.p.set(toeP.x + dx, 0, toeP.z + dz); }
+    L.d.set(dx, 0, dz);
+  } else { L.on = 0; L.d.multiplyScalar(Math.exp(-dt * LOCK_OUT)); }
+  if ((L.d.x * L.d.x + L.d.z * L.d.z) * w * w < 4e-6 * sc * sc) return false;      // lệch dưới 2 mm: coi như không khoá (giải lại chân lúc có lúc không thì gối nhấp nháy)
+  T.x += L.d.x * w; T.z += L.d.z * w; return true;
+}
+function liftHips(r, lift, root, plant = 0, dt = 0, lock = 0) {
   const B = r.bones; if (!B.Hips || (lift < 1e-4 && !(plant > 0))) return;
   const legs = [], y0 = plant > 0 ? root.getWorldPosition(_H).y : 0; let low = 0;
   for (const S of ['Left', 'Right']) {
@@ -629,8 +670,10 @@ function liftHips(r, lift, root, plant = 0) {
       if (Math.abs(shift) < 0.004) shift = 0; if (Math.abs(dToe) < 0.004) dToe = 0; if (shift < low) low = shift;
     }
     const raise = plant > 0 ? plantFoot(r, S, foot, B[S + 'ToeBase'], y0, plant, dToe) : 0;      // có thể xoay bàn chân → lấy vị trí/hướng bàn chân sau dòng này
-    const T = foot.getWorldPosition(new THREE.Vector3()); T.y += raise + shift;
-    legs.push({ up, leg, foot, T, raise: raise + Math.abs(shift), fq: foot.getWorldQuaternion(new THREE.Quaternion()) });
+    const T = foot.getWorldPosition(new THREE.Vector3()); let locked = false;
+    if (r.footY !== undefined && (lock > 0 || r.lock[S].on || r.lock[S].d.x || r.lock[S].d.z)) { const sc = r.g.scale.y || 1, toe = B[S + 'ToeBase']; const tp = toe && r.toeY !== undefined ? posNow(toe, _g1) : null; locked = lockFoot(r, S, T, (T.y - y0) / sc - r.footY, tp, tp ? (tp.y - y0) / sc - r.toeY : 1, dt, shift || dToe ? 0 : lock); }      // chỉ xét cổ chân: gót đã nhấc (mũi còn chạm) là thôi khoá, kẻo chân bị kéo duỗi quá tầm; trên bậc thang/dốc không khoá
+    T.y += raise + shift;
+    legs.push({ up, leg, foot, T, raise: raise + Math.abs(shift) + (locked ? 1 : 0), fq: foot.getWorldQuaternion(new THREE.Quaternion()) });
   }
   lift += low * HIP_FOLLOW;      // bàn chân thấp nhất nằm dưới mặt phẳng của gốc: hạ hông theo một phần để chân đó với tới
   if (Math.abs(lift) >= 1e-4) { B.Hips.position.y += lift / (r.g.scale.y || 1); B.Hips.updateMatrixWorld(true); }
@@ -711,6 +754,7 @@ function anchorFeet(r, dt, root, w) {
     if (!a.on) { a.p.copy(a.t); a.on = true; a.rel = false; a.lift = 0; a.v = 0; a.near = near; a.lag = 0; continue; }
     if (near < 0.01 || a.rel) {
       // thả neo: hết lý do neo (bàn chân đang vung, hoặc đã vào nhịp đi/chạy đều) mà còn lệch thì phần lệch tan dần, tính theo chính bàn chân đang chuyển động — không nhảy về
+      if (!a.rel && a.near < 0.01) { a.p.copy(a.t); a.lift = 0; a.v = 0; a.lag = 0; continue; }      // khung trước cũng không neo (bàn chân đang vung tự do, hàm còn được gọi vì chân kia đang thả neo): chỉ bám theo. Coi đây là "thả neo" thì độ dời của một khung chạy (7 cm) thành phần lệch mới, hai chân thay nhau giữ r.anchor.busy mãi và bàn chân vung bị giật lùi mỗi vài khung
       if (!a.rel) { a.rel = true; a.d.subVectors(a.p, a.t); }
       a.d.multiplyScalar(Math.exp(-dt * ANCHOR_OUT)); a.near = 0; a.lag = 0; a.v = 0;
       if (a.d.lengthSq() < 1.6e-5 * sc * sc) { a.rel = false; a.p.copy(a.t); a.lift = 0; } else { a.p.addVectors(a.t, a.d); a.lift = Math.max(0, a.d.y); a.ik = true; busy = true; }
@@ -721,7 +765,7 @@ function anchorFeet(r, dt, root, w) {
     if (a.lag > worst) { worst = a.lag; step = S; }
   }
   // chân đang bước thì bước cho xong (tới khi gần hết lệch) rồi mới tới lượt chân kia: chọn lại mỗi khung thì hai chân thay nhau nhấc từng khung, gối rung
-  { const c = A.step && A[A.step]; if (c && c.near >= 0.01 && c.lag > ANCHOR_LAG * 0.5) step = A.step; A.step = step; }
+  { const c = A.step && A[A.step]; if (c && c.near >= 0.01 && c.lag > ANCHOR_LAG * 0.5 && !(step && step !== A.step && worst > ANCHOR_TURN * sc && r.w.walk + r.w.run < 0.05)) step = A.step; A.step = step; }      // …trừ khi đang đứng (không có trọng số đi/chạy) mà chân kia đã bị bỏ lại quá ANCHOR_TURN: gốc đang xoay/đi đều (xoay người trước khi ngồi) thì chân đang bước đuổi mãi không tới, chân kia không bao giờ được nhấc, hai chân choãi ra nửa mét
   for (const S of ['Left', 'Right']) {
     const a = A[S], o = A[S === 'Left' ? 'Right' : 'Left'];
     if (a.near >= 0.01) {
@@ -881,12 +925,11 @@ const JUMP = {      // [ra ngoài, lên, ra trước] ở mức co chân/vung ta
  * Chỉ là dáng; vật lý nhảy không đổi. r.jumpKind = 'rope': nhảy dây — nhảy thấp chụm chân, tay để yên cho cử chỉ khác.
  */
 function actJump(r, dt, air, speed, root) {
-  if (air) { r.airT += dt; r.land = 0; r.airV = Math.max(r.airV, speed); } else { if (r.airT > 0.14) { r.land = 1; r.landK = (r.jumpKind === 'rope' ? 0.35 : 1) * Math.min(1, r.airT / 0.5); } r.airT = 0; r.airV = 0; }
-  r.airK += ((air && r.airT > 0.03 ? 1 : 0) - r.airK) * (1 - Math.exp(-dt * 14));
-  if (r.land > 0) r.land = Math.max(0, r.land - dt / LAND_SECS);
+  // r.airT / r.airK / r.airV / r.land / r.landK do airMix (gait.js) cập nhật đầu khung
   const a = r.airK; if (a < 0.01 && r.land <= 0) return;
   root.getWorldQuaternion(_wq);
   if (air && r.airT < JUMP_DIP[0] && r.jumpKind !== 'rope' && r.bones.Hips) { r.bones.Hips.position.y -= JUMP_DIP[1] * Math.sin(Math.PI * r.airT / JUMP_DIP[0]); r.bones.Hips.updateMatrixWorld(true); }
+  if (r.airAct && r.jumpKind !== 'rope') return;      // có clip nhảy thật (anims_ual.glb): dáng trên không và tiếp đất đã do clip lo, chỉ giữ cú nhún hông lúc bật
   if (a >= 0.01) {
     const rope = r.jumpKind === 'rope', mv = rope ? 0 : THREE.MathUtils.smoothstep(r.airV, 0.8, 2.6), u = Math.min(1, r.airT / JUMP_AIR), J = JUMP;
     const tuck = Math.pow(Math.sin(Math.PI * u), 0.8) * (rope ? 0.3 : 1) * (r.airT > JUMP_AIR ? 0 : 1) + (r.airT > JUMP_AIR ? 0.25 : 0);      // rơi lâu hơn một cú nhảy (bước hụt bậc): chân duỗi chờ đất, gối hơi co
@@ -1013,57 +1056,49 @@ function inFocus(r, root) {
   const seen = _g1.dot(FOCUS.d) > d * (FOCUS_COS - h * 0.1);
   return (r.fine = d < FOCUS_NEAR + h || (d < FOCUS_R + h && seen) || (FOCUS.photo && d < FOCUS_PHOTO && seen && !!r.pose && r.pose.startsWith('pose_')));
 }
-const ANCHOR_JUMP = 0.05, ANCHOR_SLIDE = 1.0, ANCHOR_SPIN = 3, ANCHOR_VMAX = 2.4, _rp = new THREE.Vector3();      // ANCHOR_SPIN: gốc bị xoay nhanh hơn 3 rad/s (trượt vào ghế có xoay người) cũng là bị dời; ANCHOR_VMAX: bàn chân đang bước không đuổi nhanh hơn mức này (m/s)
+const ANCHOR_TURN = 0.16, ANCHOR_JUMP = 0.05, ANCHOR_SLIDE = 1.0, ANCHOR_SPIN = 3, ANCHOR_VMAX = 2.4, _rp = new THREE.Vector3();      // ANCHOR_SPIN: gốc bị xoay nhanh hơn 3 rad/s (trượt vào ghế có xoay người) cũng là bị dời; ANCHOR_VMAX: bàn chân đang bước không đuổi nhanh hơn mức này (m/s)
 // r.carry: nơi điều khiển gốc báo thẳng "đang mang nhân vật đi" (campus_play.js lúc trượt người vào/ra ghế).
 // ANCHOR_JUMP/ANCHOR_SLIDE:      // gốc trôi nhanh hơn tốc độ đi báo vào quá 1 m/s → đang bị dời từ ngoài (thả neo êm); kèm nhảy quá 5 cm trong một khung → bỏ neo ngay.
 // (1 m/s: phần lùi hông của clip ngồi xuống do tickMove dời gốc đạt tối đa ~0,9 m/s — lúc đó bàn chân phải được giữ yên, không thả)
 /** bỏ neo bàn chân của một nhân vật ngay (gọi khi vừa đặt nhân vật sang chỗ khác); animateRigged cũng tự bỏ khi thấy gốc bị dời */
-export function dropAnchors(r) { if (!r || !r.anchor) return; const A = r.anchor; A.Left.on = A.Right.on = false; A.Left.rel = A.Right.rel = false; A.Left.lift = A.Right.lift = 0; A.busy = false; A.step = null; }
-const GAIT_PHASE = 0.05;      // clip chạy đặt chân trái muộn hơn clip đi chừng này (phần của một chu kỳ hai bước)
-/**
- * Đi và chạy được trộn theo trọng số: hai clip phải cùng pha bước (chân trái cùng chạm đất một lúc), nếu không lúc chuyển đi ↔ chạy
- * tư thế trộn ra có hai chân chẳng khớp nhịp nào — bàn chân quét trên nền, chìm xuống đất. Lấy nhịp bước chung (số chu kỳ mỗi giây, trộn theo
- * trọng số) cho cả hai clip rồi đặt thời gian của clip nhẹ hơn theo pha của clip nặng hơn. Gọi sau khi đã đặt timeScale của từng clip.
- */
-function syncGait(r) {
-  const a = r.act.walk, b = r.act.run; if (!a || !b) return;
-  const da = a.getClip().duration, db = b.getClip().duration, wa = r.w.walk, wb = r.w.run, sum = wa + wb; if (sum < 1e-4 || !(da > 0) || !(db > 0)) return;
-  const rate = (wa * a.timeScale / da + wb * b.timeScale / db) / sum;
-  a.timeScale = rate * da; b.timeScale = rate * db;
-  if (wa >= wb) b.time = (a.time / da + GAIT_PHASE) % 1 * db; else a.time = ((b.time / db - GAIT_PHASE) % 1 + 1) % 1 * da;
-}
+export function dropAnchors(r) { if (!r || !r.anchor) return; const A = r.anchor; for (const S of ['Left', 'Right']) { r.lock[S].on = 0; r.lock[S].d.set(0, 0, 0); } A.Left.on = A.Right.on = false; A.Left.rel = A.Right.rel = false; A.Left.lift = A.Right.lift = 0; A.busy = false; A.step = null; }
+const LEAN_K = 0.035, LEAN_MAX = 0.2;      // nghiêng khi rẽ: rad cho mỗi (rad/s × m/s), và mức tối đa (rad)
+// trọng số + pha bước chung của các clip đi/chạy, clip nhảy và clip đứng nghỉ: xem gait.js
 /** cập nhật hoạt hoạ: speed (m/s), air = đang trên không, holding = đang cầm đồ */
 export function animateRigged(r, speed, dt, air, holding, root) {
   const run = THREE.MathUtils.smoothstep(speed, 2.1, 3.2), move = THREE.MathUtils.smoothstep(speed, 0.15, 0.9);
   const target = { idle: 1 - move, walk: move * (1 - run), run: move * run }, k = 1 - Math.exp(-dt * 9);
-  const pw = r.pw = blendPoses(r, dt), free = 1 - pw;      // free = phần còn lại cho đứng/đi/chạy khi đang tạo dáng
-  for (const n in r.act) { r.w[n] += (target[n] - r.w[n]) * k; r.act[n].setEffectiveWeight(r.w[n] * free); }
-  const sc = (r.g.scale.y || 1) * r.stride;       // người thấp, chân ngắn (mô hình nữ: hông thấp hơn mô hình mà clip được đo ~7 %) thì sải ngắn hơn → nhịp nhanh hơn ở cùng tốc độ
-  if (r.act.walk) r.act.walk.timeScale = THREE.MathUtils.clamp(speed / (WALK_SPEED * sc), 0.6, 1.8);
-  if (r.act.run) r.act.run.timeScale = THREE.MathUtils.clamp(speed / (RUN_SPEED * sc), 0.7, 1.7) * (air ? 0.35 : 1);
-  syncGait(r);
+  const pw = r.pw = blendPoses(r, dt), jw = airMix(r, dt, !!air, speed), free = (1 - pw) * (1 - jw);      // free = phần còn lại cho đứng/đi/chạy khi đang tạo dáng / đang nhảy (jw = phần của clip nhảy)
+  for (const n in r.w) r.w[n] += (target[n] - r.w[n]) * k;
+  gaitMix(r, speed, dt, air, free);      // trọng số + pha bước chung của các clip đi/chạy (gait.js)
   r.mixer.update(dt); r.t += dt;
   if (!(dt > 0)) return;      // cả dt = NaN cũng dừng ở đây
   const fine = root ? inFocus(r, root) : false;
   // gốc bị dời từ ngoài (dịch chuyển tức thời, trượt vào ghế, đặt lại chỗ, người chơi mạng giật vị trí): tư thế vẫn là đứng/ngồi nhưng cả người đang bị mang đi → không neo
   // chân (neo thì chân "bước đuổi" theo tới 4–5 m/s). Trôi nhanh hơn tốc độ đi được báo vào (speed) quá ANCHOR_SLIDE là bị dời.
-  let carried = false; if (root) { root.getWorldPosition(_rp); const mv = r.rootSeen ? _rp.distanceTo(r.rootP) : 0; let dy = root.rotation.y - r.rootYaw; dy = Math.abs(Math.atan2(Math.sin(dy), Math.cos(dy))); r.rootYaw = root.rotation.y;      // root = nhóm gốc của nhân vật, xoay quanh trục đứng
-    carried = !!r.carry || mv / dt - speed > ANCHOR_SLIDE || (r.rootSeen && dy / dt > ANCHOR_SPIN); if (mv > ANCHOR_JUMP && mv / dt - speed > ANCHOR_SLIDE) dropAnchors(r); r.rootP.copy(_rp); r.rootSeen = true; }
+  let carried = false, moved = false; if (root) {      // moved: bị dời chỗ; carried: bị dời chỗ hoặc bị xoay nhanh
+    root.getWorldPosition(_rp); const mv = r.rootSeen ? _rp.distanceTo(r.rootP) : 0; root.getWorldQuaternion(_wq); const yaw = Math.atan2(2 * (_wq.w * _wq.y + _wq.x * _wq.z), 1 - 2 * (_wq.y * _wq.y + _wq.x * _wq.x)); let dy = yaw - r.rootYaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); r.turn = r.rootSeen ? dy / dt : 0; dy = Math.abs(dy); r.rootYaw = yaw;      // góc quay THẾ GIỚI quanh trục đứng: người chơi xoay ở nhóm cha (holder), root.rotation.y của họ luôn 0
+    moved = !!r.carry || mv / dt - speed > ANCHOR_SLIDE; carried = moved || (r.rootSeen && dy / dt > ANCHOR_SPIN); if (mv > ANCHOR_JUMP && mv / dt - speed > ANCHOR_SLIDE) dropAnchors(r); r.rootP.copy(_rp); r.rootSeen = true; }
   if (root && r.w.idle * free > 0.02) { relaxPose(r, Math.min(1, r.w.idle * free), root, fine); }
-  const gait = (r.w.walk + r.w.run * 0.6) * free;
+  const gait = (r.w.walk + r.w.run * 0.6) * free, starting = target.walk + target.run > r.w.walk + r.w.run + 0.02;      // starting: đang từ đứng chuyển sang đi/chạy
+  if (r.w.walk + r.w.run < 0.05) r.startT = 0;      // cả khi đang ngồi/nhảy (nhánh dưới không chạy): lần bước đi sau vẫn được khoá chân lúc xuất phát
   if (root && gait > 0.02) { refineGait(r, Math.min(1, gait), root, fine); if (!fine && r.bones.Hips) r.bones.Hips.position.y += COARSE_UP * Math.min(1, (r.w.walk + r.w.run) * free);      // đường rẻ: không ép từng bàn chân, chỉ nâng cả người một chút cho đế bớt chìm
-    if (!air) liftHips(r, 0.012 * r.w.run * free * (r.g.scale.y || 1), root, fine ? Math.min(1, (r.w.walk + r.w.run) * free) : 0); }
+    if (!air) { const gw = fine ? Math.min(1, (r.w.walk + r.w.run) * free) : 0; const mix = r.w.walk * r.w.run / Math.max(1e-4, (r.w.walk + r.w.run) ** 2); r.startT = r.w.walk + r.w.run < 0.05 ? 0 : r.startT + dt;      // giây kể từ lúc rời dáng đứng
+      const share = r.w.run / Math.max(1e-4, r.w.walk + r.w.run), shift = THREE.MathUtils.smoothstep(Math.abs(share - r.runShare) / dt, LOCK_SHIFT[0], LOCK_SHIFT[1]); r.runShare = share;      // shift: tỉ lệ clip chạy đang ĐỔI (đổi đi ↔ chạy) — chạy chậm đều ở 2–3 m/s cũng trộn hai clip nhưng không khoá (khoá mãi thì chân bị bỏ lại sau, với không tới nền)
+      r.lockW += ((carried || r.windK >= 0.02 || r.kickT >= 0 ? 0 : Math.max(THREE.MathUtils.smoothstep(mix, 0.02, 0.1) * shift, starting && r.startT < LOCK_START ? 1 : 0)) - r.lockW) * (1 - Math.exp(-dt * 10)); liftHips(r, 0.012 * r.w.run * free * (r.g.scale.y || 1), root, gw, dt, r.lockW < 0.02 ? 0 : gw * r.lockW); } }      // khoá chân trụ chỉ trong lúc đang đổi đi ↔ chạy (mix = 0,25 khi hai clip ngang nhau) và lúc từ đứng bước đi (bàn chân ở yên tới khi clip nhấc nó lên — bước đầu tiên là một bước thật, không lết)
   // đứng yên vắt qua mép bậc/vỉa hè (nền dưới một bàn chân lệch nền dưới gốc): đặt từng bàn chân lên nền của nó như lúc đi. Nền phẳng thì không đụng gì tới dáng đứng
   if (root && fine && !air && r.groundAt && gait <= 0.02 && pw < 0.02 && r.w.idle > 0.5 && unevenFeet(r, root))      // pw < 0,02: đang ngồi xuống/đứng dậy/tạo dáng thì không đụng (mặt ghế, mép bồn cây cạnh chân không phải bậc để đặt chân lên)
     liftHips(r, 0, root, Math.min(1, r.w.idle * free));
+  // nghiêng người vào trong khi rẽ lúc đang đi/chạy (học từ leanInto của "Patch's starter man"): tỉ lệ với tốc độ quay thân × tốc độ đi, tối đa ~11°, chia cho hai đốt cột sống
+  if (root) { const want = air || moved ? 0 : THREE.MathUtils.clamp(-(r.turn || 0) * speed * LEAN_K, -LEAN_MAX, LEAN_MAX) * Math.min(1, gait); r.lean += (want - r.lean) * (1 - Math.exp(-dt * 6));
+    if (Math.abs(r.lean) > 0.004) { root.getWorldQuaternion(_wq); bend(r.bones.Spine, 0, 0, 1, r.lean * 0.5, true); bend(r.bones.Spine1, 0, 0, 1, r.lean * 0.5); } }
   if (root && r.poseLegs > 0.02) poseLegs(r, Math.min(1, r.poseLegs), root);
   applyCurl(r);
   if (root && pw - r.poseLegs > 0.02) { groundFeet(r, 1, root, 1.6 * dt); if (fine) settleFeet(r, root, Math.min(1, pw - r.poseLegs)); } else r.gfc = 0;
   { // mức neo: 1 khi đứng/tạo dáng/đang dừng lại, 0 khi đã đi/chạy đều (clip tự giữ chân trụ) và khi đang bắt đầu đi (chân phải rời chỗ ngay; neo rồi thả giữa chừng
     // làm bàn chân giật 7–12 cm/khung²)
-    const starting = target.walk + target.run > r.w.walk + r.w.run + 0.02;
     // bị mang đi chậm hơn một cú nhảy: thả neo êm (phần lệch tan dần theo bàn chân), không neo mới
-    const aw = root && !air && !starting && !carried && fine ? 1 - THREE.MathUtils.smoothstep((r.w.walk + r.w.run) * free, ANCHOR_GAIT[0], ANCHOR_GAIT[1]) : 0;
+    const aw = root && !air && !starting && !carried && fine ? 1 - THREE.MathUtils.smoothstep((r.w.walk + r.w.run) * (1 - pw), ANCHOR_GAIT[0], ANCHOR_GAIT[1]) : 0;      // (1 − pw) chứ không phải free: clip tiếp đất chiếm một phần trọng số lúc vừa chạm đất khi đang chạy — không vì thế mà neo chân (neo thì hai chân bị bỏ lại sau lưng)
     if (root && !air && (aw > 0.01 || r.anchor.busy || (carried && (r.anchor.Left.on || r.anchor.Right.on)))) anchorFeet(r, dt, root, aw); else { r.anchor.Left.on = r.anchor.Right.on = false; r.anchor.Left.rel = r.anchor.Right.rel = false; r.anchor.busy = false; r.anchor.step = null; } }
   if (root) actJump(r, dt, !!air, speed, root);
   if (r.flaps.length && root) { driveFlaps(r, dt, speed, root); }

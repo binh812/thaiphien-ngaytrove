@@ -139,7 +139,14 @@ export function init(ctx) {
     const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 480; const g = cv.getContext('2d'), tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
     const mat = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }), mesh = new THREE.Mesh(new THREE.PlaneGeometry(led.w, led.h), mat); mesh.position.set(led.x, led.y, led.z); mesh.rotation.y = led.ry; scene.add(mesh);
     const st = { x: 1024 }; let acc = 1;
-    ctx.updaters.push((dt) => { acc += dt; mat.color.setScalar(1.25 + U.uNight.value * 1.2); if (acc < 0.1) return; acc = 0; drawLED(g, performance.now() / 1000, st); tex.needsUpdate = true; });
+    const ledFw = new THREE.Vector3();
+    ctx.updaters.push((dt) => {
+      acc += dt; mat.color.setScalar(1.25 + U.uNight.value * 1.2); if (acc < 0.1) return;
+      // vẽ lại canvas 1024×480 + đẩy ảnh + dựng mipmap mỗi 0,1 s kể cả khi màn nằm sau lưng/xa hàng trăm mét: chỉ làm khi màn ở trong nón nhìn (hoặc đứng gần)
+      const cp = ctx.camera.position, dx = led.x - cp.x, dy = led.y - cp.y, dz = led.z - cp.z, d2 = dx * dx + dz * dz; ctx.camera.getWorldDirection(ledFw);
+      if (d2 > 25 * 25 && (d2 > 160 * 160 || (dx * ledFw.x + dy * ledFw.y + dz * ledFw.z) / Math.sqrt(d2 + dy * dy) < 0.3)) return;
+      acc = 0; drawLED(g, performance.now() / 1000, st); tex.needsUpdate = true;
+    });
     ctx.ledLight = new THREE.PointLight(0xff5a4a, 0, 38, 1.6); ctx.ledLight.position.set(led.x - 4, led.y, led.z); scene.add(ctx.ledLight);
   }
   // quạt trần

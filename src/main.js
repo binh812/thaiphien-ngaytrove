@@ -25,6 +25,7 @@ import { init as initCampus } from './game/campus_life.js';
 import { init as initNet } from './net/index.js';
 import { PENCIL_ON } from './engine/pencil/style.js';
 import { pencilScene, pencilSky, pencilUI } from './engine/pencil/pencil.js';
+import { warmUp } from './engine/warm.js';
 
 const $ = (id) => document.getElementById(id);
 const setLoad = (p, msg) => { $('loadBar').style.width = Math.round(p * 100) + '%'; $('loadMsg').textContent = msg; return new Promise(r => setTimeout(r, 0)); };
@@ -63,6 +64,7 @@ async function boot() {
   scene.traverse((o) => { if (o.isSkinnedMesh && o.material) for (const k of ['map', 'normalMap', 'roughnessMap']) if (o.material[k]) pipeline.renderer.initTexture(o.material[k]); });
 
   if (PENCIL_ON) { pencilUI(); pencilScene(scene); pipeline.page.setLights(ctx.nightLights || null); const ps = pencilSky(sky, pipeline.renderer); ctx.updaters.push(ps.update); }      // kiểu chì màu (bản thử): trời vẽ + chỉnh vật liệu lá, cỏ, lửa
+  await setLoad(0.985, 'Biên dịch shader, đẩy ảnh lên GPU…'); sky.update(0.016, camera); await warmUp(ctx);      // sky.update trước: nướng ánh sáng môi trường, nếu không mọi chương trình biên dịch lúc này thiếu envMap và phải biên dịch lại
   const clock = new THREE.Clock(); let acc = 0, frames = 0;
   const fail = (e) => { console.error(e); $('loading').classList.remove('hidden'); $('start').classList.add('hidden'); $('loadMsg').textContent = 'Lỗi khi chạy: ' + (e && e.message ? e.message : e) + ' — hãy tải lại trang.'; };
   function loop() {
@@ -80,7 +82,8 @@ async function boot() {
     if (acc > 0.5) { const i = pipeline.renderer.info.render; $('stats').textContent = `${Math.round(frames / acc)} FPS · ${i.calls} lệnh vẽ · ${(i.triangles / 1e6).toFixed(2)} tr tam giác · ${QNAME}`; acc = 0; frames = 0; }
   }
   window.__tp = ctx;
-  try { frame(); frame(); } catch (e) { fail(e); return; }      // vẽ thử sau màn hình chờ: biên dịch vật liệu xong rồi mới cho vào chơi
+  // chạy nóng ~20 khung ngay ở màn hình chờ: các bộ cập nhật/hoạt hoạ/vật lý chạy lần đầu (V8 chưa tối ưu, bộ đệm chưa nạp) mất hàng trăm ms mỗi khung — đo được 40–600 ms trong 2 giây đầu sau khi vào chơi
+  try { for (let i = 0; i < 20; i++) { frame(); if (i % 5 === 4) await new Promise(r => setTimeout(r, 0)); } } catch (e) { fail(e); return; }
   await setLoad(1, 'Xong'); $('loading').classList.add('hidden');
   if (param('ui', '1') !== '0' && ctx.ui) ctx.ui.showStart(); else if (ctx.ui) ctx.ui.hideAll();
   clock.getDelta(); loop();

@@ -8568,5 +8568,41 @@
     }
    ]
   }
+ },
+ "animations_ual": {
+  "source": "Universal Animation Library 1 + 2 (Quaternius, CC0) và clip starter man của Patch (CC0)",
+  "file": "anims_ual.glb",
+  "bytes": 242172,
+  "fps": 30,
+  "retargetedOn": "m_white.glb",
+  "hipsRestHeight": 0.9311,
+  "tracks": "quaternion cho mọi xương + position chỉ cho mixamorigHips",
+  "clips": {
+   "idle_am": {
+    "frames": 106,
+    "duration": 3.5,
+    "from": "pm:AM_Idle"
+   },
+   "idle_fold": {
+    "frames": 76,
+    "duration": 2.5,
+    "from": "u2:Idle_FoldArms_Loop"
+   },
+   "jump_start": {
+    "frames": 41,
+    "duration": 1.3333,
+    "from": "u1:Jump_Start"
+   },
+   "jump_loop": {
+    "frames": 76,
+    "duration": 2.5,
+    "from": "u1:Jump_Loop"
+   },
+   "jump_land": {
+    "frames": 39,
+    "duration": 1.2667,
+    "from": "u1:Jump_Land"
+   }
+  }
  }
 }

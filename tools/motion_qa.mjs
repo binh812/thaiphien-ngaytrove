@@ -43,7 +43,7 @@ const EXTRA = [
   { test: 'chạy 30 s (dt thật)', kind: 'long' },
 ];
 /** clip vận động có trong tệp nhưng trò chơi không phát tại chỗ (chỉ idle/walk/run được trộn theo tốc độ) → không đo */
-const SKIP_CLIP = /^(walk|run|sprint|idle)/;
+const SKIP_CLIP = /^(walk|run|sprint|idle|jump_)/;      // jump_* (anims_ual.glb): clip trên không do gait.js điều khiển, không phát tại chỗ
 
 function parseArgs(argv) {
   const opt = {}, rest = [];

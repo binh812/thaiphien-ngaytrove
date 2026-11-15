@@ -98,6 +98,9 @@ export function init(ctx) {
   });
 
   const des = { x: 0, y: 0, z: 0 };
+  // ACCEL_*/DECEL (m/s²): tăng tốc khi đi / khi chạy, giảm tốc và đổi hướng — đi đạt 1,5 m/s sau ~0,19 s, chạy đạt 4,2 m/s sau ~0,32 s, đang chạy buông phím dừng sau ~0,26 s (~55 cm), đang đi ~0,1 s (~7 cm).
+  // TURN_MAX (rad/s): thân xoay theo hướng đi nhanh nhất chừng này (trước: quay 180° có khung tới 31 rad/s, bàn chân không bước kịp).
+  const ACCEL_WALK = 8, ACCEL_RUN = 13, DECEL = 16, TURN_MAX = 9;
   // ----- nền dưới chân -----
   // GROUND_PUSH: vận tốc ép xuống (m/s) khi đang chạm đất, chỉ để bộ điều khiển còn nhận ra mặt nền. Trước đây ép 1,5 m/s: bằng đúng tốc độ đi, nên khi đi lên
   // cầu thang (mặt va chạm dốc 30°) phần ép xuống nuốt gần hết phần đi tới — giữ W 3,6 s chỉ lên được 0,6 m, nhân vật đứng dáng nghỉ.
@@ -128,7 +131,11 @@ export function init(ctx) {
     const il = Math.hypot(ix, iz); if (il > 1) { ix /= il; iz /= il; }
     const run = keys.ShiftLeft || keys.ShiftRight || il > 0.92 && joy.id !== null, target = (run ? 4.2 : 1.5) * Math.min(1, il);
     fwd.set(Math.sin(st.yaw), 0, Math.cos(st.yaw)); right.set(-fwd.z, 0, fwd.x);
-    const k = 1 - Math.exp(-dt * (st.grounded ? 12 : 3)); mv.x += ((fwd.x * iz + right.x * ix) * target - mv.x) * k; mv.z += ((fwd.z * iz + right.z * ix) * target - mv.z) * k;
+    // Vận tốc ngang tiến về vận tốc muốn có với gia tốc CÓ HẠN (học từ player.js của "Patch's starter man"): trước đây bám theo hàm mũ (nhịp 12/s) nên khung đầu tiên
+    // sau khi bấm chạy tăng tốc tới ~46 m/s², hoạt hoạ không kịp đổi clip (bàn chân trượt lúc đổi đi ↔ chạy). Trên không giữ cách cũ (điều khiển yếu, nhịp 3/s).
+    { const tx = (fwd.x * iz + right.x * ix) * target, tz = (fwd.z * iz + right.z * ix) * target, dx = tx - mv.x, dz = tz - mv.z, dl = Math.hypot(dx, dz);
+      if (!st.grounded) { const k = 1 - Math.exp(-dt * 3); mv.x += dx * k; mv.z += dz * k; }
+      else if (dl > 1e-6) { const a = target > Math.hypot(mv.x, mv.z) + 0.05 ? (run ? ACCEL_RUN : ACCEL_WALK) : DECEL, s = Math.min(1, a * dt / dl); mv.x += dx * s; mv.z += dz * s; } }
     st.vy = Math.max(-30, st.vy - 12.5 * dt);
     des.x = mv.x * dt; des.y = st.vy * dt; des.z = mv.z * dt;
     // đang chạm đất: thay phần rơi bằng độ lên/xuống của chính mặt nền theo hướng đi (đi song song mặt dốc — bộ điều khiển Rapier chiếu chuyển động ngang lên mặt dốc
@@ -162,7 +169,7 @@ export function init(ctx) {
       if (visCut || !st.grounded || Math.abs(jump + visE) > 0.3) visE = 0; else { if (Math.abs(jump) > moved * 1.2 + 0.004) visE -= jump; visE *= Math.exp(-dt * GROUND_EASE); }
       visWant = want; visY = want + visE; visCut = false; }
     holder.position.set(pos.x, visY, pos.z); holder.visible = !st.fp || st.photo;
-    if (st.speed > 0.3) { const a = Math.atan2(mv.x, mv.z); let d = a - holder.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); holder.rotation.y += d * Math.min(1, dt * 10); } else if ((st.fp || st.held || (ctx.campus && ctx.campus.play && ctx.campus.play.holding)) && !st.pose) holder.rotation.y = st.yaw;      // đang cầm vật / máy bay giấy: thân quay theo hướng nhìn (hướng sẽ ném)
+    if (st.speed > 0.3) { const a = Math.atan2(mv.x, mv.z); let d = a - holder.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); holder.rotation.y += clamp(d * Math.min(1, dt * 10), -TURN_MAX * dt, TURN_MAX * dt); } else if ((st.fp || st.held || (ctx.campus && ctx.campus.play && ctx.campus.play.holding)) && !st.pose) holder.rotation.y = st.yaw;      // đang cầm vật / máy bay giấy: thân quay theo hướng nhìn (hướng sẽ ném)
     // tạo dáng chụp ảnh: quay người về phía máy ảnh, nhìn vào ống kính, cười; bước đi thì thôi dáng
     if (st.pose && !st.photo && il > 0.1) st.pose = null;
     if (st.pose) { const a = Math.atan2(camera.position.x - pos.x, camera.position.z - pos.z); let d = a - holder.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); holder.rotation.y += d * Math.min(1, dt * 6); }

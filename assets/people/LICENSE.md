@@ -44,6 +44,18 @@ Chỉ dữ liệu chuyển động (phép quay xương) được lấy từ Xbot
 
 Tư thế ngón tay và cổ tay là tự tạo bằng mã. `poses.glb` (24 clip `pose_*`) tự tạo hoàn toàn bằng mã (`tools/blender/make_poses.py`), CC0 1.0.
 
+### Clip bổ sung — `anims_ual.glb` (đứng nghỉ, nhảy; nạp kèm `anims.glb`)
+
+Tạo bằng `tools/blender/make_anims_ual.py` (15/11/2026). Chỉ dữ liệu chuyển động (phép quay xương + độ dời hông) được chuyển sang bộ xương của bộ người này; không có lưới hay kết cấu nào của nguồn.
+
+| Clip | Nguồn chuyển động | Giấy phép |
+|---|---|---|
+| `jump_start`, `jump_loop`, `jump_land` | Quaternius, "Universal Animation Library" bản Standard (`UAL1_Standard.glb`): `Jump_Start`, `Jump_Loop`, `Jump_Land`; https://quaternius.itch.io/universal-animation-library | CC0 1.0 (tệp `License.txt` trong gói) |
+| `idle_fold` | Quaternius, "Universal Animation Library 2" bản Standard (`UAL2_Standard.glb`): `Idle_FoldArms_Loop`; https://quaternius.itch.io/universal-animation-library-2, tải ngày 15/11/2026 | CC0 1.0 (tệp `License.txt` trong gói) |
+| `idle_am`, `idle_look` | Bộ clip "Patch's starter man" trong bản demo "coloured pencil" (https://patch.gg/blendi/coloured-pencil, tệp `public/figure/starter-man-clips.glb`, bản 0400f90d): `AM_Idle` (Patch tự tạo bằng anymove) và `Idle_LookAround` (Quaternius, Universal Animation Library; chỉ dùng 56 % đầu của clip) | CC0 1.0 (ghi trong `LICENCE-NOTES.md` của bản demo: "CC0 1.0 (Quaternius); CC0 1.0, Patch") |
+
+Cách trộn clip theo pha bước, khoá bàn chân trụ, nghiêng người khi rẽ và giới hạn gia tốc (`src/game/gait.js`, `rigged.js`, `player.js`) viết lại theo ý tưởng của `src/figure/animator.js`, `player.js` trong cùng bản demo (Patch's starter man, CC0 1.0; mã của bản demo MIT) — không chép mã.
+
 Bản hoạt hoạ Mixamo cũ (mục dưới) không còn nằm trong thư mục này; bản lưu ở `.tools/build/anims_mixamo.glb`.
 
 ## Công cụ (không nằm trong sản phẩm)

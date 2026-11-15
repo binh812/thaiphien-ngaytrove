@@ -20,6 +20,7 @@ const safeName = (s) => Array.from(String(s ?? '')).slice(0, MAX_NAME).join('') 
  */
 function knownClip(h, name) {
   const clips = h.rig && h.rig.clips;
+  if (/^(idle_|jump_)/.test(String(name))) return null;      // clip nội bộ của gait.js (đứng nghỉ, nhảy): phát qua đường tạo dáng sẽ dừng hẳn action dùng chung
   return !!name && !!clips && (Object.hasOwn(clips, name) || Object.hasOwn(clips, name + '_f')) ? name : null;
 }
 const knownPose = (h, id) => (id && knownClip(h, 'pose_' + id) ? id : null);

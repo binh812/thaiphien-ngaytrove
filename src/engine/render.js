@@ -10,6 +10,7 @@ import { PENCIL_ON } from './pencil/style.js';
 import { installPencil } from './pencil/pencil.js';
 import { createPage } from './pencil/page.js';
 
+const PENCIL_MAX_DPR = 2, SCALE_STEPS = [1, 0.85, 0.72, 0.6];
 const VS = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4( position.xy, 0.0, 1.0 ); }';
 const DEPTH_FN = `
 uniform sampler2D tDepth; uniform mat4 uProjInv; uniform mat4 uProj;
@@ -189,8 +190,9 @@ const sm = (fs, uniforms, defines) => new THREE.ShaderMaterial({ vertexShader: V
 export function createPipeline(container, scene, camera) {
   const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance', preserveDrawingBuffer: false });
   if (!renderer.capabilities.isWebGL2 || !renderer.extensions.has('EXT_color_buffer_float')) throw new Error('Trình duyệt/GPU này không hỗ trợ WebGL2 với bộ đệm màu số thực, không chạy được bản đồ họa này.');
-  const dpr = Math.min(window.devicePixelRatio || 1, Q.dpr);
-  renderer.setPixelRatio(dpr); renderer.setSize(innerWidth, innerHeight);
+  const dpr = PENCIL_ON ? Math.min(window.devicePixelRatio || 1, PENCIL_MAX_DPR) : Math.min(window.devicePixelRatio || 1, Q.dpr);      // chì màu: dựng ở dpr THẬT (trần 2) để nét mảnh; hụt khung thì adapt() hạ MSAA rồi tỉ lệ
+  let scale = 1;      // tỉ lệ dựng thích ứng (chỉ kiểu chì màu đổi, xem adapt()); điểm ảnh thật = dpr × scale. Nét chì/giấy theo kích thước bộ đệm nên tự khớp, không cần uniform riêng
+  renderer.setPixelRatio(dpr * scale); renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap; installDepthVariants();
   renderer.toneMapping = THREE.NoToneMapping; renderer.outputColorSpace = THREE.LinearSRGBColorSpace;   // tự tone map ở pass cuối
   renderer.info.autoReset = false;
@@ -234,17 +236,41 @@ export function createPipeline(container, scene, camera) {
     const hw = Math.max(2, size.x >> 1), hh = Math.max(2, size.y >> 1), qw = Math.max(2, size.x >> 2), qh = Math.max(2, size.y >> 2);
     aoRT.setSize(hw, hh); aoRT2.setSize(hw, hh); volRT.setSize(qw, qh);
     aoMat.uniforms.uRes.value.set(hw, hh); blurMat.uniforms.uRes.value.set(hw, hh); compMat.uniforms.uVolRes.value.set(qw, qh); finalMat.uniforms.uRes.value.set(size.x, size.y);
-    composer.setPixelRatio(dpr); composer.setSize(w, h);
+    composer.setPixelRatio(dpr * scale); composer.setSize(w, h);
     camera.aspect = w / h; if (h > w * 1.15 && camera.fov < 78) camera.fov = 78; camera.updateProjectionMatrix();
   }
   resize(); addEventListener('resize', resize);
 
+  // ----- chất lượng thích ứng (kiểu chì màu): các nấc [MSAA, tỉ lệ dựng]; hạ MSAA (4→2→0) trước, rồi mới hạ độ phân giải từng nấc nhỏ -----
+  // Không nâng/hạ theo "dư GPU" (có vsync thì khoảng cách khung luôn ~16,7 ms) mà theo kết quả thử: hạ mà khung không nhanh hơn ≥8% (nghẽn CPU) thì hoàn lại và khoá 60 s;
+  // nâng mà khung chậm lại thì hạ ngay và lùi lần thử kế tiếp (gấp đôi, tối đa 120 s). Đổi cỡ chỉ cấp phát lại bộ đệm một lần.
+  const ms0 = sceneRT.samples, LEVELS = [...new Set([ms0, ms0 > 2 ? 2 : -1, ms0 > 0 ? 0 : -1].filter(v => v >= 0))].map(m => [m, 1]).concat(SCALE_STEPS.slice(1).map(k => [Math.min(ms0, 0), k]));
+  let lv = 0; const ad = { n: 0, sum: 0, bad: 0, good: 0, lockUntil: 0, backoff: 15, trial: null, last: 0 };
+  function setScale(k) { if (k === scale) return; scale = k; renderer.setPixelRatio(dpr * scale); resize(); }
+  function setLevel(i) { lv = i; const [m, k] = LEVELS[i]; if (sceneRT.samples !== m) { sceneRT.samples = m; sceneRT.dispose(); } setScale(k); }
+  function adapt(now) {
+    const dtm = ad.last ? now - ad.last : 0; ad.last = now;
+    if (!(dtm > 0) || dtm > 250) { ad.n = ad.sum = 0; return; }      // tab nền / cú đứng hình: không tính
+    ad.n++; ad.sum += dtm; if (ad.n < 60) return;
+    const avg = ad.sum / ad.n; ad.n = ad.sum = 0;
+    if (ad.trial) {      // đang chờ kết quả thử
+      const t = ad.trial; ad.trial = null;
+      if (t.dir > 0 && avg > t.before * 0.92) { setLevel(lv - 1); ad.lockUntil = now + 60000; ad.bad = 0; return; }      // hạ không giúp gì: hoàn lại
+      if (t.dir < 0 && avg > 18.5) { setLevel(lv + 1); ad.backoff = Math.min(120, ad.backoff * 2); ad.lockUntil = now + ad.backoff * 1000; ad.good = 0; }
+      return;
+    }
+    if (avg > 18.5) { ad.good = 0; if (++ad.bad >= 2 && lv < LEVELS.length - 1 && now > ad.lockUntil) { ad.bad = 0; ad.trial = { dir: 1, before: avg }; setLevel(lv + 1); } }
+    else { ad.bad = 0; if (avg < 17.6 && ++ad.good >= ad.backoff && lv > 0 && now > ad.lockUntil) { ad.good = 0; ad.trial = { dir: -1, before: avg }; setLevel(lv - 1); } }      // ad.good đếm các nhịp ~1 s ổn định
+  }
+  /** chạy fn ở tỉ lệ 1 (lưu ảnh: ảnh lưu không được nhoè vì tỉ lệ thích ứng) rồi trả về tỉ lệ cũ */
+  function withFullScale(fn) { const k = scale; if (k === 1) return fn(); setScale(1); try { return fn(); } finally { setScale(k); } }
   let frame = 0;
   const layers = { ao: true, vol: true, bloom: true, lens: true, gi: true, cs: true, ssr: true };
   let csK = 1;
   const _v = new THREE.Vector3();
   function render(dt, sun, sunDir) {
     frame++; renderer.info.reset();
+    if (page) { adapt(performance.now()); renderer.shadowMap.autoUpdate = false; renderer.shadowMap.needsUpdate = (frame & 1) === 0; }      // chì màu: bản đồ bóng cập nhật cách khung (30 Hz); bóng chỉ cần mềm, lệch < 1 texel khi chạy
     renderer.setRenderTarget(sceneRT); renderer.render(scene, camera);
     if (page) { page.render(); return; }
     common.uFrame.value = frame % 64;
@@ -270,5 +296,5 @@ export function createPipeline(container, scene, camera) {
     renderer.setRenderTarget(null); composer.render(dt);
   }
   const available = { ao: Q.ao > 0, vol: Q.vol > 0, bloom: !!Q.bloom, lens: true, gi: Q.ao > 0, cs: Q.ao >= 12, ssr: Q.ao >= 12 };
-  return { page, renderer, render, resize, layers, available, maxTex, setContact: (k) => { csK = k; }, u: { ao: aoMat.uniforms, vol: volMat.uniforms, comp: compMat.uniforms, final: finalMat.uniforms }, bloom };
+  return { page, sceneRT, renderer, render, resize, withFullScale, get scale() { return scale; }, get level() { return lv; }, setLevel, layers, available, maxTex, setContact: (k) => { csK = k; }, u: { ao: aoMat.uniforms, vol: volMat.uniforms, comp: compMat.uniforms, final: finalMat.uniforms }, bloom };
 }
